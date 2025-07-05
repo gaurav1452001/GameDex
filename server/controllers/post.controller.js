@@ -1,13 +1,13 @@
 export const getGames = async (req, res) => {
     try {
-        const response = await fetch("https://api.igdb.com/v4/artworks", {
+        const response = await fetch("https://api.igdb.com/v4/games", {
             method: "POST",
             headers: {
                 Accept: "application/json",
                 "Client-ID": "gi1h9oqry4ps3lr4w2btdqye2cbrmt",
                 Authorization: "Bearer 5qd4apirr7ikfb3nsm4qbs849b7y2q",
             },
-        body: "fields alpha_channel,animated,artwork_type,checksum,game,height,image_id,url,width;limit 33;"
+        body: "fields name,rating,cover.url; sort rating desc;limit 50;"
         });
         const arts = await response.json();
         console.log(arts);

@@ -3,7 +3,15 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 export default function Index() {
-  type Art = { id: string | number; url: string };
+  type Art = {
+    id: number;
+    cover: {
+      id: number;
+      url: string;
+    };
+    name: string;
+    rating: number;
+  };
   const [arts, setArts] = useState<Art[]>([]);
 
   useEffect(() => {
@@ -23,17 +31,20 @@ export default function Index() {
   
   return (
       <ScrollView>
-      <View style={{ padding: 1 ,flexDirection: 'row', flexWrap: 'wrap',backgroundColor: 'black',justifyContent: 'center',}}>
+      <View style={{ backgroundColor: '#232323' ,flexDirection: 'row', flexWrap: 'wrap',justifyContent: 'center',}}>
         {arts.map((art) => (
-          <>
           <Image
             key={art.id}
-            source={{ uri: 'https:' + art.url.replace('t_thumb', 't_cover_big_2x') }}
-            style={{ width: 85, height: 140, margin: 2 }}
+            source={{ uri: 'https:' + art.cover.url.replace('t_thumb', 't_cover_big_2x') }}
+            style={{
+              width: 85,
+              height: 115.6,
+              margin: 2.4,
+              borderWidth: 1,
+              borderColor: 'gray',
+            }}
             resizeMode="cover"
-            />
-            <Text style={{color: 'white', textAlign: 'center', width: 85}}>{art.url}</Text>
-          </>
+          />
         ))}
         
       </View>
