@@ -28,26 +28,63 @@ export default function GameInfo() {
                     colors={['transparent', '#181818']} // Replace #ffffff with your background color
                     style={styles.gradient}
                 />
-                <View style={styles.infoContainer}>
-
-                </View>
             </View>
+             <View style={styles.infoContainer}>
+                    <View style={{ flex:2,flexDirection: 'column', justifyContent: 'space-between',paddingRight: 10 }}>
+                        <View>
+                            <Text style={styles.textColor}>
+                                {gamePage?.name}
+                            </Text>
+                        </View>
+                        <View>
+                            
+                        </View>
+                    </View>
+                    <View style={{flex:1}}>
+                        <Image
+                            source={{ uri: 'https:' + gamePage?.cover?.url?.replace('t_thumb', 't_cover_big_2x') }}
+                            style={styles.displayImage}
+                            resizeMode="cover"
+                        />
+                    </View>
+                   
+                </View>
+                 <Text numberOfLines={3} style={styles.textColor2}>
+                            {gamePage?.summary}
+                 </Text>
         </ScrollView>
     );
 }
 const styles = StyleSheet.create({
     container: {
-    backgroundColor: '#232323', 
-    justifyContent: 'center' 
-  },
-  gradient: {
-    position: 'absolute',
-    bottom: 0,
-    height: '100%',
-    width: '100%',
-  },
-  infoContainer:{
-    flexDirection:'row',
-    color: 'white'
-  }
+        backgroundColor: '#232323',
+        justifyContent: 'center'
+    },
+    textColor:{
+        color: 'white',
+        fontSize: 25,
+    },
+    textColor2:{
+        color: 'beige',
+        fontSize: 13,
+        margin:16
+    },
+    gradient: {
+        position: 'absolute',
+        bottom: 0,
+        height: '50%',
+        width: '100%',
+    },
+    infoContainer: {
+        flexDirection: 'row',
+        color: 'white',
+        justifyContent: 'space-between',
+        margin: 16,
+    },
+    displayImage:{
+        width: 110,
+        height: 149.6,
+        borderWidth: 1,
+        borderColor: 'gray',
+    }
 });
