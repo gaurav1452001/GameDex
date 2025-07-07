@@ -1,10 +1,10 @@
-import { Text, View, StyleSheet, ScrollView, Image, TouchableOpacity } from "react-native";
+import { View, StyleSheet, ScrollView, Image, TouchableOpacity } from "react-native";
 import axios from "axios";
 import { useEffect, useState } from "react";
-
+import { useNavigation } from "@react-navigation/native";
 
 export default function HomeScreen() {
-  type Art = {
+  type Game = {
     id: number;
     cover: {
       id: number;
@@ -12,15 +12,20 @@ export default function HomeScreen() {
     };
     name: string;
     rating: number;
+    screenshots: Array<{
+      id: number;
+      url: string;
+    }>;
+    summary: string;
   };
-  const [arts, setArts] = useState<Art[]>([]);
+  const [gamePages, setGamePages] = useState<Game[]>([]);
 
   useEffect(() => {
     const fetchArts = async () => {
       try {
-        const response = await axios.get('http://172.19.97.212:8000/posts');
+        const response = await axios.get('http://172.19.97.169:8000/posts');
         // Set arts from response
-        setArts(response.data.arts);
+        setGamePages(response.data);
       } catch (error) {
         console.error('Error fetching arts:', error);
       }
@@ -29,22 +34,16 @@ export default function HomeScreen() {
     fetchArts();
   }, []);
 
+  const navigation = useNavigation();
+
   return (
     <ScrollView>
-
-      <View style={{ backgroundColor: '#232323', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', }}>
-        {arts.map((art) => (
-          <TouchableOpacity onPress={() => console.log(`Selected art: ${art.name} ${art.id}`)} key={art.id}>
+      <View style={styles.mainView}>
+        {gamePages.map((gamePage) => (
+          <TouchableOpacity onPress={() => navigation.navigate('gameInfo', { gamePage })} key={gamePage.id}>
             <Image
-              key={art.id}
-              source={{ uri: 'https:' + art.cover.url.replace('t_thumb', 't_cover_big_2x') }}
-              style={{
-                width: 85,
-                height: 115.6,
-                margin: 2.4,
-                borderWidth: 1,
-                borderColor: 'gray',
-              }}
+              source={{ uri: 'https:' + gamePage?.cover?.url?.replace('t_thumb', 't_cover_big_2x') }}
+              style={styles.displayImage}
               resizeMode="cover"
             />
           </TouchableOpacity>
@@ -67,5 +66,15 @@ const styles = StyleSheet.create({
     backgroundColor: "coral",
     borderRadius: 8,
     textAlign: "center"
+  },
+  mainView: {
+    backgroundColor: '#232323', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center',
+  },
+  displayImage: {
+    width: 85,
+    height: 115.6,
+    margin: 2.4,
+    borderWidth: 1,
+    borderColor: 'gray',
   }
 })
