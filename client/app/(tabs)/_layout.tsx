@@ -10,23 +10,15 @@ export default function MyTabs() {
       screenOptions={{
       tabBarItemStyle: { width: 80 },
       tabBarStyle: { backgroundColor: '#181818' },
-      tabBarLabelStyle: { color: '#fff',fontSize: 15 },
+      tabBarLabelStyle: { color: '#fff',fontSize: 13 },
       tabBarActiveTintColor: '#fff',
       }}
     >
-      <Tab.Screen name="Games" component={HomeScreen} options={{ title: "Games" }} />
-      <Tab.Screen name="Reviews" component={ProfileScreen} options={{ title: "Reviews" }} />
-      <Tab.Screen name="Lists" component={ProfileScreen} options={{ title: "Lists" }} />
-      <Tab.Screen name="News" component={ProfileScreen} options={{ title: "News" }} />
+      <Tab.Screen name="Games" component={HomeScreen} options={{ title: "GAMES" }} />
+      <Tab.Screen name="Reviews" component={ProfileScreen} options={{ title: "REVIEWS" }} />
+      <Tab.Screen name="Lists" component={ProfileScreen} options={{ title: "LISTS" }} />
+      <Tab.Screen name="News" component={ProfileScreen} options={{ title: "NEWS" }} />
     </Tab.Navigator>
   );
 }
 
-// export default function TabsLayout() {
-//   return (
-//     <Tabs>
-//       <Tabs.Screen name="index" options={{ title:"Home"}} />
-//       <Tabs.Screen name="login" options={{ title:"Login"}} />
-//     </Tabs>
-//   );
-// }

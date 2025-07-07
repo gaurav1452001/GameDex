@@ -17,6 +17,7 @@ export default function HomeScreen() {
       url: string;
     }>;
     summary: string;
+    storyline:string
   };
   const [gamePages, setGamePages] = useState<Game[]>([]);
 
@@ -72,7 +73,7 @@ const styles = StyleSheet.create({
   },
   displayImage: {
     width: 85,
-    height: 115.6,
+    height: 126.6,
     margin: 2.4,
     borderWidth: 1,
     borderColor: 'gray',
