@@ -12,7 +12,7 @@ export default function RootLayout() {
           headerStyle: { backgroundColor: "#181818" },
           headerTitleStyle: { color: "#fff", fontWeight: "bold", fontSize: 21 },
           headerTintColor: "#fff",
-          shadowOpacity: 0,
+          headerShadowVisible: false,
         }}
       />
     </Stack>

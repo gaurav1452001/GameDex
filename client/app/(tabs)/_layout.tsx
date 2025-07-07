@@ -8,10 +8,10 @@ export default function MyTabs() {
   return (
     <Tab.Navigator
       screenOptions={{
+      tabBarItemStyle: { width: 80 },
       tabBarStyle: { backgroundColor: '#181818' },
-      tabBarLabelStyle: { color: '#fff' },
+      tabBarLabelStyle: { color: '#fff',fontSize: 15 },
       tabBarActiveTintColor: '#fff',
-      tabBarInactiveTintColor: '#fff',
       }}
     >
       <Tab.Screen name="Games" component={HomeScreen} options={{ title: "Games" }} />
