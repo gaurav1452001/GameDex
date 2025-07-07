@@ -2,7 +2,7 @@ import { Text, View, StyleSheet, ScrollView ,Image} from "react-native";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-export default function Index() {
+export default function HomeScreen() {
   type Art = {
     id: number;
     cover: {
