@@ -7,7 +7,7 @@ export const getGames = async (req, res) => {
                 "Client-ID": process.env.client_id,
                 Authorization: `Bearer ${process.env.bearer_token}`,
             },
-            body: "fields name,rating,cover.url,summary,screenshots.url,storyline; sort rating desc;limit 50;"
+            body: "fields name,rating,cover.url,summary,screenshots.url,first_release_date,involved_companies.company.name; sort rating desc;limit 50;"
         });
         const data = await response.json();
         console.log(data);

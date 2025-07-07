@@ -16,8 +16,15 @@ export default function HomeScreen() {
       id: number;
       url: string;
     }>;
+    involed_companies: Array<{
+      id: number;
+      company: {
+        id: number;
+        name: string;
+      };
+    }>;
+    first_release_date:number;
     summary: string;
-    storyline:string
   };
   const [gamePages, setGamePages] = useState<Game[]>([]);
 

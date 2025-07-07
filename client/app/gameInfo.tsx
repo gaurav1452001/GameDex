@@ -37,7 +37,23 @@ export default function GameInfo() {
                             </Text>
                         </View>
                         <View>
-                            
+                            <Text style={styles.textColor2}>
+                                {gamePage?.involved_companies?.[0]?.company?.name}
+                                {gamePage?.involved_companies?.length > 1 && ', '}
+                                {gamePage?.involved_companies?.[1]?.company?.name} 
+                            </Text>
+                        </View>
+                        <View>
+                            <Text style={styles.textColor2}>
+                                {gamePage?.first_release_date
+                                    ? new Date(gamePage.first_release_date * 1000).toLocaleDateString('en-US', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric',
+                                    })
+                                    : null
+                                }
+                            </Text>
                         </View>
                     </View>
                     <View style={{flex:1}}>
@@ -49,7 +65,7 @@ export default function GameInfo() {
                     </View>
                    
                 </View>
-                 <Text numberOfLines={3} style={styles.textColor2}>
+                 <Text numberOfLines={3} style={styles.textColor3}>
                             {gamePage?.summary}
                  </Text>
         </ScrollView>
@@ -65,6 +81,11 @@ const styles = StyleSheet.create({
         fontSize: 25,
     },
     textColor2:{
+        color: 'beige',
+        fontSize: 15,
+        fontWeight: 'bold',
+    },
+    textColor3:{
         color: 'beige',
         fontSize: 13,
         margin:16
