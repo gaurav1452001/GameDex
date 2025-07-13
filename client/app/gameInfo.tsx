@@ -1,13 +1,39 @@
 import { Text, View, ScrollView, Image, StyleSheet } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { LinearGradient } from 'expo-linear-gradient';
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function GameInfo() {
     const route = useRoute();
     const { gamePage } = route?.params || {};
 
+    type Play = {
+        completely: number;
+        game_id: number;
+        hastily: number;
+        normally: number;
+    }
+    const [playtime, setPlaytime] = useState<Play>();
+
+    useEffect(() => {
+        const fetchPlaytime = async () => {
+            try {
+                const gameId = gamePage?.id;
+                const response = await axios.get('http://172.19.97.245:8000/posts/playtime', { 
+                    params: { game_id: gameId } 
+                });
+                setPlaytime(response.data[0]); // API returns array, get first item
+                console.log('Playtime data:', response.data);
+            } catch (error) {
+                console.error('Error fetching playtime:', error);
+            }
+        };
+        fetchPlaytime();
+    }, []);
+
     const hasScreenshot = gamePage?.screenshots && gamePage.screenshots[0]?.url;
-    console.log('Has screenshot:', hasScreenshot);
+    // console.log('Has screenshot:', hasScreenshot);
 
     return (
         <ScrollView style={{ backgroundColor: '#181818' }}>
@@ -68,12 +94,17 @@ export default function GameInfo() {
                  <Text numberOfLines={3} style={styles.textColor3}>
                             {gamePage?.summary}
                  </Text>
+                 <View style={{ margin: 16 }}>
+                    <Text style={styles.textColor2}>
+                        {playtime?.normally? `${(playtime.normally / 3600).toFixed(0)} hours` : ''}
+                    </Text>
+                 </View>
         </ScrollView>
     );
 }
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#232323',
+        backgroundColor: '#181818',
         justifyContent: 'center'
     },
     textColor:{

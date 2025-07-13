@@ -31,7 +31,9 @@ export default function HomeScreen() {
   useEffect(() => {
     const fetchArts = async () => {
       try {
-        const response = await axios.get('http://172.19.97.169:8000/posts');
+        //get the ip of the device running the server
+        
+        const response = await axios.get('http://172.19.97.245:8000/posts');
         // Set arts from response
         setGamePages(response.data);
       } catch (error) {
