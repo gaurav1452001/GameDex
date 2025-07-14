@@ -16,7 +16,7 @@ export default function HomeScreen() {
       id: number;
       url: string;
     }>;
-    involed_companies: Array<{
+    involved_companies: Array<{
       id: number;
       company: {
         id: number;
@@ -33,7 +33,7 @@ export default function HomeScreen() {
       try {
         //get the ip of the device running the server
         
-        const response = await axios.get('http://172.19.97.245:8000/posts');
+        const response = await axios.get('http://172.20.128.40:8000/posts');
         // Set arts from response
         setGamePages(response.data);
       } catch (error) {

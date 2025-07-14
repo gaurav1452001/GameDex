@@ -8,9 +8,9 @@ export default function MyTabs() {
   return (
     <Tab.Navigator
       screenOptions={{
-      tabBarItemStyle: { width: 80 },
+      tabBarItemStyle: { width: 'auto' },
       tabBarStyle: { backgroundColor: '#181818' },
-      tabBarLabelStyle: { color: '#fff',fontSize: 13 },
+      tabBarLabelStyle: { color: '#fff',fontSize: 14 },
       tabBarActiveTintColor: '#fff',
       }}
     >
