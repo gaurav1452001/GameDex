@@ -20,8 +20,9 @@ export default function GameInfo() {
         const fetchPlaytime = async () => {
             try {
                 const gameId = gamePage?.id;
-                const response = await axios.get('http://172.20.128.40:8000/posts/playtime', { 
-                    params: { game_id: gameId } 
+                const ipAddress = process.env.ip_address || '';
+                const response = await axios.get(`http://10.30.203.183:8000/posts/playtime`, {
+                    params: { game_id: gameId }
                 });
                 setPlaytime(response.data[0]); // API returns array, get first item
                 console.log('Playtime data:', response.data);
@@ -55,50 +56,50 @@ export default function GameInfo() {
                     style={styles.gradient}
                 />
             </View>
-             <View style={styles.infoContainer}>
-                    <View style={{ flex:2,flexDirection: 'column', justifyContent: 'space-between',paddingRight: 10 }}>
-                        <View>
-                            <Text style={styles.textColor}>
-                                {gamePage?.name}
-                            </Text>
-                        </View>
-                        <View>
-                            <Text style={styles.textColor2}>
-                                {gamePage?.involved_companies?.[0]?.company?.name}
-                                {gamePage?.involved_companies?.length > 1 && ', '}
-                                {gamePage?.involved_companies?.[1]?.company?.name} 
-                            </Text>
-                        </View>
-                        <View>
-                            <Text style={styles.textColor2}>
-                                {gamePage?.first_release_date
-                                    ? new Date(gamePage.first_release_date * 1000).toLocaleDateString('en-US', {
-                                        year: 'numeric',
-                                        month: 'long',
-                                        day: 'numeric',
-                                    })
-                                    : null
-                                }
-                            </Text>
-                        </View>
+            <View style={styles.infoContainer}>
+                <View style={{ flex: 2, flexDirection: 'column', justifyContent: 'space-between', paddingRight: 10 }}>
+                    <View>
+                        <Text style={styles.textColor}>
+                            {gamePage?.name}
+                        </Text>
                     </View>
-                    <View style={{flex:1}}>
-                        <Image
-                            source={{ uri: 'https:' + gamePage?.cover?.url?.replace('t_thumb', 't_cover_big_2x') }}
-                            style={styles.displayImage}
-                            resizeMode="cover"
-                        />
+                    <View>
+                        <Text style={styles.textColor2}>
+                            {gamePage?.involved_companies?.[0]?.company?.name}
+                            {gamePage?.involved_companies?.length > 1 && ', '}
+                            {gamePage?.involved_companies?.[1]?.company?.name}
+                        </Text>
                     </View>
-                   
+                    <View>
+                        <Text style={styles.textColor2}>
+                            {gamePage?.first_release_date
+                                ? new Date(gamePage.first_release_date * 1000).toLocaleDateString('en-US', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                })
+                                : null
+                            }
+                        </Text>
+                    </View>
                 </View>
-                 <Text numberOfLines={3} style={styles.textColor3}>
-                            {gamePage?.summary}
-                 </Text>
-                 <View style={{ margin: 16 }}>
-                    <Text style={styles.textColor2}>
-                        {playtime?.normally? `${(playtime.normally / 3600).toFixed(0)} hours` : ''}
-                    </Text>
-                 </View>
+                <View style={{ flex: 1 }}>
+                    <Image
+                        source={{ uri: 'https:' + gamePage?.cover?.url?.replace('t_thumb', 't_cover_big_2x') }}
+                        style={styles.displayImage}
+                        resizeMode="cover"
+                    />
+                </View>
+
+            </View>
+            <Text numberOfLines={3} style={styles.textColor3}>
+                {gamePage?.summary}
+            </Text>
+            <View style={{ margin: 16 }}>
+                <Text style={styles.textColor2}>
+                    {playtime?.normally ? `${(playtime.normally / 3600).toFixed(0)} hours` : ''}
+                </Text>
+            </View>
         </ScrollView>
     );
 }
@@ -107,19 +108,19 @@ const styles = StyleSheet.create({
         backgroundColor: '#181818',
         justifyContent: 'center'
     },
-    textColor:{
+    textColor: {
         color: 'white',
         fontSize: 25,
     },
-    textColor2:{
+    textColor2: {
         color: 'beige',
         fontSize: 15,
         fontWeight: 'bold',
     },
-    textColor3:{
+    textColor3: {
         color: 'beige',
         fontSize: 13,
-        margin:16
+        margin: 16
     },
     gradient: {
         position: 'absolute',
@@ -133,7 +134,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         margin: 16,
     },
-    displayImage:{
+    displayImage: {
         width: 110,
         height: 149.6,
         borderWidth: 1,
