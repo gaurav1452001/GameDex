@@ -1,4 +1,4 @@
-import { View, StyleSheet, ScrollView, Image, TouchableOpacity } from "react-native";
+import { View, StyleSheet, ScrollView, Image, TouchableOpacity, FlatList } from "react-native";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -33,7 +33,7 @@ export default function HomeScreen() {
       try {
         //get the ip of the device running the server
         const ipAddress = process.env.ip_address||'';
-        const response = await axios.get(`http://10.30.203.183:8000/posts`);
+        const response = await axios.get(`http://172.19.98.130:8000/posts/popular`);
         // Set arts from response
         setGamePages(response.data);
       } catch (error) {
@@ -47,20 +47,21 @@ export default function HomeScreen() {
   const navigation = useNavigation();
 
   return (
-    <ScrollView>
-      <View style={styles.mainView}>
-        {gamePages.map((gamePage) => (
-          <TouchableOpacity onPress={() => navigation.navigate('gameInfo', { gamePage })} key={gamePage.id}>
-            <Image
-              source={{ uri: 'https:' + gamePage?.cover?.url?.replace('t_thumb', 't_cover_big_2x') }}
-              style={styles.displayImage}
-              resizeMode="cover"
-            />
-          </TouchableOpacity>
-        ))}
-
-      </View>
-    </ScrollView>
+    <FlatList
+      data={gamePages}
+      keyExtractor={(item) => item.id.toString()}
+      numColumns={4}
+      contentContainerStyle={styles.mainView}
+      renderItem={({ item: gamePage }) => (
+      <TouchableOpacity onPress={() => navigation.navigate('gameInfo', { gamePage })} key={gamePage.id}>
+        <Image
+        source={{ uri: 'https:' + gamePage?.cover?.url?.replace('t_thumb', 't_cover_big_2x') }}
+        style={styles.displayImage}
+        resizeMode="cover"
+        />
+      </TouchableOpacity>
+      )}
+    />
   );
 }
 
@@ -78,7 +79,10 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   mainView: {
-    backgroundColor: '#232323', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center',
+    backgroundColor: '#232323', 
+    flexDirection: 'row', 
+    flexWrap: 'wrap', 
+    justifyContent: 'center',
   },
   displayImage: {
     width: 85,

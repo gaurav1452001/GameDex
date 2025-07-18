@@ -1,28 +1,9 @@
-import { Stack } from "expo-router";
-// import {DrawerContentScrollView,DrawerItemList,} from '@react-navigation/drawer';
-import { Image, Text, StyleSheet } from 'react-native';
-import GameInfo from './gameInfo';
-import SearchGame from './searchGame';
-import SignIn from './signIn';
 import { Drawer } from 'expo-router/drawer';
+// import { ClerkProvider } from '@clerk/clerk-expo'
+// import { tokenCache } from '@clerk/clerk-expo/token-cache'
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 export default function RootLayout() {
   return (
-    // <Stack>
-    //   <Stack.Screen
-    //     name="(tabs)"
-    //     options={{
-    //       headerShown: true,
-    //       title: "Popular",
-    //       headerTitleAlign: "left",
-    //       headerStyle: { backgroundColor: "#181818" },
-    //       headerTitleStyle: { color: "#fff", fontWeight: "bold", fontSize: 21 },
-    //       headerTintColor: "#fff",
-    //       headerShadowVisible: false,
-    //     }}
-    //   />
-    //   <Stack.Screen name="gameInfo" options={{headerShown:false}} />
-    // </Stack>
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Drawer
         screenOptions={{
@@ -33,7 +14,8 @@ export default function RootLayout() {
           headerTintColor: "#fff",
           drawerStyle: { backgroundColor: "#181818" },
           drawerActiveTintColor: "#fff",
-          drawerInactiveTintColor: "#b0b0b0",
+          drawerInactiveTintColor: "#734949ff",
+          
         }}
       >
         <Drawer.Screen name="(tabs)" options={{ headerShown: true, drawerLabel: 'Home', }} />

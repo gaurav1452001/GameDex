@@ -7,7 +7,7 @@ export const getGames = async (req, res) => {
                 "Client-ID": process.env.client_id,
                 Authorization: `Bearer ${process.env.bearer_token}`,
             },
-            body: "fields name,rating,cover.url,summary,screenshots.url,category,platforms,first_release_date,involved_companies.company.name; sort rating desc;limit 100;where category = 0 & platforms = 48;"
+            body: "fields name,rating,cover.url,summary,screenshots.url,category,platforms,first_release_date,involved_companies.company.name; sort rating desc;limit 50;where category = 0 & platforms = 48;"
         });
         const data = await response.json();
         console.log(data);
@@ -73,6 +73,40 @@ export const getPlaytime = async (req, res) => {
             .json({ message: "Failed to fetch playtime", error: err.message });
     }
 };
+
+export const getPopularGames = async (req, res) => {
+    try {
+        // Fetch popular game IDs first
+        const popularityResponse = await fetch("https://api.igdb.com/v4/popularity_primitives", {
+            method: "POST",
+            headers: {
+            Accept: "application/json",
+            "Client-ID": process.env.client_id,
+            Authorization: `Bearer ${process.env.bearer_token}`,
+            },
+            body: "fields game_id,value,popularity_type; sort value desc; limit 50; where popularity_type = 3;"
+        });
+        const popularityData = await popularityResponse.json();
+        const gameIds = popularityData.map(item => item.game_id).filter(Boolean);
+        // Fetch game details using the IDs
+        const gamesResponse = await fetch("https://api.igdb.com/v4/games", {
+            method: "POST",
+            headers: {
+            Accept: "application/json",
+            "Client-ID": process.env.client_id,
+            Authorization: `Bearer ${process.env.bearer_token}`,
+            },
+            body: `fields name,rating,cover.url,summary,screenshots.url,category,platforms,first_release_date,involved_companies.company.name;limit 50; where id = (${gameIds.join(',')});`
+        });
+        const data = await gamesResponse.json();
+        res.status(200).json(data);
+    } catch (err) {
+        console.error(err);
+        res
+            .status(500)
+            .json({ message: "Failed to fetch popular games", error: err.message });
+    }
+}
 
 
 

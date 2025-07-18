@@ -21,7 +21,7 @@ export default function GameInfo() {
             try {
                 const gameId = gamePage?.id;
                 const ipAddress = process.env.ip_address || '';
-                const response = await axios.get(`http://10.30.203.183:8000/posts/playtime`, {
+                const response = await axios.get(`http://172.19.98.130:8000/posts/playtime`, {
                     params: { game_id: gameId }
                 });
                 setPlaytime(response.data[0]); // API returns array, get first item
