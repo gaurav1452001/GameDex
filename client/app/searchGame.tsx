@@ -7,11 +7,6 @@ export default function SearchGame() {
   const [activeTab, setActiveTab] = useState('GAMES')
   
   const tabs = ['GAMES', 'REVIEWS', 'LISTS', 'DEVELOPERS']
-  const recentSearches = [
-    { term: 'superman', category: 'Games' },
-    { term: 'zelda', category: 'Games' },
-    { term: 'minecraft', category: 'Games' }
-  ]
 
   return (
     <SafeAreaView style={styles.container}>
@@ -54,21 +49,6 @@ export default function SearchGame() {
         </ScrollView>
       </View>
 
-      {/* Recent Searches */}
-      <View style={styles.content}>
-        <Text style={styles.sectionTitle}>RECENT SEARCHES</Text>
-        
-        {recentSearches.map((search, index) => (
-          <TouchableOpacity key={index} style={styles.searchItem}>
-            <View style={styles.searchItemContent}>
-              <Text style={styles.searchTerm}>{search.term}</Text>
-              <View style={styles.categoryTag}>
-                <Text style={styles.categoryText}>{search.category}</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-        ))}
-      </View>
     </SafeAreaView>
   )
 }

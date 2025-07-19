@@ -9,7 +9,7 @@ export default function RootLayout() {
         screenOptions={{
           headerShown: true,
           title: "Popular",
-          headerStyle: { backgroundColor: "#181818" },
+          headerStyle: { backgroundColor: "#181818",shadowOpacity: 0, elevation: 0 },
           headerTitleStyle: { color: "#fff", fontWeight: "bold", fontSize: 21 },
           headerTintColor: "#fff",
           drawerStyle: { backgroundColor: "#181818" },
