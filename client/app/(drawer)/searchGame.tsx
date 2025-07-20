@@ -1,13 +1,54 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, SafeAreaView } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, SafeAreaView, FlatList } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
+import axios from 'axios'
 
 export default function SearchGame() {
   const [searchQuery, setSearchQuery] = useState("")
   const navigation = useNavigation()
+  type Game = {
+    id: number;
+    cover: {
+      id: number;
+      url: string;
+    };
+    name: string;
+    rating: number;
+    screenshots: Array<{
+      id: number;
+      url: string;
+    }>;
+    involved_companies: Array<{
+      id: number;
+      company: {
+        id: number;
+        name: string;
+      };
+    }>;
+    first_release_date: number;
+    summary: string;
+  };
+  const [gamePages, setGamePages] = useState<Game[]>([]);
 
-  const tabs = ['GAMES', 'REVIEWS', 'LISTS', 'DEVELOPERS']
+  useEffect(() => {
+    const fetchArts = async () => {
+      try {
+        const response = await axios.get(`http://172.19.98.130:8000/posts/search`, {
+          params: {
+            searchText: searchQuery
+          }
+        });
+        // Set arts from response
+        setGamePages(response.data);
+      } catch (error) {
+        console.error('Error fetching arts:', error);
+      }
+    };
+
+    fetchArts();
+  }, [searchQuery]);
+  // const tabs = ['GAMES', 'REVIEWS', 'LISTS', 'DEVELOPERS']
 
   return (
     <SafeAreaView style={styles.container}>
@@ -16,15 +57,62 @@ export default function SearchGame() {
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search..."
-            placeholderTextColor="#666"
-            autoCapitalize='none'
-            autoCorrect={false}
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-          />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search..."
+          placeholderTextColor="#666"
+          autoCapitalize='none'
+          autoFocus={true}
+          autoCorrect={false}
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          onSubmitEditing={() => {
+            if (searchQuery.trim()) {
+              // Add your API request here
+              console.log('Searching for:', searchQuery)
+              // Example: searchAPI(searchQuery)
+            }
+          }}
+          returnKeyType="search"
+        />
+      </View>
+      <View style={styles.view}>
+        <FlatList
+          data={gamePages}
+          keyExtractor={(item) => item.id.toString()}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.mainView}
+          renderItem={({ item: gamePage }) => (
+            <TouchableOpacity onPress={() => navigation.navigate('gameInfo', { gamePage })} key={gamePage.id}>
+              <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+                <Image
+                  source={{ uri: 'https:' + gamePage?.cover?.url?.replace('t_thumb', 't_cover_big_2x') }}
+                  style={styles.displayImage}
+                  resizeMode="cover"
+                />
+                <View style={{ flex: 1, flexDirection: 'column', marginLeft: 10 }}>
+                  <Text style={{ color: '#fff', fontSize: 15,fontWeight: 'bold' }}>{gamePage?.name}</Text>
+                  <Text style={{ color: '#aaa', fontSize: 12, fontWeight: 'bold' }}>
+                    {gamePage?.involved_companies?.[0]?.company?.name}
+                    {gamePage?.involved_companies?.length > 1 && ', '}
+                    {gamePage?.involved_companies?.[1]?.company?.name}
+                  </Text>
+                  <Text style={{ color: '#aaa', fontSize: 12 }}>
+                    {gamePage?.first_release_date
+                      ? new Date(gamePage?.first_release_date * 1000).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })
+                      : null
+                    }
+                  </Text>
+                </View>
+              </View>
+              <View style={{ height: 1, backgroundColor: '#333', marginVertical: 15 }} />
+            </TouchableOpacity>
+          )}
+        />
       </View>
 
       {/* Navigation Tabs */}
@@ -55,6 +143,23 @@ export default function SearchGame() {
 }
 
 const styles = StyleSheet.create({
+  view: {
+    flex: 1,
+    backgroundColor: '#181818',
+    padding: 16,
+  },
+  mainView: {
+    backgroundColor: '#181818',
+    flexDirection: 'column',
+    justifyContent: 'center',
+  },
+  displayImage: {
+    width: 57,
+    height: 84.873,
+    marginRight: 4,
+    borderWidth: 1,
+    borderColor: 'gray',
+  },
   container: {
     flex: 1,
     backgroundColor: '#1a1a1a',

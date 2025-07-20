@@ -4,8 +4,6 @@ import { useEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 export default function HomeScreen() {
-  const route = useRoute();
-    console.log("Current route:", route.name);
   type Game = {
     id: number;
     cover: {

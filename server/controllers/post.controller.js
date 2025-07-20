@@ -112,7 +112,7 @@ export const getPopularGames = async (req, res) => {
 export const searchGames = async (req, res) => {
     try {
         // Fetch popular game IDs first
-        const searchText = "red dead";
+        const { searchText } = req.query;
         const popularityResponse = await fetch("https://api.igdb.com/v4/games/", {
             method: "POST",
             headers: {
@@ -120,7 +120,7 @@ export const searchGames = async (req, res) => {
             "Client-ID": process.env.client_id,
             Authorization: `Bearer ${process.env.bearer_token}`,
             },
-            body: `fields name;search "${searchText}";limit 50;`
+            body: `fields name,rating,cover.url,summary,screenshots.url,category,platforms,first_release_date,involved_companies.company.name;search "${searchText}";limit 50;`
         });
         const data = await popularityResponse.json();
         res.status(200).json(data);

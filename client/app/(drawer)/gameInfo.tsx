@@ -20,7 +20,6 @@ export default function GameInfo() {
         const fetchPlaytime = async () => {
             try {
                 const gameId = gamePage?.id;
-                const ipAddress = process.env.ip_address || '';
                 const response = await axios.get(`http://172.19.98.130:8000/posts/playtime`, {
                     params: { game_id: gameId }
                 });
