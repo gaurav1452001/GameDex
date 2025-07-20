@@ -16,8 +16,14 @@ export default function Index() {
                     colors={['transparent', '#181818']} // Replace #ffffff with your background color
                     style={styles.gradient}
                 />
+                
             </View>
             <View style={{ flex: 1, paddingHorizontal: 20 }}>
+                <Image
+                    source={require('../assets/images/logo.png')}
+                    style={styles.logo}
+                    resizeMode="cover"
+                />
                 <Text style={styles.mainText}>
                     GameDex
                 </Text>
@@ -48,8 +54,6 @@ const styles = StyleSheet.create({
         fontSize: 40,
         fontWeight: 'bold',
         textAlign: 'center',
-        marginTop: 20,
-        
     },
     introText: {
         color: '#b1b1b1ff',
@@ -82,6 +86,12 @@ const styles = StyleSheet.create({
     image: {
         width: '100%',
         height: 400,
+    },
+    logo:{
+        width: 180,
+        height: 120,
+        alignSelf: 'center',
+        marginTop: -100,
     },
     gradient: {
         position: 'absolute',
