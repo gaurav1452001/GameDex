@@ -20,7 +20,6 @@ export default function SearchGame() {
             style={styles.searchInput}
             placeholder="Search..."
             placeholderTextColor="#666"
-            clearButtonMode='always'
             autoCapitalize='none'
             autoCorrect={false}
             value={searchQuery}

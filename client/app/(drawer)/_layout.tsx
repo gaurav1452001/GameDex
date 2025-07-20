@@ -2,8 +2,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { Drawer } from 'expo-router/drawer';
 import { TouchableOpacity } from 'react-native';
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-export default function RootLayout() {
+import { router } from 'expo-router';
 
+
+export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Drawer
@@ -17,8 +19,8 @@ export default function RootLayout() {
           drawerActiveTintColor: "#fff",
           drawerInactiveTintColor: "#734949ff",
           headerRight: () => (
-            <TouchableOpacity>
-                    <Ionicons style={{ marginRight: 15 }} name="search-outline" size={20} color="#fff" />
+          <TouchableOpacity onPress={() => router.push('/(drawer)/searchGame')}>
+                    <Ionicons style={{ marginRight: 20, marginTop: 2, width: 30, height: 30, padding: 5 }} name="search-outline" size={23} color="#fff" />
           </TouchableOpacity>
         ),
         

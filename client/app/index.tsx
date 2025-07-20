@@ -58,17 +58,15 @@ const styles = StyleSheet.create({
         marginVertical: 10,
     },
     skipButton: {
-        backgroundColor: '#373a42ff',
+        backgroundColor: '#484b55ff',
         padding: 10,
         marginVertical: 6,
         borderRadius: 5,
-        
     },
     ButtonText: {
-        color: '#d3ceceff',
+        color: '#e7e3e3ff',
         fontSize: 16,
         textAlign: 'center',
-        
     },
     infoText: {
         color: '#747373ff',

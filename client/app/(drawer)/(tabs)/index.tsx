@@ -1,9 +1,11 @@
 import { View, StyleSheet, ScrollView, Image, TouchableOpacity, FlatList } from "react-native";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 export default function HomeScreen() {
+  const route = useRoute();
+    console.log("Current route:", route.name);
   type Game = {
     id: number;
     cover: {
