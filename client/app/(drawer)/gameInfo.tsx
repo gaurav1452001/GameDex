@@ -42,7 +42,7 @@ export default function GameInfo() {
                 <Image
                     source={hasScreenshot
                         ? { uri: 'https:' + gamePage.screenshots[0].url.replace('t_thumb', 't_1080p_2x') }
-                        : require('../assets/images/login_screen_image.png')
+                        : require('../../assets/images/login_screen_image.png')
                     }
                     style={{
                         width: '100%',

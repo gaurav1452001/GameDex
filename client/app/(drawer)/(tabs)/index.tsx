@@ -47,6 +47,7 @@ export default function HomeScreen() {
   const navigation = useNavigation();
 
   return (
+    <View style={styles.view}>
     <FlatList
       data={gamePages}
       keyExtractor={(item) => item.id.toString()}
@@ -62,6 +63,7 @@ export default function HomeScreen() {
       </TouchableOpacity>
       )}
     />
+    </View>
   );
 }
 
@@ -70,6 +72,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: '#181818', 
   },
   button: {
     width: 100,

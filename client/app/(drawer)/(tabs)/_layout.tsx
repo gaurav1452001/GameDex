@@ -1,7 +1,8 @@
 // import { Tabs } from "expo-router";
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import HomeScreen from './index';
-import ProfileScreen from './login';
+import ReviewsScreen from './reviews';
+import ListsScreen from './lists';
 const Tab = createMaterialTopTabNavigator();
 
 export default function MyTabs() {
@@ -15,9 +16,8 @@ export default function MyTabs() {
       }}
     >
       <Tab.Screen name="Games" component={HomeScreen} options={{ title: "GAMES" }} />
-      <Tab.Screen name="Reviews" component={ProfileScreen} options={{ title: "REVIEWS" }} />
-      <Tab.Screen name="Lists" component={ProfileScreen} options={{ title: "LISTS" }} />
-      <Tab.Screen name="News" component={ProfileScreen} options={{ title: "NEWS" }} />
+      <Tab.Screen name="Reviews" component={ReviewsScreen} options={{ title: "REVIEWS" }} />
+      <Tab.Screen name="Lists" component={ListsScreen} options={{ title: "LISTS" }} />
     </Tab.Navigator>
   );
 }

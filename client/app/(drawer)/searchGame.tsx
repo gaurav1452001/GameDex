@@ -1,33 +1,35 @@
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, SafeAreaView } from 'react-native'
 import React, { useState } from 'react'
 import { Ionicons } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native'
 
 export default function SearchGame() {
-  const [searchQuery, setSearchQuery] = useState('')
-  const [activeTab, setActiveTab] = useState('GAMES')
-  
+  const [searchQuery, setSearchQuery] = useState("")
+  const navigation = useNavigation()
+
   const tabs = ['GAMES', 'REVIEWS', 'LISTS', 'DEVELOPERS']
 
   return (
     <SafeAreaView style={styles.container}>
       {/* Header with back button and search */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
-        <View style={styles.searchContainer}>
           <TextInput
             style={styles.searchInput}
             placeholder="Search..."
             placeholderTextColor="#666"
+            clearButtonMode='always'
+            autoCapitalize='none'
+            autoCorrect={false}
             value={searchQuery}
             onChangeText={setSearchQuery}
           />
-        </View>
       </View>
 
       {/* Navigation Tabs */}
-      <View style={styles.tabContainer}>
+      {/* <View style={styles.tabContainer}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {tabs.map((tab, index) => (
             <TouchableOpacity
@@ -47,7 +49,7 @@ export default function SearchGame() {
             </TouchableOpacity>
           ))}
         </ScrollView>
-      </View>
+      </View> */}
 
     </SafeAreaView>
   )
@@ -62,20 +64,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingTop: 50,
+    paddingBottom: 10,
     backgroundColor: '#2a2a2a',
   },
   backButton: {
-    marginRight: 16,
+    marginRight: 25,
   },
   searchContainer: {
     flex: 1,
   },
   searchInput: {
-    backgroundColor: 'transparent',
     color: '#fff',
-    fontSize: 18,
-    fontWeight: '400',
+    fontSize: 15,
+    width: '80%',
+    paddingHorizontal: 10,
+    backgroundColor: '#333',
   },
   tabContainer: {
     backgroundColor: '#1a1a1a',
