@@ -20,8 +20,7 @@ export default function GameInfo() {
         const fetchPlaytime = async () => {
             try {
                 const gameId = gamePage?.id;
-                const ipAddress = process.env.ip_address || '';
-                const response = await axios.get(`http://10.30.203.183:8000/posts/playtime`, {
+                const response = await axios.get(`http://172.19.98.130:8000/posts/playtime`, {
                     params: { game_id: gameId }
                 });
                 setPlaytime(response.data[0]); // API returns array, get first item
@@ -42,7 +41,7 @@ export default function GameInfo() {
                 <Image
                     source={hasScreenshot
                         ? { uri: 'https:' + gamePage.screenshots[0].url.replace('t_thumb', 't_1080p_2x') }
-                        : require('../assets/images/login_screen_image.png')
+                        : require('../../assets/images/login_screen_image.png')
                     }
                     style={{
                         width: '100%',
