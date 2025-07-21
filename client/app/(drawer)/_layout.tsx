@@ -29,7 +29,7 @@ export default function RootLayout() {
         <Drawer.Screen name="(tabs)" options={{ headerShown: true, drawerLabel: 'Home', }} />
         <Drawer.Screen name="searchGame"  options={{ headerShown: false, drawerLabel: 'Search', }} />
         <Drawer.Screen name="signIn" options={{ headerShown: false, drawerLabel: 'Sign In', }} />
-        <Drawer.Screen name="gameInfo" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
+        <Drawer.Screen name="games/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
       </Drawer>
     </GestureHandlerRootView>
     

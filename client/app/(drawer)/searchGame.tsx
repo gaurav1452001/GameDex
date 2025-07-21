@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import axios from 'axios'
+import { router } from 'expo-router'
 
 export default function SearchGame() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -34,12 +35,11 @@ export default function SearchGame() {
   useEffect(() => {
     const fetchArts = async () => {
       try {
-        const response = await axios.get(`http://172.19.98.130:8000/posts/search`, {
+        const response = await axios.get(`http://172.19.97.72:8000/posts/search`, {
           params: {
             searchText: searchQuery
           }
         });
-        // Set arts from response
         setGamePages(response.data);
       } catch (error) {
         console.error('Error fetching arts:', error);
@@ -83,7 +83,7 @@ export default function SearchGame() {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.mainView}
           renderItem={({ item: gamePage }) => (
-            <TouchableOpacity onPress={() => navigation.navigate('gameInfo', { gamePage })} key={gamePage.id}>
+            <TouchableOpacity onPress={() => router.push(`/(drawer)/games/${gamePage.id}`)} key={gamePage.id}>
               <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
                 <Image
                   source={{ uri: 'https:' + gamePage?.cover?.url?.replace('t_thumb', 't_cover_big_2x') }}
