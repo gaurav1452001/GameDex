@@ -6,6 +6,7 @@ import { TouchableOpacity, View } from 'react-native'
 import { Session } from '@supabase/supabase-js'
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null)
@@ -21,11 +22,27 @@ export default function App() {
   }, [])
 
   return (
-    <View>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
+    <SafeAreaView style={styles.container}>
+      <View>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
-      {session && session.user ? <Account key={session.user.id} session={session} /> : <Auth />}
-    </View>
+        {session && session.user ? <Account key={session.user.id} session={session} /> : <Auth />}
+      </View>
+    </SafeAreaView>
   )
+}
+const styles = {
+  container: {
+    flex: 1,
+    backgroundColor: '#181818',
+    padding: 20,
+  },
+  backButton: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    zIndex: 1,
+    padding: 10,
+  },
 }
