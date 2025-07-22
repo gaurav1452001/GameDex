@@ -1,9 +1,14 @@
 import { View, StyleSheet, ScrollView, Image, TouchableOpacity, FlatList } from "react-native";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { router } from 'expo-router';
+import LottieView from 'lottie-react-native';
+
 
 export default function HomeScreen() {
+  const animation = useRef<LottieView>(null);
+  
   type Game = {
     id: number;
     cover: {
@@ -27,24 +32,44 @@ export default function HomeScreen() {
     summary: string;
   };
   const [gamePages, setGamePages] = useState<Game[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
 
   useEffect(() => {
     const fetchArts = async () => {
+      setIsLoading(true);
       try {
         //get the ip of the device running the server
         const ipAddress = process.env.ip_address||'';
-        const response = await axios.get(`http://172.19.98.130:8000/posts/popular`);
+        const response = await axios.get(`http://172.19.97.72:8000/posts/popular`);
         // Set arts from response
         setGamePages(response.data);
       } catch (error) {
         console.error('Error fetching arts:', error);
+      } finally{
+        setIsLoading(false);
       }
     };
 
     fetchArts();
   }, []);
 
-  const navigation = useNavigation();
+  if (isLoading) {
+          return (
+              <View style={{ backgroundColor: '#181818', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                  <LottieView
+                      autoPlay
+                      ref={animation}
+                      style={{
+                          width: 200,
+                          height: 200,
+                          backgroundColor: '#181818',
+                      }}
+                      source={require('../../../assets/animations/loading2.json')}
+                  />
+              </View>
+          );
+  }
 
   return (
     <View style={styles.view}>
@@ -54,7 +79,7 @@ export default function HomeScreen() {
       numColumns={4}
       contentContainerStyle={styles.mainView}
       renderItem={({ item: gamePage }) => (
-      <TouchableOpacity onPress={() => navigation.navigate('gameInfo', { gamePage })} key={gamePage.id}>
+      <TouchableOpacity onPress={() => router.push(`/(drawer)/games/${gamePage.id}`)} key={gamePage.id}>
         <Image
         source={{ uri: 'https:' + gamePage?.cover?.url?.replace('t_thumb', 't_cover_big_2x') }}
         style={styles.displayImage}
@@ -83,8 +108,6 @@ const styles = StyleSheet.create({
   },
   mainView: {
     backgroundColor: '#232323', 
-    flexDirection: 'row', 
-    flexWrap: 'wrap', 
     justifyContent: 'center',
   },
   displayImage: {

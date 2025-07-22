@@ -1,39 +1,80 @@
 import { Text, View, ScrollView, Image, StyleSheet } from "react-native";
-import { useRoute } from "@react-navigation/native";
 import { LinearGradient } from 'expo-linear-gradient';
-import { useEffect, useState } from "react";
+import { useLocalSearchParams } from 'expo-router';
+import { useEffect, useState, useRef } from "react";
+import LottieView from 'lottie-react-native';
+
 import axios from "axios";
 
-export default function GameInfo() {
-    const route = useRoute();
-    const { gamePage } = route?.params || {};
 
+export default function GameInfo() {
+    const animation = useRef<LottieView>(null);
+    const { id } = useLocalSearchParams();
     type Play = {
         completely: number;
         game_id: number;
         hastily: number;
         normally: number;
     }
+
+    type Game = {
+        id: number;
+        cover: {
+            id: number;
+            url: string;
+        };
+        name: string;
+        rating: number;
+        screenshots: Array<{
+            id: number;
+            url: string;
+        }>;
+        involved_companies: Array<{
+            id: number;
+            company: {
+                id: number;
+                name: string;
+            };
+        }>;
+        first_release_date: number;
+        summary: string;
+    };
+
     const [playtime, setPlaytime] = useState<Play>();
+    const [gamePage, setGamePage] = useState<Game>();
 
     useEffect(() => {
         const fetchPlaytime = async () => {
+            setGamePage(undefined); // Clear previous game data
             try {
-                const gameId = gamePage?.id;
-                const response = await axios.get(`http://172.19.98.130:8000/posts/playtime`, {
-                    params: { game_id: gameId }
-                });
-                setPlaytime(response.data[0]); // API returns array, get first item
+                const response = await axios.get(`http://172.19.97.72:8000/posts/search/${id}`);
                 console.log('Playtime data:', response.data);
+                setGamePage(response.data);
             } catch (error) {
                 console.error('Error fetching playtime:', error);
             }
         };
         fetchPlaytime();
-    }, []);
+    }, [id]);
 
     const hasScreenshot = gamePage?.screenshots && gamePage.screenshots[0]?.url;
-    // console.log('Has screenshot:', hasScreenshot);
+
+    if (!gamePage) {
+        return (
+            <View style={{ backgroundColor: '#181818', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                <LottieView
+                    autoPlay
+                    ref={animation}
+                    style={{
+                        width: 200,
+                        height: 200,
+                        backgroundColor: '#181818',
+                    }}
+                    source={require('../../../assets/animations/loading3.json')}
+                />
+            </View>
+        );
+    }
 
     return (
         <ScrollView style={{ backgroundColor: '#181818' }}>
@@ -41,7 +82,7 @@ export default function GameInfo() {
                 <Image
                     source={hasScreenshot
                         ? { uri: 'https:' + gamePage.screenshots[0].url.replace('t_thumb', 't_1080p_2x') }
-                        : require('../../assets/images/login_screen_image.png')
+                        : require('../../../assets/images/login_screen_image.png')
                     }
                     style={{
                         width: '100%',
@@ -65,7 +106,7 @@ export default function GameInfo() {
                     <View>
                         <Text style={styles.textColor2}>
                             {gamePage?.involved_companies?.[0]?.company?.name}
-                            {gamePage?.involved_companies?.length > 1 && ', '}
+                            {gamePage?.involved_companies?.length && gamePage.involved_companies.length > 1 && ', '}
                             {gamePage?.involved_companies?.[1]?.company?.name}
                         </Text>
                     </View>
