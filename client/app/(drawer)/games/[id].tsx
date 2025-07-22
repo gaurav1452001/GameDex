@@ -42,11 +42,9 @@ export default function GameInfo() {
 
     const [playtime, setPlaytime] = useState<Play>();
     const [gamePage, setGamePage] = useState<Game>();
-    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const fetchPlaytime = async () => {
-            setIsLoading(true);
             setGamePage(undefined); // Clear previous game data
             try {
                 const response = await axios.get(`http://172.19.97.72:8000/posts/search/${id}`);
@@ -54,8 +52,6 @@ export default function GameInfo() {
                 setGamePage(response.data);
             } catch (error) {
                 console.error('Error fetching playtime:', error);
-            } finally {
-                setIsLoading(false);
             }
         };
         fetchPlaytime();
@@ -63,7 +59,7 @@ export default function GameInfo() {
 
     const hasScreenshot = gamePage?.screenshots && gamePage.screenshots[0]?.url;
 
-    if (isLoading) {
+    if (!gamePage) {
         return (
             <View style={{ backgroundColor: '#181818', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
                 <LottieView
@@ -74,7 +70,7 @@ export default function GameInfo() {
                         height: 200,
                         backgroundColor: '#181818',
                     }}
-                    source={require('../../../assets/animations/marioloading.json')}
+                    source={require('../../../assets/animations/loading3.json')}
                 />
             </View>
         );

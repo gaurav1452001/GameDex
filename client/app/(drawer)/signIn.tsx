@@ -8,12 +8,12 @@ import { Ionicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-export default function App() {
+export default function signIn() {
   const [session, setSession] = useState<Session | null>(null)
   const navigation = useNavigation()
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
+      setSession(session) 
     })
 
     supabase.auth.onAuthStateChange((_event, session) => {
