@@ -108,6 +108,54 @@ export const getPopularGames = async (req, res) => {
     }
 }
 
+//search
+export const searchGames = async (req, res) => {
+    try {
+        // Fetch popular game IDs first
+        const { searchText } = req.query;
+        const popularityResponse = await fetch("https://api.igdb.com/v4/games/", {
+            method: "POST",
+            headers: {
+            Accept: "application/json",
+            "Client-ID": process.env.client_id,
+            Authorization: `Bearer ${process.env.bearer_token}`,
+            },
+            body: `fields name,rating,cover.url,summary,screenshots.url,category,platforms,first_release_date,involved_companies.company.name;search "${searchText}";limit 50;`
+        });
+        const data = await popularityResponse.json();
+        res.status(200).json(data);
+    } catch (err) {
+        console.error(err);
+        res
+            .status(500)
+            .json({ message: "Failed to fetch popular games", error: err.message });
+    }
+}
+
+//get information about a specific game
+export const getGameInfo = async (req, res) => {
+    try {
+        // Fetch popular game IDs first
+        const { id } = req.params;
+        const gameInfo = await fetch("https://api.igdb.com/v4/games/", {
+            method: "POST",
+            headers: {
+            Accept: "application/json",
+            "Client-ID": process.env.client_id,
+            Authorization: `Bearer ${process.env.bearer_token}`,
+            },
+            body: `fields name,rating,cover.url,summary,screenshots.url,category,platforms,first_release_date,involved_companies.company.name; where id = ${id};`
+        });
+        const data = await gameInfo.json();
+        res.status(200).json(data[0]);
+    } catch (err) {
+        console.error(err);
+        res
+            .status(500)
+            .json({ message: "Failed to fetch popular games", error: err.message });
+    }
+}
+
 
 
 

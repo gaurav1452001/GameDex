@@ -1,30 +1,10 @@
-import { Drawer } from 'expo-router/drawer';
-// import { ClerkProvider } from '@clerk/clerk-expo'
-// import { tokenCache } from '@clerk/clerk-expo/token-cache'
+import { Slot, Stack } from 'expo-router';
+import 'react-native-gesture-handler';
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-export default function RootLayout() {
+export default function AppLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <Drawer
-        screenOptions={{
-          headerShown: true,
-          title: "Popular",
-          headerStyle: { backgroundColor: "#181818" },
-          headerTitleStyle: { color: "#fff", fontWeight: "bold", fontSize: 21 },
-          headerTintColor: "#fff",
-          drawerStyle: { backgroundColor: "#181818" },
-          drawerActiveTintColor: "#fff",
-          drawerInactiveTintColor: "#734949ff",
-          
-        }}
-      >
-        <Drawer.Screen name="(tabs)" options={{ headerShown: true, drawerLabel: 'Home', }} />
-        <Drawer.Screen name="searchGame"  options={{ headerShown: false, drawerLabel: 'Search', }} />
-        <Drawer.Screen name="signIn" options={{ headerShown: false, drawerLabel: 'Sign In', }} />
-        <Drawer.Screen name="gameInfo" options={{headerShown: false,drawerItemStyle:{display:'none'}}} />
-      </Drawer>
+      <Slot/>
     </GestureHandlerRootView>
   );
 }
-
-
