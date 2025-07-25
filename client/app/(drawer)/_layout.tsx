@@ -6,7 +6,7 @@ import { router } from 'expo-router';
 import CustomDrawerContent from '../../components/CustomDrawerContent';
 
 
-export default function RootLayout() {
+export default function AppLayout() {
   return (
       <Drawer
         drawerContent={CustomDrawerContent}

@@ -35,7 +35,7 @@ export default function SearchGame() {
   useEffect(() => {
     const fetchArts = async () => {
       try {
-        const response = await axios.get(`http://172.19.97.72:8000/posts/search`, {
+        const response = await axios.get(`http://172.19.97.78:8000/posts/search`, {
           params: {
             searchText: searchQuery
           }

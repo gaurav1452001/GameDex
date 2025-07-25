@@ -1,48 +1,119 @@
-import { useState, useEffect } from 'react'
-import { supabase } from '../../lib/supabase'
-import Auth from '../../components/Auth'
-import Account from '../../components/Account'
-import { TouchableOpacity, View } from 'react-native'
-import { Session } from '@supabase/supabase-js'
-import { Ionicons } from '@expo/vector-icons'
-import { useNavigation } from '@react-navigation/native'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import React, { useCallback, useEffect } from 'react'
+import * as WebBrowser from 'expo-web-browser'
+import * as AuthSession from 'expo-auth-session'
+import { StyleSheet } from "react-native";
+import { useSSO,SignedIn, SignedOut, useUser, useClerk } from '@clerk/clerk-expo'
+import { LinearGradient } from 'expo-linear-gradient';
+import { View , Button, Image } from 'react-native'
 
-export default function signIn() {
-  const [session, setSession] = useState<Session | null>(null)
-  const navigation = useNavigation()
+
+export const useWarmUpBrowser = () => {
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session) 
-    })
+    // Preloads the browser for Android devices to reduce authentication load time
+    // See: https://docs.expo.dev/guides/authentication/#improving-user-experience
+    void WebBrowser.warmUpAsync()
+    return () => {
+      // Cleanup: closes browser when component unmounts
+      void WebBrowser.coolDownAsync()
+    }
+  }, [])
+}
 
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-    })
+// Handle any pending authentication sessions
+WebBrowser.maybeCompleteAuthSession()
+
+export default function Page() {
+  useWarmUpBrowser()
+    const { user } = useUser()
+    
+
+
+  // Use the `useSSO()` hook to access the `startSSOFlow()` method
+  const { startSSOFlow } = useSSO()
+  const { signOut } = useClerk()
+  const onPress = useCallback(async () => {
+    try {
+      // Start the authentication process by calling `startSSOFlow()`
+      const { createdSessionId, setActive, signIn, signUp } = await startSSOFlow({
+        strategy: 'oauth_google',
+        // For web, defaults to current path
+        // For native, you must pass a scheme, like AuthSession.makeRedirectUri({ scheme, path })
+        // For more info, see https://docs.expo.dev/versions/latest/sdk/auth-session/#authsessionmakeredirecturioptions
+        redirectUrl: AuthSession.makeRedirectUri(),
+      })
+
+      // If sign in was successful, set the active session
+      if (createdSessionId) {
+        setActive!({ session: createdSessionId })
+      } else {
+        // If there is no `createdSessionId`,
+        // there are missing requirements, such as MFA
+        // Use the `signIn` or `signUp` returned from `startSSOFlow`
+        // to handle next steps
+      }
+    } catch (err) {
+      // See https://clerk.com/docs/custom-flows/error-handling
+      // for more info on error handling
+      console.error(JSON.stringify(err, null, 2))
+    }
   }, [])
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.view}>
       <View>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#fff" />
-        </TouchableOpacity>
-        {session && session.user ? <Account key={session.user.id} session={session} /> : <Auth />}
+        <Image
+          source={require('../../assets/images/halocoverart.png')}
+          style={styles.image}
+          resizeMode="cover"
+        />
+        <LinearGradient
+          colors={['transparent', '#181818']} // Replace #ffffff with your background color
+          style={styles.gradient}
+        />
       </View>
-    </SafeAreaView>
+
+      <View style={styles.lowerView}>
+        <SignedOut>
+          <Button title="Sign in with Google" onPress={onPress} />
+        </SignedOut>
+        <SignedIn>
+          <Image
+            source={{ uri: user?.imageUrl }}
+            style={{
+              width: 80,
+              height: 80,
+              borderRadius: 40,
+              marginBottom: 10,
+            }}
+          />
+          <Button title="Sign Out" onPress={() => signOut()} />
+        </SignedIn>
+      </View>
+ 
+    </View>
   )
 }
-const styles = {
-  container: {
+const styles = StyleSheet.create({
+  view: {
     flex: 1,
     backgroundColor: '#181818',
-    padding: 20,
+    
   },
-  backButton: {
+  lowerView:{
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+    gap: 10,
+  },
+  image: {
+    width: '100%',
+    height: 500,
+    resizeMode: 'cover',
+  },
+  gradient: {
     position: 'absolute',
-    top: 10,
-    left: 10,
-    zIndex: 1,
-    padding: 10,
+    bottom: 0,
+    height: '50%',
+    width: '100%',
   },
-}
+});

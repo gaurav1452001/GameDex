@@ -47,7 +47,7 @@ export default function GameInfo() {
         const fetchPlaytime = async () => {
             setGamePage(undefined); // Clear previous game data
             try {
-                const response = await axios.get(`http://172.19.97.72:8000/posts/search/${id}`);
+                const response = await axios.get(`http://172.19.97.78:8000/posts/search/${id}`);
                 console.log('Playtime data:', response.data);
                 setGamePage(response.data);
             } catch (error) {
