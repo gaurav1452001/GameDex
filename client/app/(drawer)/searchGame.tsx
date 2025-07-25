@@ -35,7 +35,8 @@ export default function SearchGame() {
   useEffect(() => {
     const fetchArts = async () => {
       try {
-        const response = await axios.get(`http://172.19.97.78:8000/posts/search`, {
+        const ip_address = process.env.EXPO_PUBLIC_IP_ADDRESS || '';
+        const response = await axios.get(`http://${ip_address}:8000/posts/search`, {
           params: {
             searchText: searchQuery
           }

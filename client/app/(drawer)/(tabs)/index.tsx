@@ -40,8 +40,8 @@ export default function HomeScreen() {
       setIsLoading(true);
       try {
         //get the ip of the device running the server
-        const ipAddress = process.env.ip_address||'';
-        const response = await axios.get(`http://172.19.97.78:8000/posts/popular`);
+        const ip_Address = process.env.EXPO_PUBLIC_IP_ADDRESS||'';
+        const response = await axios.get(`http://${ip_Address}:8000/posts/popular`);
         // Set arts from response
         setGamePages(response.data);
       } catch (error) {
