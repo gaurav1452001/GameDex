@@ -5,6 +5,7 @@ import { StyleSheet } from "react-native";
 import { useSSO,SignedIn, SignedOut, useUser, useClerk } from '@clerk/clerk-expo'
 import { LinearGradient } from 'expo-linear-gradient';
 import { View , Button, Image } from 'react-native'
+import {SignOutButton} from '../../components/SignOutButton'
 
 
 export const useWarmUpBrowser = () => {
@@ -30,7 +31,6 @@ export default function Page() {
 
   // Use the `useSSO()` hook to access the `startSSOFlow()` method
   const { startSSOFlow } = useSSO()
-  const { signOut } = useClerk()
   const onPress = useCallback(async () => {
     try {
       // Start the authentication process by calling `startSSOFlow()`
@@ -86,7 +86,7 @@ export default function Page() {
               marginBottom: 10,
             }}
           />
-          <Button title="Sign Out" onPress={() => signOut()} />
+          <SignOutButton/>
         </SignedIn>
       </View>
  
