@@ -2,10 +2,10 @@ import React, { useCallback, useEffect } from 'react'
 import * as WebBrowser from 'expo-web-browser'
 import * as AuthSession from 'expo-auth-session'
 import { StyleSheet } from "react-native";
-import { useSSO,SignedIn, SignedOut, useUser, useClerk } from '@clerk/clerk-expo'
+import { useSSO, SignedIn, SignedOut, useUser, useClerk } from '@clerk/clerk-expo'
 import { LinearGradient } from 'expo-linear-gradient';
-import { View , Button, Image } from 'react-native'
-import {SignOutButton} from '../../components/SignOutButton'
+import { View, Button, Image } from 'react-native'
+import { SignOutButton } from '../../components/SignOutButton'
 
 
 export const useWarmUpBrowser = () => {
@@ -25,8 +25,8 @@ WebBrowser.maybeCompleteAuthSession()
 
 export default function Page() {
   useWarmUpBrowser()
-    const { user } = useUser()
-    
+  const { user } = useUser()
+
 
 
   // Use the `useSSO()` hook to access the `startSSOFlow()` method
@@ -39,7 +39,7 @@ export default function Page() {
         // For web, defaults to current path
         // For native, you must pass a scheme, like AuthSession.makeRedirectUri({ scheme, path })
         // For more info, see https://docs.expo.dev/versions/latest/sdk/auth-session/#authsessionmakeredirecturioptions
-        redirectUrl: AuthSession.makeRedirectUri(),
+        redirectUrl: AuthSession.makeRedirectUri({ path: '/' }),
       })
 
       // If sign in was successful, set the active session
@@ -86,10 +86,10 @@ export default function Page() {
               marginBottom: 10,
             }}
           />
-          <SignOutButton/>
+          <SignOutButton />
         </SignedIn>
       </View>
- 
+
     </View>
   )
 }
@@ -97,9 +97,9 @@ const styles = StyleSheet.create({
   view: {
     flex: 1,
     backgroundColor: '#181818',
-    
+
   },
-  lowerView:{
+  lowerView: {
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 20,
