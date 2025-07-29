@@ -1,8 +1,8 @@
 // import { Tabs } from "expo-router";
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import HomeScreen from './index';
-import ReviewsScreen from './reviews';
-import ListsScreen from './lists';
+import ReviewsScreen from './global_reviews';
+import ListsScreen from './global_lists';
 const Tab = createMaterialTopTabNavigator();
 
 export default function MyTabs() {

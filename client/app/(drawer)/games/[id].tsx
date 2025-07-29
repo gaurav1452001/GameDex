@@ -47,7 +47,8 @@ export default function GameInfo() {
         const fetchPlaytime = async () => {
             setGamePage(undefined); // Clear previous game data
             try {
-                const response = await axios.get(`http://172.19.97.72:8000/posts/search/${id}`);
+                const ip_address = process.env.EXPO_PUBLIC_IP_ADDRESS || '';
+                const response = await axios.get(`http://${ip_address}:8000/posts/search/${id}`);
                 console.log('Playtime data:', response.data);
                 setGamePage(response.data);
             } catch (error) {
