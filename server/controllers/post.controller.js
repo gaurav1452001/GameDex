@@ -144,7 +144,7 @@ export const getGameInfo = async (req, res) => {
             "Client-ID": process.env.client_id,
             Authorization: `Bearer ${process.env.bearer_token}`,
             },
-            body: `fields name,rating,cover.url,summary,screenshots.url,category,platforms,first_release_date,involved_companies.company.name; where id = ${id};`
+            body: `fields name,rating,cover.url,summary,screenshots.url,category,platforms,first_release_date,involved_companies.company.name,similar_games.cover.url; where id = ${id};`
         });
         const data = await gameInfo.json();
         res.status(200).json(data[0]);

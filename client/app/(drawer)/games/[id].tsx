@@ -1,6 +1,6 @@
-import { Text, View, ScrollView, Image, StyleSheet } from "react-native";
+import { Text, View, ScrollView, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState, useRef } from "react";
 import LottieView from 'lottie-react-native';
 
@@ -38,6 +38,13 @@ export default function GameInfo() {
         }>;
         first_release_date: number;
         summary: string;
+        similar_games: Array<{
+            id: number;
+            cover: {
+                id: number;
+                url: string;
+            };
+        }>
     };
 
     const [playtime, setPlaytime] = useState<Play>();
@@ -136,11 +143,29 @@ export default function GameInfo() {
             <Text numberOfLines={3} style={styles.textColor3}>
                 {gamePage?.summary}
             </Text>
-            <View style={{ margin: 16 }}>
+            <View style={{ marginTop: 16 }}>
                 <Text style={styles.textColor2}>
                     {playtime?.normally ? `${(playtime.normally / 3600).toFixed(0)} hours` : ''}
                 </Text>
             </View>
+            <View style={{ height: 1, backgroundColor: '#333' }} />
+            <View>
+                <Text style={{fontSize: 15, color: 'white', margin: 16}}>
+                    SIMILAR GAMES
+                </Text>
+                <ScrollView style={{ marginHorizontal: 16 }} horizontal showsHorizontalScrollIndicator={false}>
+                    {gamePage?.similar_games?.map((game) => (
+                        <TouchableOpacity key={game.id} onPress={() => router.push(`/(drawer)/games/${game.id}`)}>
+                            <Image
+                                source={{ uri: 'https:' + game.cover.url.replace('t_thumb', 't_cover_big_2x') }}
+                                style={styles.displayImage}
+                                resizeMode="cover"
+                            />
+                        </TouchableOpacity>
+                    ))}
+                </ScrollView>
+            </View>
+
         </ScrollView>
     );
 }
@@ -176,8 +201,9 @@ const styles = StyleSheet.create({
         margin: 16,
     },
     displayImage: {
-        width: 110,
-        height: 149.6,
+        width: 100, // IGDB t_cover_big_2x is 264x374
+        height: 141.66,
+        marginRight: 6,
         borderWidth: 1,
         borderColor: 'gray',
     }

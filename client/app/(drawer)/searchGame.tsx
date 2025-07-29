@@ -49,11 +49,9 @@ export default function SearchGame() {
 
     fetchArts();
   }, [searchQuery]);
-  // const tabs = ['GAMES', 'REVIEWS', 'LISTS', 'DEVELOPERS']
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header with back button and search */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="#fff" />
@@ -69,9 +67,7 @@ export default function SearchGame() {
           onChangeText={setSearchQuery}
           onSubmitEditing={() => {
             if (searchQuery.trim()) {
-              // Add your API request here
               console.log('Searching for:', searchQuery)
-              // Example: searchAPI(searchQuery)
             }
           }}
           returnKeyType="search"
@@ -115,29 +111,6 @@ export default function SearchGame() {
           )}
         />
       </View>
-
-      {/* Navigation Tabs */}
-      {/* <View style={styles.tabContainer}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {tabs.map((tab, index) => (
-            <TouchableOpacity
-              key={tab}
-              style={[
-                styles.tab,
-                activeTab === tab && styles.activeTab
-              ]}
-              onPress={() => setActiveTab(tab)}
-            >
-              <Text style={[
-                styles.tabText,
-                activeTab === tab && styles.activeTabText
-              ]}>
-                {tab}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-      </View> */}
 
     </SafeAreaView>
   )
