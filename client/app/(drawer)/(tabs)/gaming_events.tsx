@@ -1,5 +1,5 @@
 import { Text, View, Button, Image } from "react-native";
-export default function ListsScreen() {
+export default function GamingEvents() {
     return (
         <View
             style={{
@@ -13,7 +13,7 @@ export default function ListsScreen() {
                 style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}
                 resizeMode="cover"
             />
-            <Button title="Lists is under Construction" onPress={() => console.log("This is the Lists screen")} />
+            <Button title="Events is under Construction" onPress={() => console.log("This is the Lists screen")} />
         </View>
     );
 }

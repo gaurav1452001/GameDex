@@ -1,4 +1,4 @@
-import { Text, View, ScrollView, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { Text, View, ScrollView, Image, StyleSheet, TouchableOpacity,Linking } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState, useRef } from "react";
@@ -44,7 +44,11 @@ export default function GameInfo() {
                 id: number;
                 url: string;
             };
-        }>
+        }>;
+        videos: Array<{
+            id: number;
+            video_id: string;
+        }>;
     };
 
     const [playtime, setPlaytime] = useState<Play>();
@@ -64,6 +68,11 @@ export default function GameInfo() {
         };
         fetchPlaytime();
     }, [id]);
+
+    const openYouTubeLink = () => {
+        const url = `https://www.youtube.com/watch?v=${gamePage?.videos?.[0]?.video_id}`;
+        Linking.openURL(url).catch(err => console.error('Failed to open URL:', err));
+    };
 
     const hasScreenshot = gamePage?.screenshots && gamePage.screenshots[0]?.url;
 
@@ -150,20 +159,32 @@ export default function GameInfo() {
             </View>
             <View style={{ height: 1, backgroundColor: '#333' }} />
             <View>
-                <Text style={{fontSize: 15, color: 'white', margin: 16}}>
-                    SIMILAR GAMES
-                </Text>
-                <ScrollView style={{ marginHorizontal: 16 }} horizontal showsHorizontalScrollIndicator={false}>
-                    {gamePage?.similar_games?.map((game) => (
-                        <TouchableOpacity key={game.id} onPress={() => router.push(`/(drawer)/games/${game.id}`)}>
-                            <Image
-                                source={{ uri: 'https:' + game.cover.url.replace('t_thumb', 't_cover_big_2x') }}
-                                style={styles.displayImage}
-                                resizeMode="cover"
-                            />
-                        </TouchableOpacity>
-                    ))}
-                </ScrollView>
+                {gamePage?.videos && (
+                    <TouchableOpacity onPress={openYouTubeLink}>
+                        <Text style={{ color: 'white', margin: 16, letterSpacing: 2, fontSize: 15 }}>
+                            TRAILER
+                        </Text>
+                    </TouchableOpacity>
+                )}
+            </View>
+            <View>
+                {gamePage?.similar_games &&
+                    (<>
+                        <Text style={{ fontSize: 15, color: 'white', margin: 16 }}>
+                            SIMILAR GAMES
+                        </Text>
+                        <ScrollView style={{ marginHorizontal: 16 }} horizontal showsHorizontalScrollIndicator={false}>
+                            {gamePage?.similar_games?.map((game) => (
+                                <TouchableOpacity key={game.id} onPress={() => router.push(`/(drawer)/games/${game.id}`)}>
+                                    <Image
+                                        source={{ uri: 'https:' + game.cover.url.replace('t_thumb', 't_cover_big_2x') }}
+                                        style={styles.displayImage}
+                                        resizeMode="cover" />
+                                </TouchableOpacity>
+                            ))}
+                        </ScrollView>
+                    </>)
+                }
             </View>
 
         </ScrollView>
