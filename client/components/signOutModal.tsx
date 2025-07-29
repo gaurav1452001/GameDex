@@ -9,7 +9,6 @@ import {
     StyleSheet,
     TouchableOpacity,
     View,
-    StatusBar,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -18,7 +17,6 @@ export const SignOutModal = () => {
     const router = useRouter();
 
     const [modalVisible, setModalVisible] = useState(false);
-    console.log("Modal visibility:", modalVisible);
 
     const handleSignOut = async () => {
         try {
@@ -31,9 +29,8 @@ export const SignOutModal = () => {
 
     return (
         <>
-            <StatusBar translucent backgroundColor="transparent"/>
             <Modal
-                animationType="fade"
+                animationType="none"
                 transparent={true}
                 visible={modalVisible}
                 onRequestClose={() => {
@@ -87,13 +84,13 @@ const styles = StyleSheet.create({
     centeredView: {
         flex: 1,
         justifyContent: "center",
-        backgroundColor: "rgba(3, 3, 3, 0.58)",
+        backgroundColor: "rgba(3, 3, 3, 0.65)",
     },
     drawerText: {
         color: "#9f9f9fff",
     },
     modalView: {
-        margin: 20,
+        marginHorizontal: 20,
         paddingTop: 20,
         backgroundColor: "#343434ff",
         borderRadius: 8,
