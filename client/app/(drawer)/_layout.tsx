@@ -4,6 +4,8 @@ import { TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import CustomDrawerContent from '../../components/CustomDrawerContent';
 import { SignedOut, useUser } from '@clerk/clerk-expo';
+import { SignOutModal } from '@/components/signOutModal';
+import { DrawerActions } from '@react-navigation/native';
 
 
 export default function AppLayout() {
@@ -42,7 +44,7 @@ export default function AppLayout() {
         headerShown: true,
         drawerLabel: 'Home',
       }} />
-      
+
       <Drawer.Screen name="searchGame" options={{
         drawerIcon: ({ color, size }) => (
           <Ionicons name="search-outline" color={color} size={17} />
@@ -101,8 +103,10 @@ export default function AppLayout() {
           <Ionicons name="log-in-outline" color={color} size={17} />
         ),
         headerShown: false,
-        drawerLabel: (isSignedIn ? 'Sign Out' : 'Sign In'),
+        drawerLabel: 'Sign In',
+        drawerItemStyle: { display: isSignedIn ? 'none' : 'flex' },
       }} />
+      
 
       <Drawer.Screen name="games/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
 

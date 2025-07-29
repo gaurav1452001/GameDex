@@ -1,8 +1,12 @@
 import { SignedIn, SignedOut, useUser } from '@clerk/clerk-expo';
 import { DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
-import { View, Image, Text } from 'react-native';
+import { View, Image, Text, Touchable, TouchableOpacity } from 'react-native';
+import { useState } from 'react';
+import { SignOutModal } from './signOutModal';
 export default function CustomDrawerContent(props: any) {
     const { user } = useUser()
+    const [modalVisible, setModalVisible] = useState(false);
+
     return (
         <View style={{ flex: 1, backgroundColor: '#181818' }}>
             <DrawerContentScrollView {...props} scrollEnabled={false}>
@@ -37,6 +41,9 @@ export default function CustomDrawerContent(props: any) {
                     </View>
                 </SignedIn>
                 <DrawerItemList {...props} />
+                <SignedIn>
+                        <SignOutModal/>
+                </SignedIn>
             </DrawerContentScrollView>
         </View>
     );
