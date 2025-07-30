@@ -81,9 +81,9 @@ export default function HomeScreen() {
       renderItem={({ item: gamePage }) => (
       <TouchableOpacity onPress={() => router.push(`/(drawer)/games/${gamePage.id}`)} key={gamePage.id}>
         <Image
-        source={{ uri: 'https:' + gamePage?.cover?.url?.replace('t_thumb', 't_cover_big_2x') }}
-        style={styles.displayImage}
-        resizeMode="cover"
+          source={{ uri: 'https:' + gamePage?.cover?.url?.replace('t_thumb', 't_cover_big_2x') }}
+          style={styles.displayImage}
+          resizeMode="cover"
         />
       </TouchableOpacity>
       )}

@@ -155,6 +155,51 @@ export const getGameInfo = async (req, res) => {
             .json({ message: "Failed to fetch popular games", error: err.message });
     }
 }
+//get the information about gaming events
+export const getGamingEvents = async (req, res) => {
+    try {
+        // Fetch popular game IDs first
+        const eventInfo = await fetch("https://api.igdb.com/v4/events", {
+            method: "POST",
+            headers: {
+            Accept: "application/json",
+            "Client-ID": process.env.client_id,
+            Authorization: `Bearer ${process.env.bearer_token}`,
+            },
+            body: "fields created_at,description,end_time,event_networks,games,live_stream_url,name,slug,start_time,time_zone,updated_at,videos,event_logo.image_id; sort start_time desc; limit 50;"
+        });
+        const data = await eventInfo.json();
+        res.status(200).json(data);
+    } catch (err) {
+        console.error(err);
+        res
+            .status(500)
+            .json({ message: "Failed to fetch popular games", error: err.message });
+    }
+}
+export const getEventInfo = async (req, res) => {
+    try {
+        // Fetch popular game IDs first
+        const { id } = req.params;
+        const eventInfo = await fetch("https://api.igdb.com/v4/events", {
+            method: "POST",
+            headers: {
+            Accept: "application/json",
+            "Client-ID": process.env.client_id,
+            Authorization: `Bearer ${process.env.bearer_token}`,
+            },
+            body: `fields checksum, created_at,description,end_time,event_networks,games.cover.image_id,live_stream_url,name,slug,start_time,time_zone,updated_at,videos,event_logo.image_id; where id = ${id};`
+        });
+        const data = await eventInfo.json();
+        res.status(200).json(data[0]);
+    } catch (err) {
+        console.error(err);
+        res
+            .status(500)
+            .json({ message: "Failed to fetch popular games", error: err.message });
+    }
+}
+
 
 
 

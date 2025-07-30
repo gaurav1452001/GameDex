@@ -183,8 +183,8 @@ export default function GameInfo() {
                                 </TouchableOpacity>
                             ))}
                         </ScrollView>
-                    </>)
-                }
+                    </>
+                    )}
             </View>
 
         </ScrollView>
