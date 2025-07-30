@@ -10,17 +10,10 @@ export default function GamingEvents() {
         id: number;
         name: string;
         description: string;
-        slug: string;
         event_logo: {
             image_id: string;
         };
         start_time: number;
-        end_time: number;
-        live_stream_url: string;
-        games: number[];
-        videos: number[];
-        created_at: number;
-        updated_at: number;
     }
 
     const [events, setEvents] = useState<Event[]>();
@@ -42,29 +35,41 @@ export default function GamingEvents() {
 
 
     return (
-        <ScrollView style={{ backgroundColor: '#181818' }} showsVerticalScrollIndicator={false}>
-
+        <ScrollView style={{ backgroundColor: '#181818', gap: 8 }} showsVerticalScrollIndicator={false}>
             {events ? (
                 events?.map((event) => (
                     <TouchableOpacity onPress={() => router.push(`/events/${event.id}`)} key={event.id}>
-                        <View style={{ padding: 16, borderBottomWidth: 1, borderBottomColor: '#333' }}>
-                            <Image
-                                source={{
-                                    uri: 'https://images.igdb.com/igdb/image/upload/t_1080p_2x/' + event.event_logo.image_id + '.jpg'
-                                }}
-                                style={{
+                        <View style={{ margin: 10, borderRadius: 10, overflow: 'hidden', backgroundColor: '#303030ff' }}>
+                            {event.event_logo?.image_id ? (
+                                <Image
+                                    source={{
+                                        uri: 'https://images.igdb.com/igdb/image/upload/t_1080p_2x/' + event.event_logo.image_id + '.jpg'
+                                    }}
+                                    style={{
+                                        width: '100%',
+                                        height: 200,
+                                    }}
+                                    resizeMode="cover"
+                                />
+                            ) : (
+                                <View style={{
                                     width: '100%',
                                     height: 200,
-                                    borderColor: 'gray',
-                                    borderWidth: 1,
-                                }}
-                                resizeMode="contain"
-
-                            />
-                            <Text style={{ color: '#fff', fontSize: 18 }}>{event.name}</Text>
-                            <Text numberOfLines={3} style={{ color: '#aaa' }}>
-                                {event.description}
-                            </Text>
+                                    backgroundColor: '#404040',
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
+                                }}>
+                                    <Text style={{ color: '#f0f0f0', fontSize: 16, fontWeight: 'bold', textAlign: 'center' }}>
+                                        {event.name}
+                                    </Text>
+                                </View>
+                            )}
+                            <View style={{ paddingVertical: 13, paddingHorizontal: 10, gap: 6 }}>
+                                <Text style={{ color: '#fff', fontSize: 15, fontWeight: 'bold' }}>{event.name}</Text>
+                                <Text numberOfLines={2} style={{ color: '#aaa', fontSize: 12, }}>
+                                    {event.description}
+                                </Text>
+                            </View>
                         </View>
                     </TouchableOpacity>
                 ))
@@ -78,7 +83,7 @@ export default function GamingEvents() {
                             height: 200,
                             backgroundColor: '#181818',
                         }}
-                        source={require('../../../assets/animations/loading2.json')}
+                        source={require('../../../assets/animations/marioloading.json')}
                     />
                 </View>
             )}

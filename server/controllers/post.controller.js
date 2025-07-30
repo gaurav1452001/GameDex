@@ -166,7 +166,7 @@ export const getGamingEvents = async (req, res) => {
             "Client-ID": process.env.client_id,
             Authorization: `Bearer ${process.env.bearer_token}`,
             },
-            body: "fields created_at,description,end_time,event_networks,games,live_stream_url,name,slug,start_time,time_zone,updated_at,videos,event_logo.image_id; sort start_time desc; limit 50;"
+            body: "fields start_time, description, name, event_logo.image_id; sort start_time desc; limit 50;"
         });
         const data = await eventInfo.json();
         res.status(200).json(data);
@@ -188,7 +188,7 @@ export const getEventInfo = async (req, res) => {
             "Client-ID": process.env.client_id,
             Authorization: `Bearer ${process.env.bearer_token}`,
             },
-            body: `fields checksum, created_at,description,end_time,event_networks,games.cover.image_id,live_stream_url,name,slug,start_time,time_zone,updated_at,videos,event_logo.image_id; where id = ${id};`
+            body: `fields checksum, description,event_networks.url,end_time,event_networks,games.cover.image_id,live_stream_url,name,slug,start_time,time_zone,event_logo.image_id; where id = ${id};`    
         });
         const data = await eventInfo.json();
         res.status(200).json(data[0]);

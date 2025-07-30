@@ -3,8 +3,11 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState, useRef } from "react";
 import LottieView from 'lottie-react-native';
+import { WebView } from 'react-native-webview';
+
 
 import axios from "axios";
+import Ionicons from "@expo/vector-icons/build/Ionicons";
 
 
 export default function EventInfo() {
@@ -21,6 +24,7 @@ export default function EventInfo() {
         };
         start_time: number;
         end_time: number;
+        time_zone: string;
         live_stream_url: string;
         games: Array<{
             id: number;
@@ -29,9 +33,20 @@ export default function EventInfo() {
                 image_id: string;
             };
         }>;
-        videos: number[];
-        created_at: number;
-        updated_at: number;
+        videos: Array<{
+            id: number;
+            checksum: string;
+            video_id: string;
+            game: {
+                id: number;
+                name: string;
+            };
+            name: string;
+        }>;
+        event_networks: Array<{
+            id: number;
+            url: string;
+        }>;
     }
 
     const [eventPage, setEventPage] = useState<Event>();
@@ -72,37 +87,64 @@ export default function EventInfo() {
     return (
         <ScrollView style={{ backgroundColor: '#181818' }}>
             <View style={styles.container}>
-                <Image
-                    source={{
-                        uri: 'https://images.igdb.com/igdb/image/upload/t_1080p_2x/' + eventPage.event_logo.image_id + '.jpg'
-                    }}
-                    style={{
+                {eventPage.event_logo?.image_id ? (
+                    <Image
+                        source={{
+                            uri: 'https://images.igdb.com/igdb/image/upload/t_1080p_2x/' + eventPage.event_logo.image_id + '.jpg'
+                        }}
+                        style={{
+                            width: '100%',
+                            height: 200,
+                        }}
+                        resizeMode="cover"
+                    />
+                ) : (
+                    <View style={{
                         width: '100%',
                         height: 200,
-                        borderColor: 'gray',
-                        borderWidth: 1,
-                    }}
-                    resizeMode="contain"
-
-                />
-                <LinearGradient
-                    colors={['transparent', '#181818']} // Replace #ffffff with your background color
-                    style={styles.gradient}
-                />
+                        backgroundColor: '#404040',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}>
+                        <Text style={{ color: '#f0f0f0', fontSize: 16, fontWeight: 'bold', textAlign: 'center' }}>
+                            {eventPage.name}
+                        </Text>
+                    </View>
+                )}
+                {eventPage.event_networks && (
+                    <Ionicons style={{ position: 'absolute', bottom: 10, right: 10, backgroundColor: '#181818', padding: 5, borderRadius: 5 }} name="link-sharp" color={'#ffffff'} size={25} onPress={() => Linking.openURL(eventPage.event_networks[0].url)} />
+                )}
             </View>
             <View style={styles.infoContainer}>
-                <Text style={styles.textColor}>{eventPage.name}</Text>
-                <Text style={styles.textColor2}>{eventPage.description}</Text>
-            </View>
-            <View style={styles.infoContainer}>
-                <View style={styles.timeContainer}>
-                    <Text style={styles.textColor3}>Start Time</Text>
-                    <Text style={styles.textColor2}>{new Date(eventPage.start_time * 1000).toLocaleString()}</Text>
+                <View >
+                    <Text style={styles.textColor}>{eventPage.name}</Text>
+                    <View style={{ height: 1, backgroundColor: '#333', marginVertical: 8 }} />
+                    <Text style={styles.textColor2}>{eventPage.description}</Text>
                 </View>
-            </View>
-            <View style={styles.timeContainer}>
-                <Text style={styles.textColor3}>End Time</Text>
-                <Text style={styles.textColor2}>{new Date(eventPage.end_time * 1000).toLocaleString()}</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 16 }}>
+                    <View style={styles.timeContainer1}>
+                        <Text style={styles.textColor3}>Start Time</Text>
+                        <Text style={styles.textColor2}>{new Date(eventPage.start_time * 1000).toLocaleString(undefined, {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        })}</Text>
+                        <Text style={styles.textColor2}>{eventPage.time_zone ? eventPage.time_zone : ''}</Text>
+                    </View>
+                    <View style={styles.timeContainer2}>
+                        <Text style={styles.textColor3}>End Time</Text>
+                        <Text style={styles.textColor2}>{new Date(eventPage.end_time * 1000).toLocaleString(undefined, {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        })}</Text>
+                        <Text style={styles.textColor2}>{eventPage.time_zone ? eventPage.time_zone : ''}</Text>
+                    </View>
+                </View>
             </View>
 
             {eventPage?.live_stream_url && (
@@ -113,29 +155,25 @@ export default function EventInfo() {
                     <Text style={styles.streamButtonText}>Watch Live Stream</Text>
                 </TouchableOpacity>
             )}
-            <View>
+            <View style={{ marginBottom: 30 }}>
                 {eventPage?.games &&
                     (<>
-                        <Text style={{ fontSize: 15, color: 'white', margin: 16 }}>
-                            GAMES ANNOUNCED
+                        <Text style={{ fontSize: 15, color: 'white', margin: 16, fontWeight: 'bold' }}>
+                            GAMES FEATURED
                         </Text>
                         <ScrollView style={{ marginHorizontal: 16 }} horizontal showsHorizontalScrollIndicator={false}>
-                            {eventPage?.games?.map((game) => (
+                            {eventPage?.games?.filter(game => game.cover?.image_id).map((game) => (
                                 <TouchableOpacity key={game.id} onPress={() => router.push(`/games/${game.id}`)}>
                                     <Image
                                         source={{ uri: 'https://images.igdb.com/igdb/image/upload/t_cover_big_2x/' + game.cover.image_id + '.jpg' }}
                                         style={styles.displayImage}
-                                        resizeMode="cover" />
+                                        resizeMode="cover"
+                                    />
                                 </TouchableOpacity>
                             ))}
                         </ScrollView>
                     </>
                     )}
-            </View>
-
-            <View style={styles.metaContainer}>
-                <Text style={styles.textColor3}>Created: {new Date(eventPage.created_at * 1000).toLocaleDateString()}</Text>
-                <Text style={styles.textColor3}>Updated: {new Date(eventPage.updated_at * 1000).toLocaleDateString()}</Text>
             </View>
         </ScrollView>
     );
@@ -148,17 +186,20 @@ const styles = StyleSheet.create({
     textColor: {
         color: 'white',
         fontSize: 25,
-        fontWeight: 'bold',
+        fontWeight: '900',
     },
     textColor2: {
         color: 'beige',
-        fontSize: 15,
-        marginVertical: 16
+        fontSize: 13,
+        marginBottom: 4,
+        letterSpacing: 0.9,
     },
     textColor3: {
         color: 'beige',
-        fontSize: 13,
-        margin: 16
+        fontSize: 15,
+        fontWeight: 'bold',
+        marginBottom: 8,
+        letterSpacing: 0.6,
     },
     gradient: {
         position: 'absolute',
@@ -176,27 +217,32 @@ const styles = StyleSheet.create({
         marginRight: 6,
         borderWidth: 1,
         borderColor: 'gray',
+        backgroundColor: '#404040',
+        justifyContent: 'center',
     },
-    timeContainer: {
-        marginVertical: 8,
+    timeContainer1: {
+        paddingVertical: 8,
+        paddingHorizontal: 10,
+        backgroundColor: '#3a3a3aff',
+        borderRadius: 8,
+    },
+    timeContainer2: {
+        paddingVertical: 8,
+        paddingHorizontal: 10,
+        backgroundColor: '#3a3a3aff',
+        borderRadius: 8,
     },
     streamButton: {
-        backgroundColor: '#FF6B6B',
+        backgroundColor: '#f95555ff',
         paddingVertical: 12,
-        paddingHorizontal: 24,
         borderRadius: 8,
         alignItems: 'center',
-        marginVertical: 16,
+        margin: 16,
     },
     streamButtonText: {
         color: 'white',
         fontSize: 16,
         fontWeight: 'bold',
     },
-    metaContainer: {
-        marginTop: 16,
-        paddingTop: 16,
-        borderTopWidth: 1,
-        borderTopColor: '#333',
-    },
+
 });

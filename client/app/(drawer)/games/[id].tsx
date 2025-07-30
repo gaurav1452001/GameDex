@@ -1,4 +1,4 @@
-import { Text, View, ScrollView, Image, StyleSheet, TouchableOpacity,Linking } from "react-native";
+import { Text, View, ScrollView, Image, StyleSheet, TouchableOpacity, Linking } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState, useRef } from "react";
@@ -140,12 +140,20 @@ export default function GameInfo() {
                         </Text>
                     </View>
                 </View>
-                <View style={{ flex: 1 }}>
-                    <Image
-                        source={{ uri: 'https:' + gamePage?.cover?.url?.replace('t_thumb', 't_cover_big_2x') }}
-                        style={styles.displayImage}
-                        resizeMode="cover"
-                    />
+                <View>
+                    {gamePage.cover?.url ? (
+                        <Image
+                            source={{ uri: 'https:' + gamePage.cover.url.replace('t_thumb', 't_cover_big_2x') }}
+                            style={styles.displayImage}
+                            resizeMode="cover"
+                        />
+                    ) : (
+                        <View style={styles.displayImage}>
+                            <Text style={{ color: '#f0f0f0', fontSize: 16, fontWeight: 'bold', textAlign: 'center' }}>
+                                {gamePage.name}
+                            </Text>
+                        </View>
+                    )}
                 </View>
 
             </View>
@@ -174,12 +182,13 @@ export default function GameInfo() {
                             SIMILAR GAMES
                         </Text>
                         <ScrollView style={{ marginHorizontal: 16 }} horizontal showsHorizontalScrollIndicator={false}>
-                            {gamePage?.similar_games?.map((game) => (
+                            {gamePage?.similar_games?.filter(game => game.cover?.url).map((game) => (
                                 <TouchableOpacity key={game.id} onPress={() => router.push(`/(drawer)/games/${game.id}`)}>
-                                    <Image
-                                        source={{ uri: 'https:' + game.cover.url.replace('t_thumb', 't_cover_big_2x') }}
-                                        style={styles.displayImage}
-                                        resizeMode="cover" />
+                                        <Image
+                                            source={{ uri: 'https:' + game.cover.url.replace('t_thumb', 't_cover_big_2x') }}
+                                            style={styles.displayImage}
+                                            resizeMode="cover"
+                                        />
                                 </TouchableOpacity>
                             ))}
                         </ScrollView>
@@ -227,5 +236,7 @@ const styles = StyleSheet.create({
         marginRight: 6,
         borderWidth: 1,
         borderColor: 'gray',
+        backgroundColor: '#404040',
+        justifyContent: 'center',
     }
 });
