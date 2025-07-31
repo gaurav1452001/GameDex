@@ -96,7 +96,7 @@ export const getPopularGames = async (req, res) => {
             "Client-ID": process.env.client_id,
             Authorization: `Bearer ${process.env.bearer_token}`,
             },
-            body: `fields name,rating,cover.url,summary,screenshots.url,category,platforms,first_release_date,involved_companies.company.name;limit 50; where id = (${gameIds.join(',')});`
+            body: `fields rating,cover.url,first_release_date;limit 50;sort rating desc; where id = (${gameIds.join(',')});`
         });
         const data = await gamesResponse.json();
         res.status(200).json(data);

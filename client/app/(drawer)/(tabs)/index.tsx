@@ -15,21 +15,8 @@ export default function HomeScreen() {
       id: number;
       url: string;
     };
-    name: string;
     rating: number;
-    screenshots: Array<{
-      id: number;
-      url: string;
-    }>;
-    involved_companies: Array<{
-      id: number;
-      company: {
-        id: number;
-        name: string;
-      };
-    }>;
     first_release_date:number;
-    summary: string;
   };
   const [gamePages, setGamePages] = useState<Game[]>([]);
   const [isLoading, setIsLoading] = useState(true);

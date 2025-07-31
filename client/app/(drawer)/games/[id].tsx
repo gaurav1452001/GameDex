@@ -53,6 +53,7 @@ export default function GameInfo() {
 
     const [playtime, setPlaytime] = useState<Play>();
     const [gamePage, setGamePage] = useState<Game>();
+    const [expanded, setExpanded] = useState(false);
 
     useEffect(() => {
         const fetchPlaytime = async () => {
@@ -113,82 +114,85 @@ export default function GameInfo() {
                     style={styles.gradient}
                 />
             </View>
-            <View style={styles.infoContainer}>
-                <View style={{ flex: 2, flexDirection: 'column', justifyContent: 'space-between', paddingRight: 10 }}>
-                    <View>
-                        <Text style={styles.textColor}>
-                            {gamePage?.name}
-                        </Text>
-                    </View>
-                    <View>
-                        <Text style={styles.textColor2}>
-                            {gamePage?.involved_companies?.[0]?.company?.name}
-                            {gamePage?.involved_companies?.length && gamePage.involved_companies.length > 1 && ', '}
-                            {gamePage?.involved_companies?.[1]?.company?.name}
-                        </Text>
-                    </View>
-                    <View>
-                        <Text style={styles.textColor2}>
-                            {gamePage?.first_release_date
-                                ? new Date(gamePage.first_release_date * 1000).toLocaleDateString('en-US', {
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric',
-                                })
-                                : null
-                            }
-                        </Text>
-                    </View>
-                </View>
-                <View>
-                    {gamePage.cover?.url ? (
-                        <Image
-                            source={{ uri: 'https:' + gamePage.cover.url.replace('t_thumb', 't_cover_big_2x') }}
-                            style={styles.displayImage}
-                            resizeMode="cover"
-                        />
-                    ) : (
-                        <View style={styles.displayImage}>
-                            <Text style={{ color: '#f0f0f0', fontSize: 16, fontWeight: 'bold', textAlign: 'center' }}>
-                                {gamePage.name}
+            <View style={{ margin: 16 }}>
+                <View style={styles.infoContainer}>
+                    <View style={{ flex: 2, flexDirection: 'column', marginRight: 10 }}>
+                        <View>
+                            <Text style={styles.textColor}>
+                                {gamePage?.name}
                             </Text>
                         </View>
-                    )}
-                </View>
+                        <View style={{ marginTop: 20 }}>
+                            <Text style={styles.textColor2}>
+                                <Text style={{ fontStyle: 'italic', fontWeight: 'normal' }}>
+                                    {gamePage?.involved_companies && 'by  '}
+                                </Text>
+                                {gamePage?.involved_companies?.[0]?.company?.name}
+                                {gamePage?.involved_companies?.length && gamePage.involved_companies.length > 1 && ', '}
+                                {gamePage?.involved_companies?.[1]?.company?.name}
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', gap: 50, marginTop: 20, alignItems: 'center' }} >
+                            <Text style={styles.textColor2}>
+                                {gamePage?.first_release_date
+                                    ? new Date(gamePage.first_release_date * 1000).toLocaleDateString('en-US', {
+                                        year: 'numeric',
+                                    })
+                                    : null
+                                }
+                            </Text>
+                            {gamePage?.videos && (
+                                <TouchableOpacity onPress={openYouTubeLink}>
+                                    <Text style={{ color: 'white', letterSpacing: 2, fontSize: 13 }}>
+                                        TRAILER
+                                    </Text>
+                                </TouchableOpacity>
+                            )}
+                        </View>
+                    </View>
+                    <View style={{ flex: 1 }}>
+                        {gamePage.cover?.url ? (
+                            <Image
+                                source={{ uri: 'https:' + gamePage.cover.url.replace('t_thumb', 't_cover_big_2x') }}
+                                style={styles.displayImage}
+                                resizeMode="cover"
+                            />
+                        ) : (
+                            <View style={styles.displayImage}>
+                                <Text style={{ color: '#f0f0f0', fontSize: 16, fontWeight: 'bold', textAlign: 'center' }}>
+                                    {gamePage.name}
+                                </Text>
+                            </View>
+                        )}
+                    </View>
 
-            </View>
-            <Text numberOfLines={3} style={styles.textColor3}>
-                {gamePage?.summary}
-            </Text>
-            <View style={{ marginTop: 16 }}>
-                <Text style={styles.textColor2}>
-                    {playtime?.normally ? `${(playtime.normally / 3600).toFixed(0)} hours` : ''}
-                </Text>
-            </View>
-            <View style={{ height: 1, backgroundColor: '#333' }} />
-            <View>
-                {gamePage?.videos && (
-                    <TouchableOpacity onPress={openYouTubeLink}>
-                        <Text style={{ color: 'white', margin: 16, letterSpacing: 2, fontSize: 15 }}>
-                            TRAILER
+                </View>
+                <View style={{ marginTop: 20 }}>
+                    <TouchableOpacity onPress={() => setExpanded(!expanded)}>
+                        <Text numberOfLines={expanded ? undefined : 3} style={styles.textColor3}>
+                            {gamePage?.summary}
+                        </Text>
+                        <Text style={{ color: 'white',marginTop: 5, fontWeight: '900', justifyContent: 'center', textAlign: 'center' }}>
+                            {expanded ? '' : '. . .'}
                         </Text>
                     </TouchableOpacity>
-                )}
-            </View>
-            <View>
+
+                </View>
+                <View style={{ height: 1, backgroundColor: '#333', marginTop: 20 }} />
+                <View style={{ marginTop: 20 }} />
                 {gamePage?.similar_games &&
                     (<>
-                        <Text style={{ fontSize: 15, color: 'white', margin: 16 }}>
+                        <Text style={{ fontSize: 15, color: 'white', marginVertical: 10 }}>
                             SIMILAR GAMES
                         </Text>
-                        <ScrollView style={{ marginHorizontal: 16 }} horizontal showsHorizontalScrollIndicator={false}>
+                        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                             {gamePage?.similar_games?.filter(game => game.cover?.url).map((game) => (
                                 <TouchableOpacity key={game.id} onPress={() => router.push(`/(drawer)/games/${game.id}`)}>
-                                        <Image
-                                            source={{ uri: 'https:' + game.cover.url.replace('t_thumb', 't_cover_big_2x') }}
-                                            style={styles.displayImage}
-                                            resizeMode="cover"
-                                        />
+                                    <Image
+                                        source={{ uri: 'https:' + game.cover.url.replace('t_thumb', 't_cover_big_2x') }}
+                                        style={styles.displayImage}
+                                        resizeMode="cover"
+                                    />
                                 </TouchableOpacity>
                             ))}
                         </ScrollView>
@@ -208,6 +212,9 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 25,
     },
+    giveMargin: {
+        marginVertical: 9,
+    },
     textColor2: {
         color: 'beige',
         fontSize: 15,
@@ -216,7 +223,6 @@ const styles = StyleSheet.create({
     textColor3: {
         color: 'beige',
         fontSize: 13,
-        margin: 16
     },
     gradient: {
         position: 'absolute',
@@ -227,16 +233,14 @@ const styles = StyleSheet.create({
     infoContainer: {
         flexDirection: 'row',
         color: 'white',
-        justifyContent: 'space-between',
-        margin: 16,
     },
     displayImage: {
         width: 100, // IGDB t_cover_big_2x is 264x374
         height: 141.66,
-        marginRight: 6,
         borderWidth: 1,
-        borderColor: 'gray',
+        borderColor: '#404040',
         backgroundColor: '#404040',
         justifyContent: 'center',
+        marginRight: 6,
     }
 });
