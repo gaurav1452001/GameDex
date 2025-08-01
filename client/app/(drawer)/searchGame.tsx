@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, SafeAreaView, FlatList } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, SafeAreaView, FlatList, BackHandler } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
@@ -7,7 +7,21 @@ import { router } from 'expo-router'
 
 export default function SearchGame() {
   const [searchQuery, setSearchQuery] = useState("")
-  const navigation = useNavigation()
+  const navigation = useNavigation();
+ // Handle back button press to clear search and go back
+  useEffect(()=>{
+    const handleBackPress = () => {
+      setSearchQuery("");
+      navigation.goBack();
+      return true; // Prevent default back behavior
+    };
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+    return () => {
+      backHandler.remove();
+    };
+  }, [navigation]);
+
   type Game = {
     id: number;
     cover: {
@@ -34,6 +48,7 @@ export default function SearchGame() {
 
   useEffect(() => {
     const fetchArts = async () => {
+
       try {
         const ip_address = process.env.EXPO_PUBLIC_IP_ADDRESS || '';
         const response = await axios.get(`http://${ip_address}:8000/posts/search`, {
@@ -53,7 +68,7 @@ export default function SearchGame() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <TouchableOpacity style={styles.backButton} onPress={() => { setSearchQuery(""); navigation.goBack() }}>
           <Ionicons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
         <TextInput
@@ -82,13 +97,21 @@ export default function SearchGame() {
           renderItem={({ item: gamePage }) => (
             <TouchableOpacity onPress={() => router.push(`/(drawer)/games/${gamePage.id}`)} key={gamePage.id}>
               <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-                <Image
-                  source={{ uri: 'https:' + gamePage?.cover?.url?.replace('t_thumb', 't_cover_big_2x') }}
-                  style={styles.displayImage}
-                  resizeMode="cover"
-                />
+                {gamePage.cover?.url ? (
+                  <Image
+                    source={{ uri: 'https:' + gamePage.cover.url.replace('t_thumb', 't_cover_big_2x') }}
+                    style={styles.displayImage}
+                    resizeMode="cover"
+                  />
+                ) : (
+                  <View style={styles.displayImage}>
+                    <Text style={{ color: '#f0f0f0', fontSize: 10, fontWeight: 'bold', textAlign: 'center', justifyContent: 'center' }}>
+                      {gamePage.name}
+                    </Text>
+                  </View>
+                )}
                 <View style={{ flex: 1, flexDirection: 'column', marginLeft: 10 }}>
-                  <Text style={{ color: '#fff', fontSize: 15,fontWeight: 'bold' }}>{gamePage?.name}</Text>
+                  <Text style={{ color: '#fff', fontSize: 15, fontWeight: 'bold' }}>{gamePage?.name}</Text>
                   <Text style={{ color: '#aaa', fontSize: 12, fontWeight: 'bold' }}>
                     {gamePage?.involved_companies?.[0]?.company?.name}
                     {gamePage?.involved_companies?.length > 1 && ', '}
@@ -130,9 +153,11 @@ const styles = StyleSheet.create({
   displayImage: {
     width: 57,
     height: 84.873,
+    borderColor: '#535353ff',
+    backgroundColor: '#404040',
+    justifyContent: 'center',
     marginRight: 4,
     borderWidth: 1,
-    borderColor: 'gray',
   },
   container: {
     flex: 1,

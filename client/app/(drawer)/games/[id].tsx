@@ -1,10 +1,11 @@
 import { Text, View, ScrollView, Image, StyleSheet, TouchableOpacity, Linking } from "react-native";
+import { SignedIn, useUser } from '@clerk/clerk-expo'
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState, useRef } from "react";
 import LottieView from 'lottie-react-native';
-
 import axios from "axios";
+import Ionicons from "@expo/vector-icons/build/Ionicons";
 
 
 export default function GameInfo() {
@@ -16,7 +17,6 @@ export default function GameInfo() {
         hastily: number;
         normally: number;
     }
-
     type Game = {
         id: number;
         cover: {
@@ -24,7 +24,14 @@ export default function GameInfo() {
             url: string;
         };
         name: string;
+        keywords: Array<{
+            id: number;
+            name: string;
+        }>;
         rating: number;
+        rating_count: number;
+        aggregated_rating: number;
+        aggregated_rating_count: number;
         screenshots: Array<{
             id: number;
             url: string;
@@ -54,6 +61,7 @@ export default function GameInfo() {
     const [playtime, setPlaytime] = useState<Play>();
     const [gamePage, setGamePage] = useState<Game>();
     const [expanded, setExpanded] = useState(false);
+    const { user } = useUser()
 
     useEffect(() => {
         const fetchPlaytime = async () => {
@@ -167,37 +175,113 @@ export default function GameInfo() {
                     </View>
 
                 </View>
-                <View style={{ marginTop: 20 }}>
+                <View style={{ marginTop: 10 }}>
                     <TouchableOpacity onPress={() => setExpanded(!expanded)}>
                         <Text numberOfLines={expanded ? undefined : 3} style={styles.textColor3}>
                             {gamePage?.summary}
                         </Text>
-                        <Text style={{ color: 'white',marginTop: 5, fontWeight: '900', justifyContent: 'center', textAlign: 'center' }}>
-                            {expanded ? '' : '. . .'}
+                        <Text style={{ justifyContent: 'center', textAlign: 'center' }}>
+                            {expanded ? '' : <Ionicons name="ellipsis-horizontal" color={'#d6d6d6ff'} size={23} />}
                         </Text>
                     </TouchableOpacity>
 
                 </View>
-                <View style={{ height: 1, backgroundColor: '#333', marginTop: 20 }} />
-                <View style={{ marginTop: 20 }} />
-                {gamePage?.similar_games &&
-                    (<>
-                        <Text style={{ fontSize: 15, color: 'white', marginVertical: 10 }}>
-                            SIMILAR GAMES
-                        </Text>
+                <View style={styles.hLine} />
+                <View style={{ marginTop: 6, paddingHorizontal: 10 }}>
+                    <Text style={styles.textColor3}>
+                        RATINGS
+                    </Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 }}>
+                        <View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                                <Ionicons name="star" color={'#54e868ff'} size={32} />
+                                <Text style={{ fontSize: 25, color: 'white' }}>
+                                    {gamePage?.aggregated_rating ? (gamePage.aggregated_rating / 10).toFixed(1) : 'N / A'}
+                                </Text>
+                            </View>
+                            <Text style={styles.textColor3}>
+                                {gamePage?.aggregated_rating_count ? gamePage.aggregated_rating_count : 'No'} critic ratings
+                            </Text>
+                        </View>
+                        <View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                                <Ionicons name="star" color={'#54e868ff'} size={32} />
+                                <Text style={{ fontSize: 25, color: 'white' }}>
+                                    {gamePage?.aggregated_rating ? (gamePage.rating / 10).toFixed(1) : 'N / A'}
+                                </Text>
+                            </View>
+                            <Text style={styles.textColor3}>
+                                {gamePage?.aggregated_rating_count ? gamePage.rating_count : 'No'} user ratings
+                            </Text>
+                        </View>
+                    </View>
+                </View>
+                <View style={styles.hLine} />
+                <View>
+                    <SignedIn>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 16, paddingVertical: 8, paddingHorizontal: 10, borderRadius: 9, backgroundColor: '#3e3e3eff' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                                <Image
+                                    source={{ uri: user?.imageUrl }}
+                                    style={{
+                                        width: 25,
+                                        height: 25,
+                                        borderRadius: 40,
+                                    }}
+                                />
+                                <Text style={{ color: '#ffffffff', fontSize: 12, letterSpacing: 0.3 }}>
+                                    Rate, log, review or add to list
+                                </Text>
+                            </View>
+                            <View>
+                                <Ionicons name="ellipsis-horizontal" color={'#d6d6d6ff'} size={23} />
+                            </View>
+                        </View>
+                    </SignedIn>
+                </View>
+                <View style={styles.hLine} />
+                <View style={{ marginTop: 6, marginRight: -16 }}>
+                    {gamePage?.similar_games &&
+                        (<>
+                            <Text style={{ fontSize: 15, color: 'white', marginVertical: 10 }}>
+                                SIMILAR GAMES
+                            </Text>
+                            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                                {gamePage?.similar_games?.filter(game => game.cover?.url).map((game) => (
+                                    <TouchableOpacity key={game.id} onPress={() => router.push(`/(drawer)/games/${game.id}`)}>
+                                        <Image
+                                            source={{ uri: 'https:' + game.cover.url.replace('t_thumb', 't_cover_big_2x') }}
+                                            style={styles.displayImage}
+                                            resizeMode="cover"
+                                        />
+                                    </TouchableOpacity>
+                                ))}
+                            </ScrollView>
+                        </>
+                        )}
+                </View>
+
+                <View style={{ marginTop: 6 }}>
+                    {gamePage?.keywords && gamePage.keywords.length > 0 && (
+                        <>
+                            <View style={styles.hLine} />
+                            <Text style={{ fontSize: 15, color: 'white', marginVertical: 10 }}>
+                                KEYWORDS
+                            </Text>
+                        </>
+                    )}
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginRight: -16 }}>
                         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                            {gamePage?.similar_games?.filter(game => game.cover?.url).map((game) => (
-                                <TouchableOpacity key={game.id} onPress={() => router.push(`/(drawer)/games/${game.id}`)}>
-                                    <Image
-                                        source={{ uri: 'https:' + game.cover.url.replace('t_thumb', 't_cover_big_2x') }}
-                                        style={styles.displayImage}
-                                        resizeMode="cover"
-                                    />
+                            {gamePage?.keywords?.map((keyword) => (
+                                <TouchableOpacity key={keyword.id} onPress={() => router.push(`/(drawer)/keywords/${keyword.id}`)}>
+                                    <View key={keyword.id} style={{ backgroundColor: '#404040', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 16, marginRight: 6 }}>
+                                        <Text style={{ color: '#ffffff', fontSize: 12 }}>{keyword.name}</Text>
+                                    </View>
                                 </TouchableOpacity>
                             ))}
                         </ScrollView>
-                    </>
-                    )}
+                    </View>
+                </View>
             </View>
 
         </ScrollView>
@@ -223,6 +307,8 @@ const styles = StyleSheet.create({
     textColor3: {
         color: 'beige',
         fontSize: 13,
+        marginTop: 8,
+        letterSpacing: 0.3,
     },
     gradient: {
         position: 'absolute',
@@ -233,6 +319,12 @@ const styles = StyleSheet.create({
     infoContainer: {
         flexDirection: 'row',
         color: 'white',
+    },
+    hLine: {
+        height: 1,
+        backgroundColor: '#333',
+        marginTop: 20,
+        marginHorizontal: -16
     },
     displayImage: {
         width: 100, // IGDB t_cover_big_2x is 264x374

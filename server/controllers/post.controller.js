@@ -20,12 +20,51 @@ export const getGames = async (req, res) => {
     }
 };
 
+
+export const getKeywordGames = async (req, res) => {
+    try {
+        const { id } = req.params;
+        // First fetch the keyword name
+        const keywordResponse = await fetch("https://api.igdb.com/v4/keywords", {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Client-ID": process.env.client_id,
+                Authorization: `Bearer ${process.env.bearer_token}`,
+            },
+            body: `fields name; where id = ${id};`
+        });
+        const keywordData = await keywordResponse.json();
+        const keywordName = keywordData[0]?.name;
+
+        // Then fetch games with that keyword
+        const response = await fetch("https://api.igdb.com/v4/games", {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Client-ID": process.env.client_id,
+                Authorization: `Bearer ${process.env.bearer_token}`,
+            },
+            body: `fields name,rating,cover.url,summary,first_release_date,involved_companies.company.name;sort rating desc; where keywords = ${id};`
+        });
+        const data = await response.json();
+        console.log(data);
+        res.status(200).json({
+            keywordName: keywordName,
+            games: data
+        });
+    } catch (err) {
+        console.error(err);
+        res
+            .status(500)
+            .json({ message: "Failed to fetch artworks", error: err.message });
+    }
+};
+
 export const getScreenshots = async (req, res) => {
     try {
         // You need to get the game id from req.query or req.params
         const { id } = req.query; // or req.params if using route params
-        console.log("Fetching screenshots for game ID:", id);
-        console.log("Client ID:", process.env.client_id);
         const response = await fetch("https://api.igdb.com/v4/games", {
             method: "POST",
             headers: {
@@ -144,7 +183,7 @@ export const getGameInfo = async (req, res) => {
             "Client-ID": process.env.client_id,
             Authorization: `Bearer ${process.env.bearer_token}`,
             },
-            body: `fields name,rating,cover.url,summary,screenshots.url,category,platforms,first_release_date,involved_companies.company.name,similar_games.cover.url,videos.video_id; where id = ${id};`
+            body: `fields name,rating,keywords.name,rating_count,cover.url,summary,screenshots.url,category,platforms,first_release_date,involved_companies.company.name,similar_games.cover.url,videos.video_id,aggregated_rating,aggregated_rating_count; where id = ${id};"`
         });
         const data = await gameInfo.json();
         res.status(200).json(data[0]);
