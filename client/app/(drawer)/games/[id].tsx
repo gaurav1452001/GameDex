@@ -2,6 +2,7 @@ import { Text, View, ScrollView, Image, StyleSheet, TouchableOpacity, Linking } 
 import { SignedIn, useUser } from '@clerk/clerk-expo'
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams } from 'expo-router';
+import GamePageTopTab from '../../../components/gamePageTopTab';
 import { useEffect, useState, useRef } from "react";
 import LottieView from 'lottie-react-native';
 import axios from "axios";
@@ -11,7 +12,6 @@ import Ionicons from "@expo/vector-icons/build/Ionicons";
 export default function GameInfo() {
     const animation = useRef<LottieView>(null);
     const { id } = useLocalSearchParams();
-    console.log('Game ID:', id);
     // Define types for Play and Game
     type Play = {
         completely: number;
@@ -245,6 +245,9 @@ export default function GameInfo() {
                     </SignedIn>
                 </View>
                 <View style={styles.hLine} />
+                <View style={{ height: 300 }}>
+                    <GamePageTopTab/>
+                </View>
                 <View style={{ marginTop: 10 }}>
                     <Text style={styles.textColor3}>
                         TIME TO BEAT
