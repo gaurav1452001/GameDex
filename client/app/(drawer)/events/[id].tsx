@@ -11,9 +11,7 @@ export default function EventInfo() {
     const animation = useRef<LottieView>(null);
     const { id } = useLocalSearchParams();
 
-    type Event = eventPageDataType;
-
-    const [eventPage, setEventPage] = useState<Event>();
+    const [eventPage, setEventPage] = useState<eventPageDataType>();
 
 
     useEffect(() => {

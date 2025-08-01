@@ -12,12 +12,9 @@ import { GamePageDataType, PlaytimeType } from "@/types/gameTypes";
 export default function GameInfo() {
     const animation = useRef<LottieView>(null);
     const { id } = useLocalSearchParams();
-    // Define types for Play and Game
-    type Play = PlaytimeType;
-    type Game = GamePageDataType;
 
-    const [playtime, setPlaytime] = useState<Play>();
-    const [gamePage, setGamePage] = useState<Game>();
+    const [playtime, setPlaytime] = useState<PlaytimeType>();
+    const [gamePage, setGamePage] = useState<GamePageDataType>();
     const [expanded, setExpanded] = useState(false);
     const { user } = useUser()
 

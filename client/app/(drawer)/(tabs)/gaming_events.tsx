@@ -8,9 +8,7 @@ import { eventScreenType } from "@/types/eventTypes";
 export default function GamingEvents() {
     const animation = useRef<LottieView>(null);
 
-    type Event = eventScreenType;
-
-    const [events, setEvents] = useState<Event[]>();
+    const [events, setEvents] = useState<eventScreenType[]>();
 
     useEffect(() => {
         const fetchEvents = async () => {

@@ -9,9 +9,7 @@ import { HomePageGameType } from '@/types/gameTypes';
 
 export default function HomeScreen() {
   const animation = useRef<LottieView>(null);
-  
-  type Game = HomePageGameType;
-  const [gamePages, setGamePages] = useState<Game[]>([]);
+  const [gamePages, setGamePages] = useState<HomePageGameType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
 

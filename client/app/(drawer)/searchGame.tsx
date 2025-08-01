@@ -24,8 +24,7 @@ export default function SearchGame() {
     };
   }, [navigation]);
 
-  type Game = SearchGameType
-  const [gamePages, setGamePages] = useState<Game[]>([]);
+  const [gamePages, setGamePages] = useState<SearchGameType[]>([]);
 
   useEffect(() => {
     const fetchArts = async () => {
