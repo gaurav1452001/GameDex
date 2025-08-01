@@ -8,38 +8,38 @@ import LottieView from 'lottie-react-native';
 import axios from "axios";
 import Ionicons from "@expo/vector-icons/build/Ionicons";
 import { GamePageDataType, PlaytimeType } from "@/types/gameTypes";
-import { useSelector, useDispatch } from 'react-redux'
 import type { RootState } from '@/redux/store'
+import { useAppSelector, useAppDispatch } from '@/redux/hooks'
+import { update,clearData } from '@/redux/counter/gameDataSlice'
 
 
 export default function GameInfo() {
-    const count = useSelector((state: RootState) => state.counter.value)
-
+    const dispatch = useAppDispatch();
     const animation = useRef<LottieView>(null);
     const { id } = useLocalSearchParams();
 
     const [playtime, setPlaytime] = useState<PlaytimeType>();
-    const [gamePage, setGamePage] = useState<GamePageDataType>();
     const [expanded, setExpanded] = useState(false);
     const { user } = useUser()
 
     useEffect(() => {
         const fetchGameInfo = async () => {
-            setGamePage(undefined); // Clear previous game data
+            dispatch(clearData());       
             try {
                 const ip_address = process.env.EXPO_PUBLIC_IP_ADDRESS || '';
                 const response = await axios.get(`http://${ip_address}:8000/posts/search/${id}`);
                 const responsePlaytime = await axios.get(`http://${ip_address}:8000/posts/playtime/${id}`);
-                console.log('Playtime:', responsePlaytime.data);
-                setGamePage(response.data);
+                dispatch(update(response.data));
                 setPlaytime(responsePlaytime.data[0]);
+                console.log('bbc');
+
             } catch (error) {
                 console.error('Error fetching playtime:', error);
             }
         };
         fetchGameInfo();
     }, [id]);
-
+    const gamePage = useAppSelector((state: RootState) => state.gamePageData.data)
     const openYouTubeLink = () => {
         const url = `https://www.youtube.com/watch?v=${gamePage?.videos?.[0]?.video_id}`;
         Linking.openURL(url).catch(err => console.error('Failed to open URL:', err));
@@ -121,7 +121,7 @@ export default function GameInfo() {
                         </View>
                     </View>
                     <View style={{ flex: 1 }}>
-                        {gamePage.cover?.url ? (
+                        {gamePage?.cover?.url ? (
                             <Image
                                 source={{ uri: 'https:' + gamePage.cover.url.replace('t_thumb', 't_cover_big_2x') }}
                                 style={styles.displayImage}
@@ -130,7 +130,7 @@ export default function GameInfo() {
                         ) : (
                             <View style={styles.displayImage}>
                                 <Text style={{ color: '#f0f0f0', fontSize: 16, fontWeight: 'bold', textAlign: 'center' }}>
-                                    {gamePage.name}
+                                    {gamePage?.name}
                                 </Text>
                             </View>
                         )}
@@ -148,11 +148,6 @@ export default function GameInfo() {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.hLine} />
-                <View>
-                    <Text style={styles.textColor3}>
-                        count: {count}
-                    </Text>
-                </View>
                 <View style={{ marginTop: 6 }}>
                     <Text style={styles.textColor3}>
                         RATINGS
@@ -206,9 +201,9 @@ export default function GameInfo() {
                     </SignedIn>
                 </View>
                 <View style={styles.hLine} />
-                <View style={{ height: 300 }}>
+                {/* <View style={{ height: 500 }}>
                     <GamePageTopTab/>
-                </View>
+                </View> */}
                 <View style={{ marginTop: 10 }}>
                     <Text style={styles.textColor3}>
                         TIME TO BEAT

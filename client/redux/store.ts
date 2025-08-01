@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
-import counterReducer from './counter/counterSlice'
+import gameDataReducer from './counter/gameDataSlice'
 export const store = configureStore({
     reducer: {
-        counter: counterReducer,
+        gamePageData: gameDataReducer,
     },
 })
 
