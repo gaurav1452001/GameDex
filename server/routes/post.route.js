@@ -5,12 +5,12 @@ const router = express.Router()
 
 router.get('/', getGames);
 router.get('/screenshot', getScreenshots);
-router.get('/playtime', getPlaytime);
+router.get('/playtime/:id', getPlaytime);
 router.get('/popular', getPopularGames);
 router.get('/search', searchGames);
 router.get('/search/:id', getGameInfo);
-router.get('/searchEvent/:id', getEventInfo);
 router.get('/events',getGamingEvents);
+router.get('/searchEvent/:id', getEventInfo);
 router.get('/keywords/:id', getKeywordGames);
 
 export default router

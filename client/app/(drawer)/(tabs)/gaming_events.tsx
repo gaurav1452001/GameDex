@@ -24,7 +24,6 @@ export default function GamingEvents() {
             try {
                 const ip_address = process.env.EXPO_PUBLIC_IP_ADDRESS || '';
                 const response = await axios.get(`http://${ip_address}:8000/posts/events`);
-                console.log('Playtime data:', response.data);
                 setEvents(response.data);
             } catch (error) {
                 console.error('Error fetching playtime:', error);

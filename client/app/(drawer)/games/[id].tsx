@@ -11,11 +11,14 @@ import Ionicons from "@expo/vector-icons/build/Ionicons";
 export default function GameInfo() {
     const animation = useRef<LottieView>(null);
     const { id } = useLocalSearchParams();
+    console.log('Game ID:', id);
+    // Define types for Play and Game
     type Play = {
         completely: number;
         game_id: number;
         hastily: number;
         normally: number;
+        count: number;
     }
     type Game = {
         id: number;
@@ -64,18 +67,20 @@ export default function GameInfo() {
     const { user } = useUser()
 
     useEffect(() => {
-        const fetchPlaytime = async () => {
+        const fetchGameInfo = async () => {
             setGamePage(undefined); // Clear previous game data
             try {
                 const ip_address = process.env.EXPO_PUBLIC_IP_ADDRESS || '';
                 const response = await axios.get(`http://${ip_address}:8000/posts/search/${id}`);
-                console.log('Playtime data:', response.data);
+                const responsePlaytime = await axios.get(`http://${ip_address}:8000/posts/playtime/${id}`);
+                console.log('Playtime:', responsePlaytime.data);
                 setGamePage(response.data);
+                setPlaytime(responsePlaytime.data[0]);
             } catch (error) {
                 console.error('Error fetching playtime:', error);
             }
         };
-        fetchPlaytime();
+        fetchGameInfo();
     }, [id]);
 
     const openYouTubeLink = () => {
@@ -187,7 +192,7 @@ export default function GameInfo() {
 
                 </View>
                 <View style={styles.hLine} />
-                <View style={{ marginTop: 6, paddingHorizontal: 10 }}>
+                <View style={{ marginTop: 6 }}>
                     <Text style={styles.textColor3}>
                         RATINGS
                     </Text>
@@ -240,6 +245,46 @@ export default function GameInfo() {
                     </SignedIn>
                 </View>
                 <View style={styles.hLine} />
+                <View style={{ marginTop: 10 }}>
+                    <Text style={styles.textColor3}>
+                        TIME TO BEAT
+                    </Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 }}>
+                        <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                            <Text style={{ color: '#d8d8d8ff', fontSize: 12, marginTop: 8 }}>
+                                Completely
+                            </Text>
+                            <View style={styles.playtime}>
+                                <Text style={{ color: '#e2e2e2ff', fontSize: 19, fontWeight: 'bold' }}>
+                                    {playtime?.completely ? `${Math.round(playtime.completely / 3600)}H` : 'N/A'}
+                                </Text>
+                            </View>
+                        </View>
+                        <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                            <Text style={{ color: '#d8d8d8ff', fontSize: 12, marginTop: 8 }}>
+                                Normally
+                            </Text>
+                            <View style={styles.playtime}>
+                                <Text style={{ color: '#c3c3c3ff', fontSize: 19, fontWeight: 'bold' }}>
+                                    {playtime?.normally ? `${Math.round(playtime.normally / 3600)}H` : 'N/A'}
+                                </Text>
+                            </View>
+                        </View>
+                        <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                            <Text style={{ color: '#d8d8d8ff', fontSize: 12, marginTop: 8 }}>
+                                Hastily
+                            </Text>
+                            <View style={styles.playtime}>
+                                <Text style={{ color: '#c3c3c3ff', fontSize: 19, fontWeight: 'bold' }}>
+                                    {playtime?.hastily ? `${Math.round(playtime.hastily / 3600)}H` : 'N/A'}
+                                </Text>
+                            </View>
+                        </View>
+                    </View>
+                    <Text style={{ color: '#959595ff', fontSize: 12, marginTop: 8 }}>
+                        {playtime?.count ? `Based on ${playtime.count} ratings` : ''}
+                    </Text>
+                </View>
                 <View style={{ marginTop: 6, marginRight: -16 }}>
                     {gamePage?.similar_games &&
                         (<>
@@ -260,7 +305,6 @@ export default function GameInfo() {
                         </>
                         )}
                 </View>
-
                 <View style={{ marginTop: 6 }}>
                     {gamePage?.keywords && gamePage.keywords.length > 0 && (
                         <>
@@ -309,6 +353,17 @@ const styles = StyleSheet.create({
         fontSize: 13,
         marginTop: 8,
         letterSpacing: 0.3,
+    },
+    playtime: {
+        flexDirection: 'column',
+        alignItems: 'center', 
+        backgroundColor: '#000000ff', 
+        borderWidth: 1, 
+        borderColor: '#333333ff', 
+        paddingVertical: 15, 
+        paddingHorizontal: 20, 
+        borderRadius: 10, 
+        marginTop: 10
     },
     gradient: {
         position: 'absolute',

@@ -91,9 +91,7 @@ export const getScreenshots = async (req, res) => {
 export const getPlaytime = async (req, res) => {
     try {
         // You need to get the game id from req.query or req.params
-        const { game_id } = req.query; 
-        console.log("Fetching playtime for game ID:", game_id);
-        console.log("Client ID:", process.env.client_id);
+        const { id } = req.params; 
         const response = await fetch("https://api.igdb.com/v4/game_time_to_beats", {
             method: "POST",
             headers: {
@@ -101,10 +99,9 @@ export const getPlaytime = async (req, res) => {
                 "Client-ID": process.env.client_id,
                 Authorization: `Bearer ${process.env.bearer_token}`,
             },
-        body: `fields completely,game_id,hastily,normally;where game_id = ${game_id};`
+        body: `fields completely,game_id,hastily,normally,count;where game_id = ${id};`
         });
         const data = await response.json();
-        console.log(data);
         res.status(200).json(data);
     } catch (err) {
         res
