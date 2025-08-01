@@ -10,7 +10,7 @@ import Ionicons from "@expo/vector-icons/build/Ionicons";
 import { GamePageDataType, PlaytimeType } from "@/types/gameTypes";
 import type { RootState } from '@/redux/store'
 import { useAppSelector, useAppDispatch } from '@/redux/hooks'
-import { update,clearData } from '@/redux/counter/gameDataSlice'
+import { update, clearData } from '@/redux/counter/gameDataSlice'
 
 
 export default function GameInfo() {
@@ -24,7 +24,7 @@ export default function GameInfo() {
 
     useEffect(() => {
         const fetchGameInfo = async () => {
-            dispatch(clearData());       
+            dispatch(clearData());
             try {
                 const ip_address = process.env.EXPO_PUBLIC_IP_ADDRESS || '';
                 const response = await axios.get(`http://${ip_address}:8000/posts/search/${id}`);
@@ -44,8 +44,6 @@ export default function GameInfo() {
         const url = `https://www.youtube.com/watch?v=${gamePage?.videos?.[0]?.video_id}`;
         Linking.openURL(url).catch(err => console.error('Failed to open URL:', err));
     };
-
-    const hasScreenshot = gamePage?.screenshots && gamePage.screenshots[0]?.url;
 
     if (!gamePage) {
         return (
@@ -67,18 +65,27 @@ export default function GameInfo() {
     return (
         <ScrollView style={{ backgroundColor: '#181818' }}>
             <View style={styles.container}>
-                <Image
-                    source={hasScreenshot
-                        ? { uri: 'https:' + gamePage.screenshots[0].url.replace('t_thumb', 't_1080p_2x') }
-                        : require('../../../assets/images/login_screen_image.png')
-                    }
-                    style={{
-                        width: '100%',
-                        height: 200,
-                        borderColor: 'gray',
-                    }}
-                    resizeMode="cover"
-                />
+                {gamePage?.screenshots ? (
+                    <Image
+                        source={{ uri: 'https:' + gamePage.screenshots[0].url.replace('t_thumb', 't_screenshot_huge') }}
+                        style={{
+                            width: '100%',
+                            height: 200,
+                            borderColor: 'gray',
+                        }}
+                        resizeMode="cover"
+                    />
+                ) : (
+                    <Image
+                        source={require('../../../assets/images/login_screen_image.png')}
+                        style={{
+                            width: '100%',
+                            height: 200,
+                            borderColor: 'gray',
+                        }}
+                        resizeMode="cover"
+                    />
+                )}
                 <LinearGradient
                     colors={['transparent', '#181818']} // Replace #ffffff with your background color
                     style={styles.gradient}
@@ -315,13 +322,13 @@ const styles = StyleSheet.create({
     },
     playtime: {
         flexDirection: 'column',
-        alignItems: 'center', 
-        backgroundColor: '#000000ff', 
-        borderWidth: 1, 
-        borderColor: '#333333ff', 
-        paddingVertical: 15, 
-        paddingHorizontal: 20, 
-        borderRadius: 10, 
+        alignItems: 'center',
+        backgroundColor: '#000000ff',
+        borderWidth: 1,
+        borderColor: '#333333ff',
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        borderRadius: 10,
         marginTop: 10
     },
     gradient: {
