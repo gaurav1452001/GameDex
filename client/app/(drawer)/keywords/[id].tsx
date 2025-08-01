@@ -5,29 +5,13 @@ import { useNavigation } from '@react-navigation/native'
 import axios from 'axios'
 import { router, useLocalSearchParams } from 'expo-router'
 import LottieView from 'lottie-react-native'
+import { KeywordGameType } from '@/types/gameTypes'
 
 export default function KeywordGames() {
     const animation = useRef<LottieView>(null);
     const { id } = useLocalSearchParams();
     
-    type Game = {
-        id: number;
-        cover: {
-            id: number;
-            url: string;
-        };
-        involved_companies: Array<{
-            id: number;
-            company: {
-                id: number;
-                name: string;
-            };
-        }>;
-        first_release_date: number;
-        name: string;
-        rating: number;
-        summary: string;
-    };
+    type Game = KeywordGameType;
     const [keywordGames, setKeywordGames] = useState<Game[]>([]);
 
     const [keywordName, setKeywordName] = useState<string>('');

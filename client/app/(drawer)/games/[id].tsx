@@ -2,64 +2,19 @@ import { Text, View, ScrollView, Image, StyleSheet, TouchableOpacity, Linking } 
 import { SignedIn, useUser } from '@clerk/clerk-expo'
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams } from 'expo-router';
-import GamePageTopTab from '../../../components/gamePageTopTab';
+import GamePageTopTab from '../../../components/gamePageTopTab/gamePageTopTab';
 import { useEffect, useState, useRef } from "react";
 import LottieView from 'lottie-react-native';
 import axios from "axios";
 import Ionicons from "@expo/vector-icons/build/Ionicons";
-
+import { GamePageDataType, PlaytimeType } from "@/types/gameTypes";
 
 export default function GameInfo() {
     const animation = useRef<LottieView>(null);
     const { id } = useLocalSearchParams();
     // Define types for Play and Game
-    type Play = {
-        completely: number;
-        game_id: number;
-        hastily: number;
-        normally: number;
-        count: number;
-    }
-    type Game = {
-        id: number;
-        cover: {
-            id: number;
-            url: string;
-        };
-        name: string;
-        keywords: Array<{
-            id: number;
-            name: string;
-        }>;
-        rating: number;
-        rating_count: number;
-        aggregated_rating: number;
-        aggregated_rating_count: number;
-        screenshots: Array<{
-            id: number;
-            url: string;
-        }>;
-        involved_companies: Array<{
-            id: number;
-            company: {
-                id: number;
-                name: string;
-            };
-        }>;
-        first_release_date: number;
-        summary: string;
-        similar_games: Array<{
-            id: number;
-            cover: {
-                id: number;
-                url: string;
-            };
-        }>;
-        videos: Array<{
-            id: number;
-            video_id: string;
-        }>;
-    };
+    type Play = PlaytimeType;
+    type Game = GamePageDataType;
 
     const [playtime, setPlaytime] = useState<Play>();
     const [gamePage, setGamePage] = useState<Game>();

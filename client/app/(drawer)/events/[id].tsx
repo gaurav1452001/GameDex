@@ -1,11 +1,8 @@
 import { Text, View, ScrollView, Image, StyleSheet, TouchableOpacity, Linking } from "react-native";
-import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState, useRef } from "react";
 import LottieView from 'lottie-react-native';
-import { WebView } from 'react-native-webview';
-
-
+import { eventPageDataType } from '@/types/eventTypes';
 import axios from "axios";
 import Ionicons from "@expo/vector-icons/build/Ionicons";
 
@@ -14,40 +11,7 @@ export default function EventInfo() {
     const animation = useRef<LottieView>(null);
     const { id } = useLocalSearchParams();
 
-    type Event = {
-        id: number;
-        name: string;
-        description: string;
-        slug: string;
-        event_logo: {
-            image_id: string;
-        };
-        start_time: number;
-        end_time: number;
-        time_zone: string;
-        live_stream_url: string;
-        games: Array<{
-            id: number;
-            cover: {
-                id: number;
-                image_id: string;
-            };
-        }>;
-        videos: Array<{
-            id: number;
-            checksum: string;
-            video_id: string;
-            game: {
-                id: number;
-                name: string;
-            };
-            name: string;
-        }>;
-        event_networks: Array<{
-            id: number;
-            url: string;
-        }>;
-    }
+    type Event = eventPageDataType;
 
     const [eventPage, setEventPage] = useState<Event>();
 

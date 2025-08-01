@@ -4,20 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { router } from 'expo-router';
 import LottieView from 'lottie-react-native';
+import { HomePageGameType } from '@/types/gameTypes';
 
 
 export default function HomeScreen() {
   const animation = useRef<LottieView>(null);
   
-  type Game = {
-    id: number;
-    cover: {
-      id: number;
-      url: string;
-    };
-    rating: number;
-    first_release_date:number;
-  };
+  type Game = HomePageGameType;
   const [gamePages, setGamePages] = useState<Game[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 

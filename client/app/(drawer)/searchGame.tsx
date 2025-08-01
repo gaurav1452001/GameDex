@@ -4,6 +4,8 @@ import { Ionicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import axios from 'axios'
 import { router } from 'expo-router'
+import { SearchGameType } from '@/types/gameTypes'
+
 
 export default function SearchGame() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -22,28 +24,7 @@ export default function SearchGame() {
     };
   }, [navigation]);
 
-  type Game = {
-    id: number;
-    cover: {
-      id: number;
-      url: string;
-    };
-    name: string;
-    rating: number;
-    screenshots: Array<{
-      id: number;
-      url: string;
-    }>;
-    involved_companies: Array<{
-      id: number;
-      company: {
-        id: number;
-        name: string;
-      };
-    }>;
-    first_release_date: number;
-    summary: string;
-  };
+  type Game = SearchGameType
   const [gamePages, setGamePages] = useState<Game[]>([]);
 
   useEffect(() => {

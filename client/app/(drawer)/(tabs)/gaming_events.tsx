@@ -3,18 +3,12 @@ import { router } from "expo-router";
 import LottieView from "lottie-react-native";
 import { useEffect, useState, useRef } from "react";
 import { Text, View, Image, ScrollView, TouchableOpacity, FlatList } from "react-native";
+import { eventScreenType } from "@/types/eventTypes";
+
 export default function GamingEvents() {
     const animation = useRef<LottieView>(null);
 
-    type Event = {
-        id: number;
-        name: string;
-        description: string;
-        event_logo: {
-            image_id: string;
-        };
-        start_time: number;
-    }
+    type Event = eventScreenType;
 
     const [events, setEvents] = useState<Event[]>();
 

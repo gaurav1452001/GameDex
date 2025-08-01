@@ -156,7 +156,7 @@ export const searchGames = async (req, res) => {
             "Client-ID": process.env.client_id,
             Authorization: `Bearer ${process.env.bearer_token}`,
             },
-            body: `fields name,rating,cover.url,summary,screenshots.url,category,platforms,first_release_date,involved_companies.company.name;search "${searchText}";limit 50;`
+            body: `fields name,rating,cover.url,platforms,first_release_date,involved_companies.company.name;search "${searchText}";limit 50;`
         });
         const data = await popularityResponse.json();
         res.status(200).json(data);
