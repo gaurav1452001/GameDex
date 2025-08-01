@@ -1,7 +1,6 @@
-import { View, StyleSheet, ScrollView, Image, TouchableOpacity, FlatList } from "react-native";
+import { View, StyleSheet, Image, TouchableOpacity, FlatList } from "react-native";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import { useNavigation, useRoute } from "@react-navigation/native";
 import { router } from 'expo-router';
 import LottieView from 'lottie-react-native';
 import { HomePageGameType } from '@/types/gameTypes';

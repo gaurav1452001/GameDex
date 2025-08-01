@@ -8,8 +8,13 @@ import LottieView from 'lottie-react-native';
 import axios from "axios";
 import Ionicons from "@expo/vector-icons/build/Ionicons";
 import { GamePageDataType, PlaytimeType } from "@/types/gameTypes";
+import { useSelector, useDispatch } from 'react-redux'
+import type { RootState } from '@/redux/store'
+
 
 export default function GameInfo() {
+    const count = useSelector((state: RootState) => state.counter.value)
+
     const animation = useRef<LottieView>(null);
     const { id } = useLocalSearchParams();
 
@@ -141,9 +146,13 @@ export default function GameInfo() {
                             {expanded ? '' : <Ionicons name="ellipsis-horizontal" color={'#d6d6d6ff'} size={23} />}
                         </Text>
                     </TouchableOpacity>
-
                 </View>
                 <View style={styles.hLine} />
+                <View>
+                    <Text style={styles.textColor3}>
+                        count: {count}
+                    </Text>
+                </View>
                 <View style={{ marginTop: 6 }}>
                     <Text style={styles.textColor3}>
                         RATINGS

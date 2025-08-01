@@ -1,7 +1,6 @@
 import { useClerk } from "@clerk/clerk-expo";
 import { useRouter} from "expo-router";
 import { useState } from "react";
-import { BlurView } from "expo-blur";
 
 import {
     Text,
