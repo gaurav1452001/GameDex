@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     tabContent: {
         flex: 1,
         backgroundColor: '#181818',
-        paddingTop: 10,
+        paddingTop: 20,
     },
     section: {
         marginBottom: 20,

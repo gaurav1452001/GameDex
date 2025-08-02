@@ -4,6 +4,98 @@ export interface GamePageDataType {
         id: number;
         url: string;
     };
+    ports: Array<{
+        id: number;
+        cover: {
+            id: number;
+            url: string;
+        };
+    }>;
+    bundles: Array<{
+        id: number;
+        cover: {
+            id: number;
+            url: string;
+        };
+    }>;
+    dlcs: Array<{
+        id: number;
+        cover: {
+            id: number;
+            url: string;
+        };
+    }>;
+    expansions: Array<{
+        id: number;
+        cover: {
+            id: number;
+            url: string;
+        };
+    }>;
+    remakes: Array<{
+        id: number;
+        cover: {
+            id: number;
+            url: string;
+        };
+    }>;
+    standalone_expansions: Array<{
+        id: number;
+        cover: {
+            id: number;
+            url: string;
+        };
+    }>;
+    expanded_games: Array<{
+        id: number;
+        cover: {
+            id: number;
+            url: string;
+        };
+    }>;
+    forks: Array<{
+        id: number;
+        cover: {
+            id: number;
+            url: string;
+        };
+    }>;
+    collections: Array<{
+        id: number;
+        name: string;
+        games: Array<{
+            id: number;
+            cover: {
+                id: number;
+                url: string;
+            };
+        }>;
+    }>;
+    franchise:{
+        id: number;
+        name: string;
+        games: Array<{
+            id: number;
+            cover: {
+                id: number;
+                url: string;
+            };
+        }>;
+    }
+    remasters: Array<{
+        id: number;
+        cover: {
+            id: number;
+            url: string;
+        };
+    }>;
+    parent_game: {
+        id: number;
+        cover: {
+            id: number;
+            url: string;
+        };
+    };
     name: string;
     keywords: Array<{
         id: number;
