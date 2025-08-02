@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
-import gameDataReducer from './counter/gameDataSlice'
+import gameDataReducer from './gameData/gameDataSlice'
+import  gameHeightReducer  from './gameTabHeight/gameTabHeightSlice'
 export const store = configureStore({
     reducer: {
         gamePageData: gameDataReducer,
-    },
+        gamePageHeight: gameHeightReducer,
+    }
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

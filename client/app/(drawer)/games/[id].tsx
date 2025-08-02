@@ -1,4 +1,4 @@
-import { Text, View, ScrollView, Image, StyleSheet, TouchableOpacity, Linking } from "react-native";
+import { Text, View, ScrollView, Image, StyleSheet, TouchableOpacity, Linking, Modal, Touchable } from "react-native";
 import { SignedIn, useUser } from '@clerk/clerk-expo'
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -7,31 +7,32 @@ import { useEffect, useState, useRef } from "react";
 import LottieView from 'lottie-react-native';
 import axios from "axios";
 import Ionicons from "@expo/vector-icons/build/Ionicons";
-import { GamePageDataType, PlaytimeType } from "@/types/gameTypes";
+import { PlaytimeType } from "@/types/gameTypes";
 import type { RootState } from '@/redux/store'
 import { useAppSelector, useAppDispatch } from '@/redux/hooks'
-import { update, clearData } from '@/redux/counter/gameDataSlice'
+import { update, clearData } from '@/redux/gameData/gameDataSlice'
 
 
 export default function GameInfo() {
     const dispatch = useAppDispatch();
     const animation = useRef<LottieView>(null);
     const { id } = useLocalSearchParams();
-
+    
     const [playtime, setPlaytime] = useState<PlaytimeType>();
+    const [modalVisible, setModalVisible] = useState(false);
     const [expanded, setExpanded] = useState(false);
-    const { user } = useUser()
+    const { user } = useUser();
 
     useEffect(() => {
         const fetchGameInfo = async () => {
             dispatch(clearData());
+            setExpanded(false);
             try {
                 const ip_address = process.env.EXPO_PUBLIC_IP_ADDRESS || '';
                 const response = await axios.get(`http://${ip_address}:8000/posts/search/${id}`);
                 const responsePlaytime = await axios.get(`http://${ip_address}:8000/posts/playtime/${id}`);
                 dispatch(update(response.data));
                 setPlaytime(responsePlaytime.data[0]);
-                console.log('bbc');
 
             } catch (error) {
                 console.error('Error fetching playtime:', error);
@@ -64,6 +65,23 @@ export default function GameInfo() {
 
     return (
         <ScrollView style={{ backgroundColor: '#181818' }}>
+            <Modal
+                animationType="none"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                }}
+            >
+                <View style={styles.modalContainer}>
+                    <Image
+                        source={{ uri: 'https:' + gamePage?.cover?.url.replace('t_thumb', 't_1080p_2x') }}
+                        style={styles.modalImage}
+                        resizeMode="contain"
+                    />
+                </View>
+            </Modal>
+
             <View style={styles.container}>
                 {gamePage?.screenshots ? (
                     <Image
@@ -129,11 +147,13 @@ export default function GameInfo() {
                     </View>
                     <View style={{ flex: 1 }}>
                         {gamePage?.cover?.url ? (
-                            <Image
-                                source={{ uri: 'https:' + gamePage.cover.url.replace('t_thumb', 't_cover_big_2x') }}
-                                style={styles.displayImage}
-                                resizeMode="cover"
-                            />
+                            <TouchableOpacity onPress={() => setModalVisible(true)}>
+                                <Image
+                                    source={{ uri: 'https:' + gamePage.cover.url.replace('t_thumb', 't_cover_big_2x') }}
+                                    style={styles.displayImage}
+                                    resizeMode="cover"
+                                />
+                            </TouchableOpacity>
                         ) : (
                             <View style={styles.displayImage}>
                                 <Text style={{ color: '#f0f0f0', fontSize: 16, fontWeight: 'bold', textAlign: 'center' }}>
@@ -208,9 +228,10 @@ export default function GameInfo() {
                     </SignedIn>
                 </View>
                 <View style={styles.hLine} />
-                {/* <View style={{ height: 500 }}>
-                    <GamePageTopTab/>
-                </View> */}
+                <View style={{ height:400 }}>
+                    <GamePageTopTab />
+                    <View style={styles.hLine} />
+                </View>
                 <View style={{ marginTop: 10 }}>
                     <Text style={styles.textColor3}>
                         TIME TO BEAT
@@ -340,6 +361,17 @@ const styles = StyleSheet.create({
     infoContainer: {
         flexDirection: 'row',
         color: 'white',
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        height: '100%',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    },
+    modalImage: {
+        width: '100%',
+        height: '70%',
     },
     hLine: {
         height: 1,

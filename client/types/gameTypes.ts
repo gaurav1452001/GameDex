@@ -9,6 +9,22 @@ export interface GamePageDataType {
         id: number;
         name: string;
     }>;
+    game_modes: Array<{
+        id: number;
+        name: string;
+    }>;
+    player_perspectives:Array<{
+        id: number;
+        name: string;
+    }>;
+    genres: Array<{
+        id: number;
+        name: string;
+    }>;
+    themes: Array<{
+        id: number;
+        name: string;
+    }>;
     rating: number;
     rating_count: number;
     aggregated_rating: number;
@@ -23,6 +39,10 @@ export interface GamePageDataType {
             id: number;
             name: string;
         };
+        developer: boolean;
+        porting: boolean;
+        publisher: boolean;
+        supporting: boolean;
     }>;
     first_release_date: number;
     summary: string;
