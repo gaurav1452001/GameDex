@@ -62,7 +62,7 @@ export default function DetailsScreen() {
 
     return (
         <ScrollView style={styles.mainView}>
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+            <View style={{ flex:1,flexDirection: 'row', justifyContent: 'space-between' }}>
                 <View style={styles.tabContent}>
                     {companies && companies.mainDevelopers.length > 0 && (
                         <View style={styles.section}>
@@ -144,10 +144,10 @@ const styles = StyleSheet.create({
         letterSpacing: 1,
     },
     companyList: {
-        color: '#ffffffff',
+        color: 'beige',
         fontSize: 15,
         letterSpacing: 0.3,
-        marginTop: 8,
+        marginTop: 5,
     },
     sectionTitle2: {
         color: '#b59ae6ff',
@@ -156,10 +156,10 @@ const styles = StyleSheet.create({
         textAlign: 'right',
     },
     List: {
-        color: '#ffffffff',
+        color: 'beige',
         fontSize: 15,
         letterSpacing: 0.3,
-        marginTop: 8,
+        marginTop: 5,
         textAlign: 'right',
     },
     tabText: {
