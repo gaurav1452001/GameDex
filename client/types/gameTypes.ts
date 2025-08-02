@@ -45,6 +45,18 @@ export interface GamePageDataType {
         supporting: boolean;
     }>;
     first_release_date: number;
+    release_dates: Array<{
+        id: number;
+        platform: {
+            id: number;
+            name: string;
+            platform_logo: {
+                id: number;
+                url: string;
+            };
+        };
+        date: number;
+    }>;
     summary: string;
     similar_games: Array<{
         id: number;

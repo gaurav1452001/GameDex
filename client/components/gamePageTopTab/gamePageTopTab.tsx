@@ -3,7 +3,6 @@ import DetailsScreen from './DetailsScreen';
 import MediaScreen from './MediaScreen';
 import RelatedScreen from './RelatedScreen';
 import ReleasesScreen from './ReleasesScreen';
-import { View } from 'react-native/Libraries/Components/View/View';
 import { StyleSheet } from 'react-native';
 
 const Tab = createMaterialTopTabNavigator();

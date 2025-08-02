@@ -180,8 +180,9 @@ export const getGameInfo = async (req, res) => {
             "Client-ID": process.env.client_id,
             Authorization: `Bearer ${process.env.bearer_token}`,
             },
-            body: `fields name,rating,keywords.name,rating_count,genres.name,themes.name,game_modes.name,player_perspectives.name,cover.url,summary,screenshots.url,category,platforms,first_release_date,involved_companies.company.name,similar_games.cover.url,videos.video_id,aggregated_rating,aggregated_rating_count,involved_companies.*;exclude involved_companies.created_at,involved_companies.updated_at,involved_companies.game,involved_companies.checksum; where id = ${id};"`
+            body: `fields name,rating,keywords.name,rating_count,genres.name,themes.name,game_modes.name,player_perspectives.name,cover.url,summary,screenshots.url,category,platforms,first_release_date,involved_companies.company.name,similar_games.cover.url,videos.video_id,aggregated_rating,aggregated_rating_count,involved_companies.*,release_dates.date,release_dates.platform.name,release_dates.platform.platform_logo.url;exclude involved_companies.created_at,involved_companies.updated_at,involved_companies.game,involved_companies.checksum; where id = ${id};"`
         });
+
         const data = await gameInfo.json();
         res.status(200).json(data[0]);
     } catch (err) {

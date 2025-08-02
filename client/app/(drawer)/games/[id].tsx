@@ -11,6 +11,10 @@ import { PlaytimeType } from "@/types/gameTypes";
 import type { RootState } from '@/redux/store'
 import { useAppSelector, useAppDispatch } from '@/redux/hooks'
 import { update, clearData } from '@/redux/gameData/gameDataSlice'
+import DetailsScreen from '@/components/gamePageTopTab/DetailsScreen';
+import MediaScreen from '@/components/gamePageTopTab/MediaScreen';
+import ReleasesScreen from '@/components/gamePageTopTab/ReleasesScreen';
+import RelatedScreen from '@/components/gamePageTopTab/RelatedScreen';
 
 
 export default function GameInfo() {
@@ -21,11 +25,13 @@ export default function GameInfo() {
     const [playtime, setPlaytime] = useState<PlaytimeType>();
     const [modalVisible, setModalVisible] = useState(false);
     const [expanded, setExpanded] = useState(false);
+    const [activeTab, setActiveTab] = useState('details');
     const { user } = useUser();
 
     useEffect(() => {
         const fetchGameInfo = async () => {
             dispatch(clearData());
+            setActiveTab('details');
             setExpanded(false);
             try {
                 const ip_address = process.env.EXPO_PUBLIC_IP_ADDRESS || '';
@@ -228,10 +234,39 @@ export default function GameInfo() {
                     </SignedIn>
                 </View>
                 <View style={styles.hLine} />
-                <View style={{ height:400 }}>
-                    <GamePageTopTab />
-                    <View style={styles.hLine} />
+                
+                <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 5, borderBottomWidth: 1, borderBottomColor: '#333', marginHorizontal: -16 }}>
+                    <TouchableOpacity
+                        style={[styles.tabButton, activeTab === 'details' && styles.activeTab]} 
+                        onPress={() => setActiveTab('details')}
+                    >
+                        <Text style={[styles.tabText, activeTab === 'details' && styles.activeTabText]}>DETAILS</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                        style={[styles.tabButton, activeTab === 'media' && styles.activeTab]} 
+                        onPress={() => setActiveTab('media')}
+                    >
+                        <Text style={[styles.tabText, activeTab === 'media' && styles.activeTabText]}>MEDIA</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                        style={[styles.tabButton, activeTab === 'releases' && styles.activeTab]} 
+                        onPress={() => setActiveTab('releases')}
+                    >
+                        <Text style={[styles.tabText, activeTab === 'releases' && styles.activeTabText]}>RELEASES</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                        style={[styles.tabButton, activeTab === 'related' && styles.activeTab]} 
+                        onPress={() => setActiveTab('related')}
+                    >
+                        <Text style={[styles.tabText, activeTab === 'related' && styles.activeTabText]}>RELATED</Text>
+                    </TouchableOpacity>
                 </View>
+
+                {activeTab === 'details' && <DetailsScreen />}
+                {activeTab === 'media' && <MediaScreen />}
+                {activeTab === 'releases' && <ReleasesScreen />}
+                {activeTab === 'related' && <RelatedScreen />}
+                <View style={styles.hLine} />
                 <View style={{ marginTop: 10 }}>
                     <Text style={styles.textColor3}>
                         TIME TO BEAT
@@ -387,5 +422,19 @@ const styles = StyleSheet.create({
         backgroundColor: '#404040',
         justifyContent: 'center',
         marginRight: 6,
+    },
+    tabButton: {
+        paddingVertical: 10,
+    },
+    activeTab: {
+        borderBottomWidth: 2,
+        borderBottomColor: '#54e868ff',
+    },
+    tabText: {
+        color: '#888',
+        fontSize: 14,
+    },
+    activeTabText: {
+        color: '#ffffffff',
     }
-});
+})

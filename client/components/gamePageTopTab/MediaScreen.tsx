@@ -1,7 +1,7 @@
 import { View, StyleSheet, Image, Text, Modal, TouchableOpacity, Touchable } from 'react-native';
 import type { RootState } from '@/redux/store'
 import { useAppSelector } from '@/redux/hooks'
-import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useRef, useState } from 'react';
 import LottieView from 'lottie-react-native';
 
@@ -13,8 +13,8 @@ export default function MediaScreen() {
 
     if (!gamePage?.screenshots) {
         return (
-            <View style={{ backgroundColor: '#181818', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-                <Text style={{ letterSpacing: 0.8, color: '#d4d4d4ff', fontSize: 15, marginBottom: 10, paddingHorizontal: 20, textAlign: 'center' }}>
+            <View style={{ backgroundColor: '#181818', justifyContent: 'center', alignItems: 'center', paddingTop: 20}}>
+                <Text style={{ letterSpacing: 0.8, color: '#d4d4d4ff', fontSize: 15, paddingHorizontal: 20, textAlign: 'center' }}>
                     Screenshots for this game are shrouded in mystery.
                 </Text>
                 <LottieView
@@ -22,7 +22,7 @@ export default function MediaScreen() {
                     ref={animation}
                     style={{
                         width: 250,
-                        height: 250,
+                        height: 150,
                         backgroundColor: '#181818',
                     }}
                     source={require('../../assets/animations/ghost.json')}
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     tabContent: {
         flex: 1,
         backgroundColor: '#181818',
-        paddingVertical: 20,
+        paddingTop: 20,
     },
     modalContainer: {
         flex: 1,
