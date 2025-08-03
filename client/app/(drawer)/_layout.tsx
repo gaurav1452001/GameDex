@@ -3,9 +3,7 @@ import { Drawer } from 'expo-router/drawer';
 import { TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import CustomDrawerContent from '../../components/CustomDrawerContent';
-import { SignedOut, useUser } from '@clerk/clerk-expo';
-import { SignOutModal } from '@/components/signOutModal';
-import { DrawerActions } from '@react-navigation/native';
+import { useUser } from '@clerk/clerk-expo';
 
 
 export default function AppLayout() {
@@ -109,6 +107,8 @@ export default function AppLayout() {
       
 
       <Drawer.Screen name="games/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
+      <Drawer.Screen name="events/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
+      <Drawer.Screen name="keywords/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
 
     </Drawer>
 

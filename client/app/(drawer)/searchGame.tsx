@@ -1,39 +1,34 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, SafeAreaView, FlatList } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, SafeAreaView, FlatList, BackHandler } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import axios from 'axios'
 import { router } from 'expo-router'
+import { SearchGameType } from '@/types/gameTypes'
+
 
 export default function SearchGame() {
   const [searchQuery, setSearchQuery] = useState("")
-  const navigation = useNavigation()
-  type Game = {
-    id: number;
-    cover: {
-      id: number;
-      url: string;
+  const navigation = useNavigation();
+ // Handle back button press to clear search and go back
+  useEffect(()=>{
+    const handleBackPress = () => {
+      setSearchQuery("");
+      navigation.goBack();
+      return true; // Prevent default back behavior
     };
-    name: string;
-    rating: number;
-    screenshots: Array<{
-      id: number;
-      url: string;
-    }>;
-    involved_companies: Array<{
-      id: number;
-      company: {
-        id: number;
-        name: string;
-      };
-    }>;
-    first_release_date: number;
-    summary: string;
-  };
-  const [gamePages, setGamePages] = useState<Game[]>([]);
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+    return () => {
+      backHandler.remove();
+    };
+  }, [navigation]);
+
+  const [gamePages, setGamePages] = useState<SearchGameType[]>([]);
 
   useEffect(() => {
     const fetchArts = async () => {
+
       try {
         const ip_address = process.env.EXPO_PUBLIC_IP_ADDRESS || '';
         const response = await axios.get(`http://${ip_address}:8000/posts/search`, {
@@ -49,13 +44,11 @@ export default function SearchGame() {
 
     fetchArts();
   }, [searchQuery]);
-  // const tabs = ['GAMES', 'REVIEWS', 'LISTS', 'DEVELOPERS']
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header with back button and search */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <TouchableOpacity style={styles.backButton} onPress={() => { setSearchQuery(""); navigation.goBack() }}>
           <Ionicons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
         <TextInput
@@ -69,9 +62,7 @@ export default function SearchGame() {
           onChangeText={setSearchQuery}
           onSubmitEditing={() => {
             if (searchQuery.trim()) {
-              // Add your API request here
               console.log('Searching for:', searchQuery)
-              // Example: searchAPI(searchQuery)
             }
           }}
           returnKeyType="search"
@@ -86,13 +77,21 @@ export default function SearchGame() {
           renderItem={({ item: gamePage }) => (
             <TouchableOpacity onPress={() => router.push(`/(drawer)/games/${gamePage.id}`)} key={gamePage.id}>
               <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-                <Image
-                  source={{ uri: 'https:' + gamePage?.cover?.url?.replace('t_thumb', 't_cover_big_2x') }}
-                  style={styles.displayImage}
-                  resizeMode="cover"
-                />
+                {gamePage.cover?.url ? (
+                  <Image
+                    source={{ uri: 'https:' + gamePage.cover.url.replace('t_thumb', 't_cover_big_2x') }}
+                    style={styles.displayImage}
+                    resizeMode="cover"
+                  />
+                ) : (
+                  <View style={styles.displayImage}>
+                    <Text style={{ color: '#f0f0f0', fontSize: 10, fontWeight: 'bold', textAlign: 'center', justifyContent: 'center' }}>
+                      {gamePage.name}
+                    </Text>
+                  </View>
+                )}
                 <View style={{ flex: 1, flexDirection: 'column', marginLeft: 10 }}>
-                  <Text style={{ color: '#fff', fontSize: 15,fontWeight: 'bold' }}>{gamePage?.name}</Text>
+                  <Text style={{ color: '#fff', fontSize: 15, fontWeight: 'bold' }}>{gamePage?.name}</Text>
                   <Text style={{ color: '#aaa', fontSize: 12, fontWeight: 'bold' }}>
                     {gamePage?.involved_companies?.[0]?.company?.name}
                     {gamePage?.involved_companies?.length > 1 && ', '}
@@ -116,29 +115,6 @@ export default function SearchGame() {
         />
       </View>
 
-      {/* Navigation Tabs */}
-      {/* <View style={styles.tabContainer}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {tabs.map((tab, index) => (
-            <TouchableOpacity
-              key={tab}
-              style={[
-                styles.tab,
-                activeTab === tab && styles.activeTab
-              ]}
-              onPress={() => setActiveTab(tab)}
-            >
-              <Text style={[
-                styles.tabText,
-                activeTab === tab && styles.activeTabText
-              ]}>
-                {tab}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-      </View> */}
-
     </SafeAreaView>
   )
 }
@@ -157,9 +133,11 @@ const styles = StyleSheet.create({
   displayImage: {
     width: 57,
     height: 84.873,
+    borderColor: '#535353ff',
+    backgroundColor: '#404040',
+    justifyContent: 'center',
     marginRight: 4,
     borderWidth: 1,
-    borderColor: 'gray',
   },
   container: {
     flex: 1,

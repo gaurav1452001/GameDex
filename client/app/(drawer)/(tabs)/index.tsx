@@ -1,37 +1,14 @@
-import { View, StyleSheet, ScrollView, Image, TouchableOpacity, FlatList } from "react-native";
+import { View, StyleSheet, Image, TouchableOpacity, FlatList } from "react-native";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import { useNavigation, useRoute } from "@react-navigation/native";
 import { router } from 'expo-router';
 import LottieView from 'lottie-react-native';
+import { HomePageGameType } from '@/types/gameTypes';
 
 
 export default function HomeScreen() {
   const animation = useRef<LottieView>(null);
-  
-  type Game = {
-    id: number;
-    cover: {
-      id: number;
-      url: string;
-    };
-    name: string;
-    rating: number;
-    screenshots: Array<{
-      id: number;
-      url: string;
-    }>;
-    involved_companies: Array<{
-      id: number;
-      company: {
-        id: number;
-        name: string;
-      };
-    }>;
-    first_release_date:number;
-    summary: string;
-  };
-  const [gamePages, setGamePages] = useState<Game[]>([]);
+  const [gamePages, setGamePages] = useState<HomePageGameType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
 
@@ -81,9 +58,9 @@ export default function HomeScreen() {
       renderItem={({ item: gamePage }) => (
       <TouchableOpacity onPress={() => router.push(`/(drawer)/games/${gamePage.id}`)} key={gamePage.id}>
         <Image
-        source={{ uri: 'https:' + gamePage?.cover?.url?.replace('t_thumb', 't_cover_big_2x') }}
-        style={styles.displayImage}
-        resizeMode="cover"
+          source={{ uri: 'https:' + gamePage?.cover?.url?.replace('t_thumb', 't_cover_big_2x') }}
+          style={styles.displayImage}
+          resizeMode="cover"
         />
       </TouchableOpacity>
       )}
@@ -114,7 +91,8 @@ const styles = StyleSheet.create({
     width: 85,
     height: 126.6,
     margin: 2.4,
-    borderWidth: 1,
+    borderWidth: 0.4,
     borderColor: 'gray',
+    backgroundColor: '#404040',
   }
 })

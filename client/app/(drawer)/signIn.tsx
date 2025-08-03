@@ -2,10 +2,9 @@ import React, { useCallback, useEffect } from 'react'
 import * as WebBrowser from 'expo-web-browser'
 import * as AuthSession from 'expo-auth-session'
 import { StyleSheet } from "react-native";
-import { useSSO, SignedIn, SignedOut, useUser, useClerk } from '@clerk/clerk-expo'
+import { useSSO, SignedIn, SignedOut, useUser } from '@clerk/clerk-expo'
 import { LinearGradient } from 'expo-linear-gradient';
 import { View, Button, Image } from 'react-native'
-import { SignOutModal } from '../../components/signOutModal'
 
 
 export const useWarmUpBrowser = () => {

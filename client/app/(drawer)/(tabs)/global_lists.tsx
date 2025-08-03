@@ -1,5 +1,5 @@
 import { Text, View, Button, Image } from "react-native";
-export default function ProfileScreen() {
+export default function ListsScreen() {
     return (
         <View
             style={{
