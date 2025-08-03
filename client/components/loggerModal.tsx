@@ -26,8 +26,8 @@ const LoggerModal = () => {
                     <View style={{ flexDirection: 'column', paddingVertical: 10 }}>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                             <Text style={styles.modalTextName}>{gamePage?.name}</Text>
-                            <TouchableOpacity style={{ backgroundColor: '#bababaff', borderRadius: 50 }} onPress={() => dispatch(clearLogger())}>
-                                <Ionicons name="close-outline" size={25} color="#323232ff" />
+                            <TouchableOpacity style={{ backgroundColor: '#909090ff', borderRadius: 50 }} onPress={() => dispatch(clearLogger())}>
+                                <Ionicons name="close-outline" size={24} color="#262626ff" />
                             </TouchableOpacity>
                         </View>
                         <Text style={styles.modalText}>{gamePage?.first_release_date ? new Date(gamePage.first_release_date * 1000).getFullYear() : ''}</Text>

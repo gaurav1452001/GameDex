@@ -4,6 +4,21 @@ export interface GamePageDataType {
         id: number;
         url: string;
     };
+    language_supports: Array<{
+        id: number;
+        language: {
+            id:number;
+            name:string;
+        };
+    }>;
+    age_ratings: Array<{
+        id: number;
+        rating_cover_url: string;
+        organization: {
+            id: number;
+            name: string;
+        };
+    }>;
     ports: Array<{
         id: number;
         cover: {

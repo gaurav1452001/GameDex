@@ -17,7 +17,7 @@ import ReleasesScreen from '@/components/gamePageTopTab/ReleasesScreen';
 import RelatedScreen from '@/components/gamePageTopTab/RelatedScreen';
 import LoggerButton from "@/components/loggerButton";
 import LoggerModal from "@/components/loggerModal";
-import BottomSheet from "@gorhom/bottom-sheet";
+import Languages from "@/components/gamePageInfo/languages";
 
 
 
@@ -309,7 +309,7 @@ export default function GameInfo() {
                                 Completely
                             </Text>
                             <View style={styles.playtime}>
-                                <Text style={{ color: '#e2e2e2ff', fontSize: 19, fontWeight: 'bold' }}>
+                                <Text style={{ color: '#c3c3c3ff', fontSize: 19, fontWeight: 'bold' }}>
                                     {playtime?.completely ? `${Math.round(playtime.completely / 3600)}H` : 'N/A'}
                                 </Text>
                             </View>
@@ -342,6 +342,7 @@ export default function GameInfo() {
                 <View style={{ marginTop: 6, marginRight: -16 }}>
                     {gamePage?.similar_games &&
                         (<>
+                        <View style={styles.hLine} />
                             <Text style={{ fontSize: 15, color: 'white', marginVertical: 10 }}>
                                 SIMILAR GAMES
                             </Text>
@@ -359,6 +360,7 @@ export default function GameInfo() {
                         </>
                         )}
                 </View>
+                <Languages/>
                 <View style={{ marginTop: 6 }}>
                     {gamePage?.keywords && gamePage.keywords.length > 0 && (
                         <>
@@ -372,7 +374,7 @@ export default function GameInfo() {
                         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                             {gamePage?.keywords?.map((keyword) => (
                                 <TouchableOpacity key={keyword.id} onPress={() => router.push(`/(drawer)/keywords/${keyword.id}`)}>
-                                    <View key={keyword.id} style={{ backgroundColor: '#404040', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 16, marginRight: 6 }}>
+                                    <View key={keyword.id} style={{ backgroundColor: '#404040', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 5, marginRight: 6 }}>
                                         <Text style={{ color: '#ffffff', fontSize: 12 }}>{keyword.name}</Text>
                                     </View>
                                 </TouchableOpacity>
