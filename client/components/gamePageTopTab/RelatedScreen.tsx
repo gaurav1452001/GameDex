@@ -73,8 +73,10 @@ export default function RelatedScreen() {
     return (
         <View style={styles.tabContent}>
             {renderSection('PARENT GAME', [gamePage?.parent_game].filter(Boolean))}
-            {gamePage?.collections?.map((collection) => 
-                renderSection(`COLLECTION: ${collection.name?.toUpperCase()}`, collection.games || [])
+            {gamePage?.collections?.map((collection, index) => 
+            <View key={`collection-${collection.id || index}`}>
+                {renderSection(`COLLECTION: ${collection.name?.toUpperCase()}`, collection.games || [])}
+            </View>
             )}
             {renderSection(`FRANCHISE: ${gamePage?.franchise?.name.toUpperCase()}`, gamePage?.franchise?.games || [])}
             {renderSection('PORTS', gamePage?.ports || [])}

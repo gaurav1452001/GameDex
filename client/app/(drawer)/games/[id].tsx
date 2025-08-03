@@ -2,7 +2,6 @@ import { Text, View, ScrollView, Image, StyleSheet, TouchableOpacity, Linking, M
 import { SignedIn, useUser } from '@clerk/clerk-expo'
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams } from 'expo-router';
-import GamePageTopTab from '../../../components/gamePageTopTab/gamePageTopTab';
 import { useEffect, useState, useRef } from "react";
 import LottieView from 'lottie-react-native';
 import axios from "axios";
@@ -11,19 +10,26 @@ import { PlaytimeType } from "@/types/gameTypes";
 import type { RootState } from '@/redux/store'
 import { useAppSelector, useAppDispatch } from '@/redux/hooks'
 import { update, clearData } from '@/redux/gameData/gameDataSlice'
+import { clearLogger,updateLogger } from '@/redux/gameLogger/gameLoggerSlice';
 import DetailsScreen from '@/components/gamePageTopTab/DetailsScreen';
 import MediaScreen from '@/components/gamePageTopTab/MediaScreen';
 import ReleasesScreen from '@/components/gamePageTopTab/ReleasesScreen';
 import RelatedScreen from '@/components/gamePageTopTab/RelatedScreen';
+import LoggerButton from "@/components/loggerButton";
+import LoggerModal from "@/components/loggerModal";
+import BottomSheet from "@gorhom/bottom-sheet";
+
 
 
 export default function GameInfo() {
     const dispatch = useAppDispatch();
     const animation = useRef<LottieView>(null);
     const { id } = useLocalSearchParams();
-    
+
+
     const [playtime, setPlaytime] = useState<PlaytimeType>();
     const [modalVisible, setModalVisible] = useState(false);
+    const loggerVisible = useAppSelector((state: RootState) => state.gamePageLogger.data);
     const [expanded, setExpanded] = useState(false);
     const [activeTab, setActiveTab] = useState('details');
     const { user } = useUser();
@@ -31,6 +37,7 @@ export default function GameInfo() {
     useEffect(() => {
         const fetchGameInfo = async () => {
             dispatch(clearData());
+            dispatch(clearLogger());
             setActiveTab('details');
             setExpanded(false);
             try {
@@ -51,6 +58,28 @@ export default function GameInfo() {
         const url = `https://www.youtube.com/watch?v=${gamePage?.videos?.[0]?.video_id}`;
         Linking.openURL(url).catch(err => console.error('Failed to open URL:', err));
     };
+    const actions = [
+        {
+            text: "Accessibility",
+            name: "bt_accessibility",
+            position: 2
+        },
+        {
+            text: "Language",
+            name: "bt_language",
+            position: 1
+        },
+        {
+            text: "Location",
+            name: "bt_room",
+            position: 3
+        },
+        {
+            text: "Video",
+            name: "bt_videocam",
+            position: 4
+        }
+    ];
 
     if (!gamePage) {
         return (
@@ -70,22 +99,25 @@ export default function GameInfo() {
     }
 
     return (
+        <View style={{ flex: 1}}>
+        
         <ScrollView style={{ backgroundColor: '#181818' }}>
+
             <Modal
-                animationType="none"
+                animationType="fade"
                 transparent={true}
                 visible={modalVisible}
                 onRequestClose={() => {
                     setModalVisible(!modalVisible);
                 }}
             >
-                <View style={styles.modalContainer}>
+                <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.modalContainer}>
                     <Image
                         source={{ uri: 'https:' + gamePage?.cover?.url.replace('t_thumb', 't_1080p_2x') }}
                         style={styles.modalImage}
                         resizeMode="contain"
                     />
-                </View>
+                </TouchableOpacity>
             </Modal>
 
             <View style={styles.container}>
@@ -211,7 +243,7 @@ export default function GameInfo() {
                     </View>
                 </View>
                 <View style={styles.hLine} />
-                <View>
+                <TouchableOpacity onPress={()=>{dispatch(updateLogger())}}>
                     <SignedIn>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 16, paddingVertical: 8, paddingHorizontal: 10, borderRadius: 9, backgroundColor: '#3e3e3eff' }}>
                             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
@@ -232,30 +264,30 @@ export default function GameInfo() {
                             </View>
                         </View>
                     </SignedIn>
-                </View>
+                </TouchableOpacity>
                 <View style={styles.hLine} />
-                
+
                 <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 5, borderBottomWidth: 1, borderBottomColor: '#333', marginHorizontal: -16 }}>
                     <TouchableOpacity
-                        style={[styles.tabButton, activeTab === 'details' && styles.activeTab]} 
+                        style={[styles.tabButton, activeTab === 'details' && styles.activeTab]}
                         onPress={() => setActiveTab('details')}
                     >
                         <Text style={[styles.tabText, activeTab === 'details' && styles.activeTabText]}>DETAILS</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity 
-                        style={[styles.tabButton, activeTab === 'media' && styles.activeTab]} 
+                    <TouchableOpacity
+                        style={[styles.tabButton, activeTab === 'media' && styles.activeTab]}
                         onPress={() => setActiveTab('media')}
                     >
                         <Text style={[styles.tabText, activeTab === 'media' && styles.activeTabText]}>MEDIA</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity 
-                        style={[styles.tabButton, activeTab === 'releases' && styles.activeTab]} 
+                    <TouchableOpacity
+                        style={[styles.tabButton, activeTab === 'releases' && styles.activeTab]}
                         onPress={() => setActiveTab('releases')}
                     >
                         <Text style={[styles.tabText, activeTab === 'releases' && styles.activeTabText]}>RELEASES</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity 
-                        style={[styles.tabButton, activeTab === 'related' && styles.activeTab]} 
+                    <TouchableOpacity
+                        style={[styles.tabButton, activeTab === 'related' && styles.activeTab]}
                         onPress={() => setActiveTab('related')}
                     >
                         <Text style={[styles.tabText, activeTab === 'related' && styles.activeTabText]}>RELATED</Text>
@@ -349,8 +381,14 @@ export default function GameInfo() {
                     </View>
                 </View>
             </View>
-
+        
         </ScrollView>
+        <TouchableOpacity onPress={() => {dispatch(updateLogger())}} style={{ position: 'absolute', bottom: 35, right: 20 }}>
+            <LoggerButton />
+        </TouchableOpacity>
+        {loggerVisible && <LoggerModal />}
+
+        </View>
     );
 }
 const styles = StyleSheet.create({

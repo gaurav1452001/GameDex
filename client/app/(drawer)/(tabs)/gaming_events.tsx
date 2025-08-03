@@ -55,9 +55,9 @@ export default function GamingEvents() {
                                     </Text>
                                 </View>
                             )}
-                            <View style={{ paddingVertical: 13, paddingHorizontal: 10, gap: 6 }}>
-                                <Text style={{ color: '#fff', fontSize: 15, fontWeight: 'bold' }}>{event.name}</Text>
-                                <Text numberOfLines={2} style={{ color: '#aaa', fontSize: 12, }}>
+                            <View style={{ paddingVertical: 13, paddingHorizontal: 15, gap: 6 }}>
+                                <Text style={{ color: '#fff', fontSize: 15, fontWeight: 'bold', letterSpacing: 0.5 }}>{event.name}</Text>
+                                <Text numberOfLines={2} style={{ color: '#aaa', fontSize: 11, letterSpacing: 0.5 }}>
                                     {event.description}
                                 </Text>
                             </View>

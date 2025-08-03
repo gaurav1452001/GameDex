@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
 import gameDataReducer from './gameData/gameDataSlice'
-import  gameHeightReducer  from './gameTabHeight/gameTabHeightSlice'
+import  gameLoggerReducer  from './gameLogger/gameLoggerSlice'
 export const store = configureStore({
     reducer: {
         gamePageData: gameDataReducer,
-        gamePageHeight: gameHeightReducer,
+        gamePageLogger: gameLoggerReducer,
     }
 })
 
