@@ -91,6 +91,12 @@ export default function DetailsScreen() {
                             <Text style={styles.companyList}>{companies.supportingDevelopers.join('\n')}</Text>
                         </View>
                     )}
+                    {gamePage?.game_engines && gamePage.game_engines.length > 0 && (
+                        <View style={styles.section}>
+                            <Text style={styles.sectionTitle}>GAME ENGINES</Text>
+                            <Text style={styles.companyList}>{gamePage.game_engines.map(engine => engine.name).join('\n')}</Text>
+                        </View>
+                    )}
                 </View>
                 <View style={styles.tabContent}>
                     {gamePage?.genres && gamePage.genres.length > 0 && (

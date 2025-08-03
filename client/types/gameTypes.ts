@@ -11,13 +11,21 @@ export interface GamePageDataType {
             name:string;
         };
     }>;
+    game_engines:Array<{
+        id: number;
+        name: string;
+    }>;
+    websites:Array<{
+        id: number;
+        url: string;
+        type:{
+            id: number;
+            type: string;
+        }
+    }>
     age_ratings: Array<{
         id: number;
         rating_cover_url: string;
-        organization: {
-            id: number;
-            name: string;
-        };
     }>;
     ports: Array<{
         id: number;
@@ -163,6 +171,10 @@ export interface GamePageDataType {
             };
         };
         date: number;
+    }>;
+    platforms: Array<{
+        id: number;
+        name:string;
     }>;
     summary: string;
     similar_games: Array<{

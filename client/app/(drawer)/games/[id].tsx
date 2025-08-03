@@ -18,6 +18,8 @@ import RelatedScreen from '@/components/gamePageTopTab/RelatedScreen';
 import LoggerButton from "@/components/loggerButton";
 import LoggerModal from "@/components/loggerModal";
 import Languages from "@/components/gamePageInfo/languages";
+import Platforms from "@/components/gamePageInfo/platforms";
+import Websites from "@/components/gamePageInfo/websites";
 
 
 
@@ -360,6 +362,8 @@ export default function GameInfo() {
                         </>
                         )}
                 </View>
+                <Websites/>
+                <Platforms/>
                 <Languages/>
                 <View style={{ marginTop: 6 }}>
                     {gamePage?.keywords && gamePage.keywords.length > 0 && (
