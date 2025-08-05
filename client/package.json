@@ -48,6 +48,7 @@
     "react-native": "0.79.5",
     "react-native-floating-action": "^1.22.0",
     "react-native-gesture-handler": "~2.24.0",
+    "react-native-keyboard-controller": "^1.18.2",
     "react-native-pager-view": "6.7.1",
     "react-native-pell-rich-editor": "^1.10.0",
     "react-native-reanimated": "~3.17.4",
