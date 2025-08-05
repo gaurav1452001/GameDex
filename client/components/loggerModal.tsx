@@ -26,7 +26,7 @@ const LoggerModal = () => {
                     <View style={{ flexDirection: 'column', paddingVertical: 10 }}>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                             <Text style={styles.modalTextName}>{gamePage?.name}</Text>
-                            <TouchableOpacity style={{ backgroundColor: '#909090ff', borderRadius: 50 }} onPress={() => dispatch(clearLogger())}>
+                            <TouchableOpacity style={{ backgroundColor: '#7d7d7dff', borderRadius: 50 }} onPress={() => dispatch(clearLogger())}>
                                 <Ionicons name="close-outline" size={24} color="#262626ff" />
                             </TouchableOpacity>
                         </View>
@@ -35,15 +35,15 @@ const LoggerModal = () => {
                     <View style={styles.hLine} />
                     <View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingVertical: 10 }}>
                         <TouchableOpacity style={styles.centerItems}>
-                            <Ionicons name="game-controller" size={50} color="#bababaff" />
+                            <Ionicons name="game-controller-outline" size={50} color="#7d7d7dff" />
                             <Text style={styles.modalText}>Play</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.centerItems}>
-                            <Ionicons name="heart" size={50} color="#bababaff" />
+                            <Ionicons name="heart-outline" size={50} color="#7d7d7dff" />
                             <Text style={styles.modalText}>Like</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.centerItems}>
-                            <Ionicons name="time" size={50} color="#bababaff" />
+                            <Ionicons name="time-outline" size={50} color="#7d7d7dff" />
                             <Text style={styles.modalText}>Later</Text>
                         </TouchableOpacity>
                     </View>
@@ -55,7 +55,7 @@ const LoggerModal = () => {
                             onChange={setRating}
                             starSize={55}
                             enableHalfStar={true}
-                            emptyColor="#969696ff"
+                            emptyColor="#555555ff"
                             color="#61d76fff"
                         />
                         <Text style={[styles.modalText, { marginTop: 10 }]}>

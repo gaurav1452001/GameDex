@@ -66,7 +66,7 @@ export default function Page() {
           resizeMode="cover"
         />
         <LinearGradient
-          colors={['transparent', '#181818']} // Replace #ffffff with your background color
+          colors={['transparent', '#181818']} 
           style={styles.gradient}
         />
       </View>

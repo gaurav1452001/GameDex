@@ -15,14 +15,12 @@ const Platforms = () => {
                     </Text>
                 </>
             )}
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginRight: -16 }}>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap',   }}>
                     {gamePage?.platforms?.map((platform) => (
-                            <View key={platform.id} style={{ backgroundColor: '#404040', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 5, marginRight: 6, }}>
+                            <View key={platform.id} style={{ backgroundColor: '#353535ff', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 5, marginRight: 6,marginTop: 10 }}>
                                 <Text style={{ color: 'white', letterSpacing: 0.5 }}>{platform.name}</Text>
                             </View>
                     ))}
-                </ScrollView>
             </View>
         </View>
     )

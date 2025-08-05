@@ -19,7 +19,7 @@ const Languages = () => {
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                     {Array.from(new Set(gamePage?.language_supports?.map(language => language.language.name)))
                         .map((languageName) => (
-                            <View key={languageName} style={{ backgroundColor: '#404040', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 5, marginRight: 6 }}>
+                            <View key={languageName} style={{ backgroundColor: '#353535ff', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 5, marginRight: 6 }}>
                                 <Text style={{ color: '#ffffff', fontSize: 12 }}>{languageName}</Text>
                             </View>
                         ))}
