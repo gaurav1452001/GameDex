@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { clearLogger } from '@/redux/gameLogger/gameLoggerSlice';
 import { Ionicons } from '@expo/vector-icons';
 import StarRating from 'react-native-star-rating-widget';
+import { router } from 'expo-router';
 
 
 const LoggerModal = () => {
@@ -64,7 +65,7 @@ const LoggerModal = () => {
                     </View>
                     <View style={styles.hLine} />
                     <View style={{ flexDirection: 'column', paddingVertical: 10, gap: 30 }}>
-                        <TouchableOpacity style={styles.lister}>
+                        <TouchableOpacity style={styles.lister} onPress={() =>router.push(`/(drawer)/games/review`)}>
                             <Ionicons name="create-outline" size={20} color="#bababaff" />
                             <Text style={styles.modalText}>Review or log</Text>
                         </TouchableOpacity>

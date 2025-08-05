@@ -49,6 +49,7 @@
     "react-native-floating-action": "^1.22.0",
     "react-native-gesture-handler": "~2.24.0",
     "react-native-pager-view": "6.7.1",
+    "react-native-pell-rich-editor": "^1.10.0",
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.11.1",
@@ -56,7 +57,7 @@
     "react-native-svg": "^15.12.1",
     "react-native-url-polyfill": "^2.0.0",
     "react-native-web": "~0.20.0",
-    "react-native-webview": "13.13.5",
+    "react-native-webview": "^13.13.5",
     "react-redux": "^9.2.0"
   },
   "devDependencies": {

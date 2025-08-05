@@ -20,7 +20,7 @@ export default function ReleasesScreen() {
                     ref={animation}
                     style={{
                         width: 250,
-                        height: 250,
+                        height: 150,
                         backgroundColor: '#181818',
                     }}
                     source={require('../../assets/animations/ghost.json')}
