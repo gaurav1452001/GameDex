@@ -1,27 +1,88 @@
-import { View, Image, Text, TouchableOpacity, Platform, KeyboardAvoidingView, StyleSheet } from 'react-native'
-import React, { useState } from 'react'
+import { View, Image, Text, TouchableOpacity, Platform, Keyboard, StyleSheet, Dimensions } from 'react-native'
+import React, { useRef, useState, useEffect } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
 import type { RootState } from '@/redux/store'
 import { useAppSelector } from '@/redux/hooks'
 import StarRating from 'react-native-star-rating-widget'
 import { Ionicons } from '@expo/vector-icons'
 import { TextInput } from 'react-native'
+import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated'
+
+const { height: screenHeight } = Dimensions.get('window');
 
 const Review = () => {
     const [rating, setRating] = useState(0);
     const gamePage = useAppSelector((state: RootState) => state.gamePageData.data)
     const [reviewText, setReviewText] = useState('');
+    const inputRef = useRef<TextInput>(null);
+    const scrollViewRef = useRef<ScrollView>(null);
+    
+    // Use react-native-reanimated for keyboard handling
+    const keyboardHeight = useSharedValue(0);
+
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener(
+            'keyboardDidShow',
+            (e) => {
+                keyboardHeight.value = withTiming(e.endCoordinates.height, { duration: 250 });
+                
+                // Scroll to keep TextInput visible
+                setTimeout(() => {
+                    inputRef.current?.measure((x, y, width, height, pageX, pageY) => {
+                        const inputBottom = pageY + height;
+                        const keyboardTop = screenHeight - e.endCoordinates.height;
+                        
+                        if (inputBottom > keyboardTop) {
+                            const scrollOffset = inputBottom - keyboardTop + 50; // Extra padding
+                            scrollViewRef.current?.scrollTo({
+                                y: scrollOffset,
+                                animated: true,
+                            });
+                        }
+                    });
+                }, 100);
+            }
+        );
+
+        const keyboardDidHideListener = Keyboard.addListener(
+            'keyboardDidHide',
+            () => {
+                keyboardHeight.value = withTiming(0, { duration: 250 });
+            }
+        );
+
+        return () => {
+            keyboardDidShowListener.remove();
+            keyboardDidHideListener.remove();
+        };
+    }, []);
+
+    const keyboardPadding = useAnimatedStyle(() => {
+        return {
+            height: keyboardHeight.value,
+        };
+    });
+
+    const handleTextInputFocus = () => {
+        // Additional delay to ensure keyboard is fully shown
+        setTimeout(() => {
+            inputRef.current?.measure((x, y, width, height, pageX, pageY) => {
+                scrollViewRef.current?.scrollTo({
+                    y: pageY - 100,
+                    animated: true,
+                });
+            });
+        }, 300);
+    };
 
     return (
-        <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={styles.container}
-            keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 70}
-        >
-            <ScrollView 
+        <View style={styles.container}>
+            <ScrollView
+                ref={scrollViewRef}
                 style={styles.scrollView}
                 contentContainerStyle={styles.contentContainer}
                 showsVerticalScrollIndicator={false}
+                keyboardShouldPersistTaps="handled"
             >
                 <View style={styles.gameHeader}>
                     <View style={styles.gameInfo}>
@@ -38,9 +99,9 @@ const Review = () => {
                         resizeMode="cover"
                     />
                 </View>
-                
+
                 <View style={styles.hLine} />
-                
+
                 <View style={styles.dateSection}>
                     <Text style={styles.sectionLabel}>
                         Date
@@ -54,9 +115,9 @@ const Review = () => {
                         })}
                     </Text>
                 </View>
-                
+
                 <View style={styles.hLine} />
-                
+
                 <View style={styles.ratingSection}>
                     <View>
                         <StarRating
@@ -74,11 +135,12 @@ const Review = () => {
                         <Ionicons name="heart-outline" size={50} color="#a0a0a0ff" />
                     </View>
                 </View>
-                
+
                 <View style={styles.hLine} />
-                
+
                 <View style={styles.reviewSection}>
                     <TextInput
+                        ref={inputRef}
                         style={styles.reviewInput}
                         placeholder="Write your review..."
                         placeholderTextColor="#a0a0a0ff"
@@ -89,16 +151,17 @@ const Review = () => {
                                 setReviewText(text);
                             }
                         }}
+                        onFocus={handleTextInputFocus}
                         maxLength={1000}
+                        scrollEnabled={true}
+                        textAlignVertical="top"
                     />
                     <Text style={styles.characterCount}>
                         {reviewText.length}/1000
                     </Text>
                 </View>
-                
             </ScrollView>
-            
-        </KeyboardAvoidingView>
+        </View>
     )
 }
 
@@ -170,7 +233,6 @@ const styles = StyleSheet.create({
     },
     reviewSection: {
         marginTop: 10,
-        flex: 1,
         minHeight: 150,
     },
     reviewInput: {
@@ -180,6 +242,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         fontSize: 16,
         minHeight: 120,
+        maxHeight: 200,
         textAlignVertical: 'top',
         borderWidth: 1,
         borderColor: '#444',
@@ -194,5 +257,6 @@ const styles = StyleSheet.create({
         height: 1,
         backgroundColor: '#333',
         marginVertical: 5,
+        marginHorizontal: -18,
     },
 });
