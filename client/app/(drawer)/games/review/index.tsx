@@ -1,12 +1,11 @@
-import { View, Image, Text, TouchableOpacity, Platform, Keyboard, StyleSheet, Dimensions } from 'react-native'
-import React, { useRef, useState, useEffect } from 'react'
+import { View, Image, Text, StyleSheet, Dimensions } from 'react-native'
+import React, { useState } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
 import type { RootState } from '@/redux/store'
 import { useAppSelector } from '@/redux/hooks'
 import StarRating from 'react-native-star-rating-widget'
 import { Ionicons } from '@expo/vector-icons'
 import { TextInput } from 'react-native'
-import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated'
 
 const { height: screenHeight } = Dimensions.get('window');
 
@@ -14,71 +13,11 @@ const Review = () => {
     const [rating, setRating] = useState(0);
     const gamePage = useAppSelector((state: RootState) => state.gamePageData.data)
     const [reviewText, setReviewText] = useState('');
-    const inputRef = useRef<TextInput>(null);
-    const scrollViewRef = useRef<ScrollView>(null);
     
-    // Use react-native-reanimated for keyboard handling
-    const keyboardHeight = useSharedValue(0);
-
-    useEffect(() => {
-        const keyboardDidShowListener = Keyboard.addListener(
-            'keyboardDidShow',
-            (e) => {
-                keyboardHeight.value = withTiming(e.endCoordinates.height, { duration: 250 });
-                
-                // Scroll to keep TextInput visible
-                setTimeout(() => {
-                    inputRef.current?.measure((x, y, width, height, pageX, pageY) => {
-                        const inputBottom = pageY + height;
-                        const keyboardTop = screenHeight - e.endCoordinates.height;
-                        
-                        if (inputBottom > keyboardTop) {
-                            const scrollOffset = inputBottom - keyboardTop + 50; // Extra padding
-                            scrollViewRef.current?.scrollTo({
-                                y: scrollOffset,
-                                animated: true,
-                            });
-                        }
-                    });
-                }, 100);
-            }
-        );
-
-        const keyboardDidHideListener = Keyboard.addListener(
-            'keyboardDidHide',
-            () => {
-                keyboardHeight.value = withTiming(0, { duration: 250 });
-            }
-        );
-
-        return () => {
-            keyboardDidShowListener.remove();
-            keyboardDidHideListener.remove();
-        };
-    }, []);
-
-    const keyboardPadding = useAnimatedStyle(() => {
-        return {
-            height: keyboardHeight.value,
-        };
-    });
-
-    const handleTextInputFocus = () => {
-        // Additional delay to ensure keyboard is fully shown
-        setTimeout(() => {
-            inputRef.current?.measure((x, y, width, height, pageX, pageY) => {
-                scrollViewRef.current?.scrollTo({
-                    y: pageY - 100,
-                    animated: true,
-                });
-            });
-        }, 300);
-    };
 
     return (
         <View style={styles.container}>
             <ScrollView
-                ref={scrollViewRef}
                 style={styles.scrollView}
                 contentContainerStyle={styles.contentContainer}
                 showsVerticalScrollIndicator={false}
@@ -140,7 +79,6 @@ const Review = () => {
 
                 <View style={styles.reviewSection}>
                     <TextInput
-                        ref={inputRef}
                         style={styles.reviewInput}
                         placeholder="Write your review..."
                         placeholderTextColor="#a0a0a0ff"
@@ -151,10 +89,11 @@ const Review = () => {
                                 setReviewText(text);
                             }
                         }}
-                        onFocus={handleTextInputFocus}
                         maxLength={1000}
                         scrollEnabled={true}
                         textAlignVertical="top"
+                        spellCheck={false}
+                        autoCorrect={false}
                     />
                     <Text style={styles.characterCount}>
                         {reviewText.length}/1000
@@ -234,11 +173,12 @@ const styles = StyleSheet.create({
     reviewSection: {
         marginTop: 10,
         minHeight: 150,
+        maxHeight: screenHeight * 0.4,
     },
     reviewInput: {
         backgroundColor: '#2a2a2aff',
         color: 'white',
-        padding: 15,
+        paddingHorizontal: 15,
         borderRadius: 8,
         fontSize: 16,
         minHeight: 120,
