@@ -20,7 +20,7 @@ export default function AppLayout() {
       screenOptions={{
         headerShown: true,
         title: "Popular",
-        headerStyle: { backgroundColor: "#181818", shadowOpacity: 0, elevation: 0 },
+        headerStyle: { backgroundColor: "#0b0b0bff", shadowOpacity: 0, elevation: 0 },
         headerTitleStyle: { color: "#fff", fontWeight: "bold", fontSize: 21 },
         headerTintColor: "#fff",
         drawerStyle: { backgroundColor: "#191919ff", },
@@ -115,6 +115,8 @@ export default function AppLayout() {
       <Drawer.Screen name="games/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
       <Drawer.Screen name="events/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
       <Drawer.Screen name="keywords/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
+      <Drawer.Screen name="reviews/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
+
       <Drawer.Screen name="games/review/index" options={{
         headerShown: true,
         drawerItemStyle: { display: 'none' },
@@ -134,5 +136,4 @@ export default function AppLayout() {
 
   );
 }
-
 

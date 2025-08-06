@@ -29,15 +29,12 @@ export default function GameInfo() {
     const animation = useRef<LottieView>(null);
     const { id } = useLocalSearchParams();
     const navigation = useNavigation();
-
-
     const [playtime, setPlaytime] = useState<PlaytimeType>();
     const [modalVisible, setModalVisible] = useState(false);
     const loggerVisible = useAppSelector((state: RootState) => state.gamePageLogger.data);
     const [expanded, setExpanded] = useState(false);
     const [activeTab, setActiveTab] = useState('details');
     const { user } = useUser();
-
     useEffect(() => {
         const fetchGameInfo = async () => {
             dispatch(clearData());

@@ -1,28 +1,112 @@
-import { View, Image, Text, StyleSheet, Dimensions } from 'react-native'
-import React, { useState } from 'react'
+import { View, Image, Text, StyleSheet, Dimensions, TouchableOpacity, BackHandler, Modal } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
 import type { RootState } from '@/redux/store'
 import { useAppSelector } from '@/redux/hooks'
+import { useNavigation } from '@react-navigation/native'
 import StarRating from 'react-native-star-rating-widget'
 import { Ionicons } from '@expo/vector-icons'
 import { TextInput } from 'react-native'
+import { useMutation } from 'convex/react'
+import { api } from '@/convex/_generated/api'
+import { useUser } from '@clerk/clerk-react'
 
 const { height: screenHeight } = Dimensions.get('window');
 
 const Review = () => {
+    const navigation = useNavigation();
+    const { user } = useUser();
+    const createReview = useMutation(api.reviews.createReview)
     const [rating, setRating] = useState(0);
+    const [liked, setLiked] = useState(false);
     const gamePage = useAppSelector((state: RootState) => state.gamePageData.data)
     const [reviewText, setReviewText] = useState('');
-    
+    const [modalVisible, setModalVisible] = useState(false);
+    console.log('Current route:', navigation.getState());
+    useEffect(() => {
+        const handleBackPress = () => {
+            if (reviewText || rating > 0 || liked) {
+                setModalVisible(true);
+                return true;
+            }
+            return false;
+        };
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+        return () => {
+            backHandler.remove();
+        };
+    }, [reviewText, rating, liked]);
+
+    const reviewData = {
+        externalId: user?.id || '',
+        name: user?.fullName || '',
+        imageUrl: user?.imageUrl || undefined,
+        gameId: gamePage?.id?.toString() || '',
+        gameName: gamePage?.name || '',
+        gameCover: gamePage?.cover?.url ? 'https:' + gamePage?.cover?.url.replace('t_thumb', 't_cover_big_2x') : '',
+        starRating: rating,
+        isLiked: liked,
+        reviewText: reviewText,
+        screenshots: gamePage?.screenshots ? 'https:' + gamePage?.screenshots[0]?.url.replace('t_thumb', 't_screenshot_huge') : '',
+        reviewDate: new Date().toISOString(),
+        gameYear: gamePage?.first_release_date ? new Date(gamePage.first_release_date * 1000).getFullYear().toString() : '',
+    };
 
     return (
         <View style={styles.container}>
+            <Modal
+                animationType="none"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                }}
+            >
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <View style={{ flexDirection: 'column',marginBottom:25 }}>
+                            <Text style={{ color: 'white', textAlign: 'center', fontSize: 23, fontWeight: '900', paddingHorizontal: 20, marginBottom: 10 }}>
+                                Discard changes
+                            </Text>
+                            <Text style={{ color: 'beige', textAlign: 'center', fontSize: 17, paddingHorizontal: 40 }}>
+                                Are you sure? Changes will be lost.
+                            </Text>
+                        </View>
+                        <View style={styles.modalTextContainer}>
+                            <TouchableOpacity
+                                style={styles.buttonClose}
+                                onPress={() => setModalVisible(!modalVisible)}
+                            >
+                                <Text style={styles.textStyle}>Cancel</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={styles.buttonSignOut}
+                                onPress={()=>{
+                                    setReviewText('');
+                                    setRating(0);
+                                    setLiked(false);
+                                    setModalVisible(!modalVisible);
+                                    navigation.goBack();
+                                }}
+                            >
+                                <Text style={styles.textStyle}>Discard</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
             <ScrollView
                 style={styles.scrollView}
                 contentContainerStyle={styles.contentContainer}
                 showsVerticalScrollIndicator={false}
                 keyboardShouldPersistTaps="handled"
             >
+                <TouchableOpacity onPress={() => createReview(reviewData)}>
+                    <Text style={{ color: '#61d76fff', fontSize: 16, marginBottom: 10 }}>
+                        Submit Review
+                    </Text>
+                </TouchableOpacity>
                 <View style={styles.gameHeader}>
                     <View style={styles.gameInfo}>
                         <Text style={styles.gameName}>
@@ -70,9 +154,9 @@ const Review = () => {
                         />
                         <Text style={styles.ratedText}>Rated</Text>
                     </View>
-                    <View>
-                        <Ionicons name="heart-outline" size={50} color="#a0a0a0ff" />
-                    </View>
+                    <TouchableOpacity onPress={() => setLiked(!liked)}>
+                        <Ionicons name={liked ? "heart" : "heart-outline"} size={50} color={liked ? "#61d76fff" : "#a0a0a0ff"} />
+                    </TouchableOpacity>
                 </View>
 
                 <View style={styles.hLine} />
@@ -198,5 +282,61 @@ const styles = StyleSheet.create({
         backgroundColor: '#333',
         marginVertical: 5,
         marginHorizontal: -18,
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        backgroundColor: "rgba(3, 3, 3, 0.65)",
+    },
+    drawerText: {
+        color: "#9f9f9fff",
+    },
+    modalView: {
+        marginHorizontal: 30,
+        paddingTop: 20,
+        backgroundColor: "#343434ff",
+        borderRadius: 8,
+        overflow: "hidden",
+    },
+    buttonOpen: {
+        backgroundColor: "#F194FF",
+    },
+    buttonClose: {
+        backgroundColor: "#343434ff",
+        color: "#fff",
+        width: "50%",
+        fontSize: 25,
+        fontWeight: "bold",
+        padding: 10,
+    },
+    textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center",
+        fontSize: 16,
+        marginBottom: 3,
+    },
+    modalText: {
+        marginBottom: 25,
+        color: "white",
+        textAlign: "center",
+        fontSize: 20,
+        fontWeight: "bold",
+        paddingHorizontal: 20,
+    },
+    modalTextContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        width: "100%",
+        borderWidth: 1,
+        borderColor: "#2c2c2cff",
+    },
+    buttonSignOut: {
+        backgroundColor: "#7766bdff",
+        color: "#fff",
+        fontSize: 25,
+        padding: 10,
+        fontWeight: "bold",
+        width: "50%",
     },
 });
