@@ -43,21 +43,20 @@ export default function ReviewsScreen() {
 
         {reviews?.map((review) => (
           <TouchableOpacity onPress={() => router.push(`/reviews/${review._id}`)} key={review._id} style={{ marginTop: 15 }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 2 }}>
-              <Text style={{ color: '#c7c7c7ff', fontSize: 15, fontWeight: 900, flex: 2.1 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 2 }}>
+              <Text style={{ color: '#c7c7c7ff', fontSize: 15, fontWeight: 900, flex: 1.7 }}>
                 {review.gameName}
-            
                 <Text style={styles.reviewGameDate}>
                   {review.gameYear ? `  ${review.gameYear}` : ''}
                 </Text>
               </Text>
-              <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-                <Text style={{ color: '#828282ff', marginRight: 8, fontSize: 12, fontWeight: 'bold' }}>
-                  {review.name}
+              <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent:'flex-end' }}>
+                <Text style={{ color: '#828282ff', marginRight: 8, fontSize: 12, fontWeight: 'bold' }} numberOfLines={1}>
+                  {review.name?.length > 9 ? `${review.name.substring(0, 9)}...` : review.name}
                 </Text>
                 <Image
                   source={{ uri: review.imageUrl }}
-                  style={{ width: 28, height: 28, borderRadius: 12, borderWidth: 1, borderColor: '#404040' }}
+                  style={{ width: 28, height: 28, borderRadius: 50, borderWidth: 1, borderColor: '#404040' }}
                 />
               </View>
             </View>

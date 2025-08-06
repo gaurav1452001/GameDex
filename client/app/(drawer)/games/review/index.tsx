@@ -1,4 +1,4 @@
-import { View, Image, Text, StyleSheet, Dimensions, TouchableOpacity, BackHandler, Modal } from 'react-native'
+import { View, Image, Text, StyleSheet, Dimensions, TouchableOpacity, BackHandler, Modal, KeyboardAvoidingView, Keyboard } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
 import type { RootState } from '@/redux/store'
@@ -55,6 +55,8 @@ const Review = () => {
 
     return (
         <View style={styles.container}>
+            <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={100}>
+                
             <Modal
                 animationType="none"
                 transparent={true}
@@ -65,7 +67,7 @@ const Review = () => {
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <View style={{ flexDirection: 'column',marginBottom:25 }}>
+                        <View style={{ flexDirection: 'column', marginBottom: 25 }}>
                             <Text style={{ color: 'white', textAlign: 'center', fontSize: 23, fontWeight: '900', paddingHorizontal: 20, marginBottom: 10 }}>
                                 Discard changes
                             </Text>
@@ -82,7 +84,7 @@ const Review = () => {
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={styles.buttonSignOut}
-                                onPress={()=>{
+                                onPress={() => {
                                     setReviewText('');
                                     setRating(0);
                                     setLiked(false);
@@ -122,9 +124,7 @@ const Review = () => {
                         resizeMode="cover"
                     />
                 </View>
-
                 <View style={styles.hLine} />
-
                 <View style={styles.dateSection}>
                     <Text style={styles.sectionLabel}>
                         Date
@@ -138,9 +138,7 @@ const Review = () => {
                         })}
                     </Text>
                 </View>
-
                 <View style={styles.hLine} />
-
                 <View style={styles.ratingSection}>
                     <View>
                         <StarRating
@@ -155,12 +153,10 @@ const Review = () => {
                         <Text style={styles.ratedText}>Rated</Text>
                     </View>
                     <TouchableOpacity onPress={() => setLiked(!liked)}>
-                        <Ionicons name={liked ? "heart" : "heart-outline"} size={50} color={liked ? "#61d76fff" : "#a0a0a0ff"} />
+                        <Ionicons name={liked ? "heart" : "heart-outline"} size={50} color={liked ? "#d98138ff" : "#a0a0a0ff"} />
                     </TouchableOpacity>
                 </View>
-
                 <View style={styles.hLine} />
-
                 <View style={styles.reviewSection}>
                     <TextInput
                         style={styles.reviewInput}
@@ -184,6 +180,7 @@ const Review = () => {
                     </Text>
                 </View>
             </ScrollView>
+            </KeyboardAvoidingView>
         </View>
     )
 }
