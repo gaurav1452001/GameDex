@@ -75,13 +75,13 @@ const ReviewDetailScreen = () => {
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginHorizontal: 16 }}>
                     <View style={styles.reviewInfo}>
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', marginBottom: 8 }}>
-                            
-                                <Image
-                                    source={{ uri: review.imageUrl }}
-                                    style={{ width: 35, height: 35, borderRadius: 20, marginRight: 10, borderWidth: 1, borderColor: '#404040' }}
-                                />
+
+                            <Image
+                                source={{ uri: review.imageUrl }}
+                                style={{ width: 35, height: 35, borderRadius: 20, marginRight: 10, borderWidth: 1, borderColor: '#404040' }}
+                            />
                             <Text style={styles.reviewText}>
-                                {review.name}
+                                {review.name?.length > 25 ? `${review.name.substring(0, 25)}...` : review.name}
                             </Text>
                         </View>
                         <View style={{ flexDirection: 'column', gap: 12 }}>
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginRight: 6,
     },
-    hLine:{
+    hLine: {
         height: 1,
         backgroundColor: '#404040',
         marginVertical: 12,
@@ -184,6 +184,8 @@ const styles = StyleSheet.create({
         color: '#a0a0a0ff',
         fontSize: 12,
         fontWeight: '900',
+        letterSpacing: 0.5,
+
     },
     reviewDate: {
         color: '#7a7a7aff',

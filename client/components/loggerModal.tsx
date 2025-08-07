@@ -15,76 +15,76 @@ const LoggerModal = () => {
 
     return (
         <View>
-        <Modal
-            animationType="slide"
-            transparent={true}
-            visible={loggerVisible}
-            onRequestClose={() => {
-                dispatch(clearLogger());
-            }}>
-            <View style={styles.modalContainer} >
-                <View style={styles.modalContent}>
-                    <View style={{ flexDirection: 'column', paddingVertical: 10 }}>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Text style={styles.modalTextName}>{gamePage?.name}</Text>
-                            <TouchableOpacity style={{ backgroundColor: '#7d7d7dff', borderRadius: 50 }} onPress={() => dispatch(clearLogger())}>
-                                <Ionicons name="close-outline" size={24} color="#262626ff" />
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={loggerVisible}
+                onRequestClose={() => {
+                    dispatch(clearLogger());
+                }}>
+                <View style={styles.modalContainer} >
+                    <View style={styles.modalContent}>
+                        <View style={{ flexDirection: 'column', paddingVertical: 10 }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <Text style={styles.modalTextName}>{gamePage?.name}</Text>
+                                <TouchableOpacity style={{ backgroundColor: '#7d7d7dff', borderRadius: 50 }} onPress={() => dispatch(clearLogger())}>
+                                    <Ionicons name="close-outline" size={24} color="#262626ff" />
+                                </TouchableOpacity>
+                            </View>
+                            <Text style={styles.modalText}>{gamePage?.first_release_date ? new Date(gamePage.first_release_date * 1000).getFullYear() : ''}</Text>
+                        </View>
+                        <View style={styles.hLine} />
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingVertical: 10 }}>
+                            <TouchableOpacity style={styles.centerItems}>
+                                <Ionicons name="game-controller-outline" size={50} color="#7d7d7dff" />
+                                <Text style={styles.modalText}>Play</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.centerItems}>
+                                <Ionicons name="heart-outline" size={50} color="#7d7d7dff" />
+                                <Text style={styles.modalText}>Like</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.centerItems}>
+                                <Ionicons name="time-outline" size={50} color="#7d7d7dff" />
+                                <Text style={styles.modalText}>Later</Text>
                             </TouchableOpacity>
                         </View>
-                        <Text style={styles.modalText}>{gamePage?.first_release_date ? new Date(gamePage.first_release_date * 1000).getFullYear() : ''}</Text>
-                    </View>
-                    <View style={styles.hLine} />
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingVertical: 10 }}>
-                        <TouchableOpacity style={styles.centerItems}>
-                            <Ionicons name="game-controller-outline" size={50} color="#7d7d7dff" />
-                            <Text style={styles.modalText}>Play</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.centerItems}>
-                            <Ionicons name="heart-outline" size={50} color="#7d7d7dff" />
-                            <Text style={styles.modalText}>Like</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.centerItems}>
-                            <Ionicons name="time-outline" size={50} color="#7d7d7dff" />
-                            <Text style={styles.modalText}>Later</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.hLine} />
-                    <View style={{ alignItems: 'center', paddingVertical: 15 }}>
-                        <StarRating
-                            rating={rating}
-                            starStyle={{ marginHorizontal: -2 }}
-                            onChange={setRating}
-                            starSize={55}
-                            enableHalfStar={true}
-                            emptyColor="#555555ff"
-                            color="#61d76fff"
-                        />
-                        <Text style={[styles.modalText, { marginTop: 10 }]}>
-                            Rate
-                        </Text>
-                    </View>
-                    <View style={styles.hLine} />
-                    <View style={{ flexDirection: 'column', paddingVertical: 10, gap: 30 }}>
-                        <TouchableOpacity style={styles.lister} onPress={() =>router.push(`/(drawer)/games/review`)}>
-                            <Ionicons name="create-outline" size={20} color="#bababaff" />
-                            <Text style={styles.modalText}>Review or log</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.lister}>
-                            <Ionicons name="list-outline" size={20} color="#bababaff" />
-                            <Text style={styles.modalText} >Add to Lists</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.lister}>
-                            <Ionicons name="share-outline" size={20} color="#bababaff" />
-                            <Text style={styles.modalText}>Review or log</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.lister}>
-                            <Ionicons name="ellipsis-horizontal-outline" size={20} color="#bababaff" />
-                            <Text style={styles.modalText}>Review or log</Text>
-                        </TouchableOpacity>
+                        <View style={styles.hLine} />
+                        <View style={{ alignItems: 'center', paddingVertical: 15 }}>
+                            <StarRating
+                                rating={rating}
+                                starStyle={{ marginHorizontal: -2 }}
+                                onChange={setRating}
+                                starSize={55}
+                                enableHalfStar={true}
+                                emptyColor="#555555ff"
+                                color="#61d76fff"
+                            />
+                            <Text style={[styles.modalText, { marginTop: 10 }]}>
+                                Rate
+                            </Text>
+                        </View>
+                        <View style={styles.hLine} />
+                        <View style={{ flexDirection: 'column', paddingVertical: 10, gap: 30 }}>
+                            <TouchableOpacity style={styles.lister} onPress={() => { dispatch(clearLogger());; router.push(`/(drawer)/games/review`) }}>
+                                <Ionicons name="create-outline" size={20} color="#bababaff" />
+                                <Text style={styles.modalText}>Review or log</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.lister}>
+                                <Ionicons name="list-outline" size={20} color="#bababaff" />
+                                <Text style={styles.modalText} >Add to Lists</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.lister}>
+                                <Ionicons name="share-outline" size={20} color="#bababaff" />
+                                <Text style={styles.modalText}>Review or log</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.lister}>
+                                <Ionicons name="ellipsis-horizontal-outline" size={20} color="#bababaff" />
+                                <Text style={styles.modalText}>Review or log</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
-            </View>
-        </Modal>
+            </Modal>
         </View>
     )
 }

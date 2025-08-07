@@ -78,7 +78,7 @@ export default function GameInfo() {
 
     return (
         <View style={{ flex: 1 }}>
-            <ScrollView style={{ backgroundColor: '#181818' }}>
+            <ScrollView style={{ backgroundColor: '#181818' }} showsVerticalScrollIndicator={false}>
                 <Modal
                     animationType="fade"
                     transparent={true}

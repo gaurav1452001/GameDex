@@ -1,4 +1,4 @@
-import { View, Image, Text, StyleSheet, Dimensions, TouchableOpacity, BackHandler, Modal, KeyboardAvoidingView, Keyboard } from 'react-native'
+import { View, Image, Text, StyleSheet, Dimensions, TouchableOpacity, BackHandler, Modal, KeyboardAvoidingView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
 import type { RootState } from '@/redux/store'
@@ -10,6 +10,8 @@ import { TextInput } from 'react-native'
 import { useMutation } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import { useUser } from '@clerk/clerk-react'
+import { router } from 'expo-router'
+
 
 const { height: screenHeight } = Dimensions.get('window');
 
@@ -22,15 +24,44 @@ const Review = () => {
     const gamePage = useAppSelector((state: RootState) => state.gamePageData.data)
     const [reviewText, setReviewText] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
-    console.log('Current route:', navigation.getState());
+
+    useEffect(() => {
+        navigation.setOptions({
+            headerLeft: () => (
+                <TouchableOpacity onPress={() => {
+                    if (reviewText || rating > 0 || liked) {
+                        setModalVisible(true);
+                        return;
+                    }
+                    router.push(`/games/${gamePage?.id}`);
+                }} style={{ marginRight: 10, marginLeft:15 }}>
+                    <Ionicons name="close" size={24} color="#fff" />
+                </TouchableOpacity>
+            ),
+            headerRight: () => (
+                <TouchableOpacity onPress={() => {
+                    createReview(reviewData);
+                    setRating(0);
+                    setLiked(false);
+                    setReviewText('');
+                    router.push(`/games/${gamePage?.id}`);
+                }} style={{ marginRight: 15 }}>
+                    <Ionicons name="checkmark" size={24} color="#fff" />
+                </TouchableOpacity>
+            ),
+        });
+
+    }, []);
+
     useEffect(() => {
         const handleBackPress = () => {
-            if (reviewText || rating > 0 || liked) {
+            if (navigation.isFocused() && (reviewText || rating > 0 || liked)) {
                 setModalVisible(true);
-                return true;
+                return true; // prevent default back
             }
             return false;
         };
+
         const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
 
         return () => {
@@ -56,130 +87,124 @@ const Review = () => {
     return (
         <View style={styles.container}>
             <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={100}>
-                
-            <Modal
-                animationType="none"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                    setModalVisible(!modalVisible);
-                }}
-            >
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <View style={{ flexDirection: 'column', marginBottom: 25 }}>
-                            <Text style={{ color: 'white', textAlign: 'center', fontSize: 23, fontWeight: '900', paddingHorizontal: 20, marginBottom: 10 }}>
-                                Discard changes
-                            </Text>
-                            <Text style={{ color: 'beige', textAlign: 'center', fontSize: 17, paddingHorizontal: 40 }}>
-                                Are you sure? Changes will be lost.
-                            </Text>
-                        </View>
-                        <View style={styles.modalTextContainer}>
-                            <TouchableOpacity
-                                style={styles.buttonClose}
-                                onPress={() => setModalVisible(!modalVisible)}
-                            >
-                                <Text style={styles.textStyle}>Cancel</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.buttonSignOut}
-                                onPress={() => {
-                                    setReviewText('');
-                                    setRating(0);
-                                    setLiked(false);
-                                    setModalVisible(!modalVisible);
-                                    navigation.goBack();
-                                }}
-                            >
-                                <Text style={styles.textStyle}>Discard</Text>
-                            </TouchableOpacity>
+                <Modal
+                    animationType="none"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                        setModalVisible(!modalVisible);
+                    }}
+                >
+                    <View style={styles.centeredView}>
+                        <View style={styles.modalView}>
+                            <View style={{ flexDirection: 'column', marginBottom: 25 }}>
+                                <Text style={{ color: 'white', textAlign: 'center', fontSize: 23, fontWeight: '900', paddingHorizontal: 20, marginBottom: 10 }}>
+                                    Discard changes
+                                </Text>
+                                <Text style={{ color: 'beige', textAlign: 'center', fontSize: 17, paddingHorizontal: 40 }}>
+                                    Are you sure? Changes will be lost.
+                                </Text>
+                            </View>
+                            <View style={styles.modalTextContainer}>
+                                <TouchableOpacity
+                                    style={styles.buttonClose}
+                                    onPress={() => setModalVisible(!modalVisible)}
+                                >
+                                    <Text style={styles.textStyle}>Cancel</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={styles.buttonSignOut}
+                                    onPress={() => {
+                                        setReviewText('');
+                                        setRating(0);
+                                        setLiked(false);
+                                        setModalVisible(!modalVisible);
+                                        router.push(`/games/${gamePage?.id}`);
+                                    }}
+                                >
+                                    <Text style={styles.textStyle}>Discard</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
-                </View>
-            </Modal>
-            <ScrollView
-                style={styles.scrollView}
-                contentContainerStyle={styles.contentContainer}
-                showsVerticalScrollIndicator={false}
-                keyboardShouldPersistTaps="handled"
-            >
-                <TouchableOpacity onPress={() => createReview(reviewData)}>
-                    <Text style={{ color: '#61d76fff', fontSize: 16, marginBottom: 10 }}>
-                        Submit Review
-                    </Text>
-                </TouchableOpacity>
-                <View style={styles.gameHeader}>
-                    <View style={styles.gameInfo}>
-                        <Text style={styles.gameName}>
-                            {gamePage?.name}
-                        </Text>
-                        <Text style={styles.gameYear}>
-                            {gamePage?.first_release_date ? new Date(gamePage.first_release_date * 1000).getFullYear() : ''}
-                        </Text>
-                    </View>
-                    <Image
-                        source={{ uri: 'https:' + gamePage?.cover?.url.replace('t_thumb', 't_cover_big_2x') }}
-                        style={styles.gameCover}
-                        resizeMode="cover"
-                    />
-                </View>
-                <View style={styles.hLine} />
-                <View style={styles.dateSection}>
-                    <Text style={styles.sectionLabel}>
-                        Date
-                    </Text>
-                    <Text style={styles.dateText}>
-                        {new Date().toLocaleDateString('en-US', {
-                            weekday: 'long',
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                        })}
-                    </Text>
-                </View>
-                <View style={styles.hLine} />
-                <View style={styles.ratingSection}>
-                    <View>
-                        <StarRating
-                            rating={rating}
-                            starStyle={{ marginHorizontal: -3 }}
-                            onChange={setRating}
-                            starSize={50}
-                            enableHalfStar={true}
-                            emptyColor="#555555ff"
-                            color="#61d76fff"
+                </Modal>
+                <ScrollView
+                    style={styles.scrollView}
+                    contentContainerStyle={styles.contentContainer}
+                    showsVerticalScrollIndicator={false}
+                    keyboardShouldPersistTaps="handled"
+                >
+                    <View style={styles.gameHeader}>
+                        <View style={styles.gameInfo}>
+                            <Text style={styles.gameName}>
+                                {gamePage?.name}
+                            </Text>
+                            <Text style={styles.gameYear}>
+                                {gamePage?.first_release_date ? new Date(gamePage.first_release_date * 1000).getFullYear() : ''}
+                            </Text>
+                        </View>
+                        <Image
+                            source={{ uri: 'https:' + gamePage?.cover?.url.replace('t_thumb', 't_cover_big_2x') }}
+                            style={styles.gameCover}
+                            resizeMode="cover"
                         />
-                        <Text style={styles.ratedText}>Rated</Text>
                     </View>
-                    <TouchableOpacity onPress={() => setLiked(!liked)}>
-                        <Ionicons name={liked ? "heart" : "heart-outline"} size={50} color={liked ? "#d98138ff" : "#a0a0a0ff"} />
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.hLine} />
-                <View style={styles.reviewSection}>
-                    <TextInput
-                        style={styles.reviewInput}
-                        placeholder="Write your review..."
-                        placeholderTextColor="#a0a0a0ff"
-                        multiline={true}
-                        value={reviewText}
-                        onChangeText={(text) => {
-                            if (text.length <= 1000) {
-                                setReviewText(text);
-                            }
-                        }}
-                        maxLength={1000}
-                        scrollEnabled={true}
-                        textAlignVertical="top"
-                        spellCheck={false}
-                        autoCorrect={false}
-                    />
-                    <Text style={styles.characterCount}>
-                        {reviewText.length}/1000
-                    </Text>
-                </View>
-            </ScrollView>
+                    <View style={styles.hLine} />
+                    <View style={styles.dateSection}>
+                        <Text style={styles.sectionLabel}>
+                            Date
+                        </Text>
+                        <Text style={styles.dateText}>
+                            {new Date().toLocaleDateString('en-US', {
+                                weekday: 'long',
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            })}
+                        </Text>
+                    </View>
+                    <View style={styles.hLine} />
+                    <View style={styles.ratingSection}>
+                        <View>
+                            <StarRating
+                                rating={rating}
+                                starStyle={{ marginHorizontal: -3 }}
+                                onChange={setRating}
+                                starSize={50}
+                                enableHalfStar={true}
+                                emptyColor="#555555ff"
+                                color="#61d76fff"
+                            />
+                            <Text style={styles.ratedText}>Rated</Text>
+                        </View>
+                        <TouchableOpacity onPress={() => setLiked(!liked)}>
+                            <Ionicons name={liked ? "heart" : "heart-outline"} size={50} color={liked ? "#d98138ff" : "#a0a0a0ff"} />
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.hLine} />
+                    <View style={styles.reviewSection}>
+                        <TextInput
+                            style={styles.reviewInput}
+                            placeholder="Write your review..."
+                            placeholderTextColor="#a0a0a0ff"
+                            multiline={true}
+                            value={reviewText}
+                            onChangeText={(text) => {
+                                if (text.length <= 1000) {
+                                    setReviewText(text);
+                                }
+                            }}
+                            maxLength={1000}
+                            scrollEnabled={true}
+                            textAlignVertical="top"
+                            spellCheck={false}
+                            autoCorrect={false}
+                        />
+                        <Text style={styles.characterCount}>
+                            {reviewText.length}/1000
+                        </Text>
+                    </View>
+                </ScrollView>
             </KeyboardAvoidingView>
         </View>
     )

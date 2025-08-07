@@ -121,16 +121,6 @@ export default function AppLayout() {
         headerShown: true,
         drawerItemStyle: { display: 'none' },
         title: '    I  Played',
-        headerLeft: () => (
-          <TouchableOpacity style={{ marginLeft: 15 }} onPress={() => { dispatch(clearLogger()); router.push(`/(drawer)/games/${gamePage?.id}`) }}>
-            <Ionicons name="close" size={24} color="#fff" />
-          </TouchableOpacity>
-        ),
-        headerRight: () => (
-          <TouchableOpacity style={{ marginRight: 15 }}>
-            <Ionicons name="checkmark" size={24} color="#fff" />
-          </TouchableOpacity>
-        ),
       }} />
     </Drawer>
 
