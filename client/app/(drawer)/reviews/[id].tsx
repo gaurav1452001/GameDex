@@ -137,6 +137,9 @@ const ReviewDetailScreen = () => {
                 </View>
                 <View style={styles.hLine} />
             </ScrollView>
+            <TouchableOpacity onPress={() => router.back()} style={{ position: 'absolute', top: 50, left: 20 }}>
+                <Ionicons name="arrow-back" size={24} color="#ffffffff" />
+            </TouchableOpacity>
         </View>
     )
 }

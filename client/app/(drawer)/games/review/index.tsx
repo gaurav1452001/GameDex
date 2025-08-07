@@ -40,7 +40,7 @@ const Review = () => {
 
     const reviewData = {
         externalId: user?.id || '',
-        name: user?.fullName || '',
+        name: user?.firstName || '',
         imageUrl: user?.imageUrl || undefined,
         gameId: gamePage?.id?.toString() || '',
         gameName: gamePage?.name || '',

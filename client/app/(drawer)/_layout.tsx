@@ -115,14 +115,14 @@ export default function AppLayout() {
       <Drawer.Screen name="games/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
       <Drawer.Screen name="events/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
       <Drawer.Screen name="keywords/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
-      <Drawer.Screen name="reviews/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
+      <Drawer.Screen name="reviews/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' }}} />
 
       <Drawer.Screen name="games/review/index" options={{
         headerShown: true,
         drawerItemStyle: { display: 'none' },
         title: '    I  Played',
         headerLeft: () => (
-          <TouchableOpacity style={{ marginLeft: 15 }} onPress={() => {dispatch(clearLogger());router.push(`/(drawer)/games/${gamePage?.id}`)}}>
+          <TouchableOpacity style={{ marginLeft: 15 }} onPress={() => { dispatch(clearLogger()); router.push(`/(drawer)/games/${gamePage?.id}`) }}>
             <Ionicons name="close" size={24} color="#fff" />
           </TouchableOpacity>
         ),

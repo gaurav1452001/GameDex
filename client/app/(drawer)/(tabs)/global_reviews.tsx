@@ -31,12 +31,12 @@ export default function ReviewsScreen() {
 
   return (
       <ScrollView 
-        style={{ flex: 1, paddingHorizontal: 16, paddingTop: 27, backgroundColor: '#181818' }}
+        style={{ flex: 1, paddingHorizontal: 16, paddingTop: 20, backgroundColor: '#181818' }}
         contentContainerStyle={{ paddingBottom: 50 }}
         showsVerticalScrollIndicator={false}
       >
         <View>
-          <Text style={{ fontSize: 18, color: '#fff', fontWeight: 'bold', marginBottom: 5 }}>
+          <Text style={{ fontSize: 18, color: '#61d76fff', fontWeight: 'bold', marginBottom: 5 }}>
             Popular Reviews
           </Text>
         </View>
