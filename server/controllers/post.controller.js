@@ -112,6 +112,8 @@ export const getPlaytime = async (req, res) => {
 
 export const getPopularGames = async (req, res) => {
     try {
+        const { currentOffset } = req.query;
+        const offsetNum = parseInt(currentOffset);
         // Fetch popular game IDs first
         const popularityResponse = await fetch("https://api.igdb.com/v4/popularity_primitives", {
             method: "POST",
@@ -120,7 +122,7 @@ export const getPopularGames = async (req, res) => {
             "Client-ID": process.env.client_id,
             Authorization: `Bearer ${process.env.bearer_token}`,
             },
-            body: "fields game_id,value,popularity_type; sort value desc; limit 200; where popularity_type = 3;"
+            body: `fields game_id,value,popularity_type; sort value desc; limit 52; offset ${offsetNum}; where popularity_type = 3;`
         });
         const popularityData = await popularityResponse.json();
         const gameIds = popularityData.map(item => item.game_id).filter(Boolean);
@@ -132,7 +134,7 @@ export const getPopularGames = async (req, res) => {
             "Client-ID": process.env.client_id,
             Authorization: `Bearer ${process.env.bearer_token}`,
             },
-            body: `fields rating,cover.url,first_release_date;limit 200;sort rating desc; where id = (${gameIds.join(',')});`
+            body: `fields rating,cover.url,first_release_date;limit 60;sort rating desc; where id = (${gameIds.join(',')});`
         });
         const data = await gamesResponse.json();
         res.status(200).json(data);
