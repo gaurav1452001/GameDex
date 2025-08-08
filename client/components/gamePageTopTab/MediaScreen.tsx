@@ -68,7 +68,7 @@ export default function MediaScreen() {
                     setModalVisible(!modalVisible);
                 }}
             >
-                <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.modalContainer}>
+                <TouchableOpacity activeOpacity={1} onPress={() => setModalVisible(false)} style={styles.modalContainer}>
                     <Image
                         source={{ uri: 'https:' + selectedScreenshot?.url.replace('t_thumb', 't_screenshot_huge') }}
                         style={styles.modalImage}

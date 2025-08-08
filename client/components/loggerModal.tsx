@@ -7,11 +7,16 @@ import StarRating from 'react-native-star-rating-widget';
 import { router } from 'expo-router';
 
 
-const LoggerModal = () => {
+const LoggerModal = ({ setModalVisible }:any) => {
     const dispatch = useAppDispatch();
     const loggerVisible = useAppSelector((state) => state.gamePageLogger.data);
     const gamePage = useAppSelector((state) => state.gamePageData.data);
     const [rating, setRating] = useState(0);
+
+    const handleShowPoster = () => {
+        dispatch(clearLogger());
+        setModalVisible(true);
+    };
 
     return (
         <View>
@@ -65,7 +70,7 @@ const LoggerModal = () => {
                         </View>
                         <View style={styles.hLine} />
                         <View style={{ flexDirection: 'column', paddingVertical: 10, gap: 30 }}>
-                            <TouchableOpacity style={styles.lister} onPress={() => { dispatch(clearLogger()); router.push(`/games/review/reviewScreen`) }}>
+                            <TouchableOpacity style={styles.lister} onPress={() => { dispatch(clearLogger()); router.push(`/games/review/reviewScreen`); }}>
                                 <Ionicons name="create-outline" size={20} color="#bababaff" />
                                 <Text style={styles.modalText}>Review or log</Text>
                             </TouchableOpacity>
@@ -73,9 +78,9 @@ const LoggerModal = () => {
                                 <Ionicons name="list-outline" size={20} color="#bababaff" />
                                 <Text style={styles.modalText} >Add to Lists</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.lister}>
+                            <TouchableOpacity style={styles.lister} onPress={handleShowPoster}>
                                 <Ionicons name="share-outline" size={20} color="#bababaff" />
-                                <Text style={styles.modalText}>Review or log</Text>
+                                <Text style={styles.modalText}>Show Poster</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.lister}>
                                 <Ionicons name="ellipsis-horizontal-outline" size={20} color="#bababaff" />

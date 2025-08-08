@@ -21,7 +21,7 @@ import LoggerModal from "@/components/loggerModal";
 import Languages from "@/components/gamePageInfo/languages";
 import Platforms from "@/components/gamePageInfo/platforms";
 import Websites from "@/components/gamePageInfo/websites";
-
+import ImageViewer from 'react-native-image-zoom-viewer';
 
 
 export default function GameInfo() {
@@ -35,7 +35,7 @@ export default function GameInfo() {
     const [expanded, setExpanded] = useState(false);
     const [activeTab, setActiveTab] = useState('details');
     const { user } = useUser();
-    
+
     useEffect(() => {
         const fetchGameInfo = async () => {
             dispatch(clearData());
@@ -55,7 +55,9 @@ export default function GameInfo() {
         };
         fetchGameInfo();
     }, [id]);
-    const gamePage = useAppSelector((state: RootState) => state.gamePageData.data)
+    const gamePage = useAppSelector((state: RootState) => state.gamePageData.data);
+    const images=[{url: 'https:' + gamePage?.cover?.url.replace('t_thumb', 't_1080p_2x')}]
+
     const openYouTubeLink = () => {
         const url = `https://www.youtube.com/watch?v=${gamePage?.videos?.[0]?.video_id}`;
         Linking.openURL(url).catch(err => console.error('Failed to open URL:', err));
@@ -88,12 +90,24 @@ export default function GameInfo() {
                         setModalVisible(!modalVisible);
                     }}
                 >
-                    <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.modalContainer}>
-                        <Image
-                            source={{ uri: 'https:' + gamePage?.cover?.url.replace('t_thumb', 't_1080p_2x') }}
-                            style={styles.modalImage}
-                            resizeMode="contain"
-                        />
+                    <TouchableOpacity
+                        activeOpacity={1}
+                        style={{
+                            flex: 1,
+                            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                        onPress={() => setModalVisible(false)}
+                    >
+                        <View style={{ width: '100%', height: '70%' }}>
+                            <ImageViewer
+                                imageUrls={images}
+                                backgroundColor="transparent"
+                                enableSwipeDown={true}
+                                onSwipeDown={() => setModalVisible(false)}
+                            />
+                        </View>
                     </TouchableOpacity>
                 </Modal>
 
@@ -371,7 +385,7 @@ export default function GameInfo() {
                 <TouchableOpacity onPress={() => { dispatch(updateLogger()) }} style={{ position: 'absolute', bottom: 35, right: 20 }}>
                     <LoggerButton />
                 </TouchableOpacity>
-                {loggerVisible && <LoggerModal />}
+                {loggerVisible && <LoggerModal setModalVisible={setModalVisible} />}
             </SignedIn>
 
         </View>
