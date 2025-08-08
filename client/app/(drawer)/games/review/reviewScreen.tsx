@@ -1,4 +1,4 @@
-import { View, Image, Text, StyleSheet, Dimensions, TouchableOpacity, BackHandler, Modal, KeyboardAvoidingView } from 'react-native'
+import { View, Image, Text, StyleSheet, Dimensions, TouchableOpacity, BackHandler, Modal, KeyboardAvoidingView, Touchable } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
 import type { RootState } from '@/redux/store'
@@ -25,6 +25,23 @@ const Review = () => {
     const [reviewText, setReviewText] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
 
+
+    useEffect(() => {
+        const handleBackPress = () => {
+            if ((reviewText || rating > 0 || liked)) {
+                setModalVisible(true);
+                return true; // prevent default back
+            }
+            return false // allow default back
+        };
+
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+        return () => {
+            backHandler.remove();
+        };
+    }, [reviewText, rating, liked]);
+
     useEffect(() => {
         navigation.setOptions({
             headerLeft: () => (
@@ -34,13 +51,27 @@ const Review = () => {
                         return;
                     }
                     router.push(`/games/${gamePage?.id}`);
-                }} style={{ marginRight: 10, marginLeft:15 }}>
+                }} style={{ marginRight: 10, marginLeft: 15 }}>
                     <Ionicons name="close" size={24} color="#fff" />
                 </TouchableOpacity>
             ),
             headerRight: () => (
                 <TouchableOpacity onPress={() => {
-                    createReview(reviewData);
+                    const currentReviewData = {
+                        externalId: user?.id || '',
+                        name: user?.firstName || '',
+                        imageUrl: user?.imageUrl || undefined,
+                        gameId: gamePage?.id?.toString() || '',
+                        gameName: gamePage?.name || '',
+                        gameCover: gamePage?.cover?.url ? 'https:' + gamePage?.cover?.url.replace('t_thumb', 't_cover_big_2x') : '',
+                        starRating: rating,
+                        isLiked: liked,
+                        reviewText: reviewText,
+                        screenshots: gamePage?.screenshots ? 'https:' + gamePage?.screenshots[0]?.url.replace('t_thumb', 't_screenshot_huge') : '',
+                        reviewDate: new Date().toISOString(),
+                        gameYear: gamePage?.first_release_date ? new Date(gamePage.first_release_date * 1000).getFullYear().toString() : '',
+                    };
+                    createReview(currentReviewData);
                     setRating(0);
                     setLiked(false);
                     setReviewText('');
@@ -51,38 +82,8 @@ const Review = () => {
             ),
         });
 
-    }, []);
+    }, [reviewText, rating, liked, gamePage, user]);
 
-    useEffect(() => {
-        const handleBackPress = () => {
-            if (navigation.isFocused() && (reviewText || rating > 0 || liked)) {
-                setModalVisible(true);
-                return true; // prevent default back
-            }
-            return false;
-        };
-
-        const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
-
-        return () => {
-            backHandler.remove();
-        };
-    }, [reviewText, rating, liked]);
-
-    const reviewData = {
-        externalId: user?.id || '',
-        name: user?.firstName || '',
-        imageUrl: user?.imageUrl || undefined,
-        gameId: gamePage?.id?.toString() || '',
-        gameName: gamePage?.name || '',
-        gameCover: gamePage?.cover?.url ? 'https:' + gamePage?.cover?.url.replace('t_thumb', 't_cover_big_2x') : '',
-        starRating: rating,
-        isLiked: liked,
-        reviewText: reviewText,
-        screenshots: gamePage?.screenshots ? 'https:' + gamePage?.screenshots[0]?.url.replace('t_thumb', 't_screenshot_huge') : '',
-        reviewDate: new Date().toISOString(),
-        gameYear: gamePage?.first_release_date ? new Date(gamePage.first_release_date * 1000).getFullYear().toString() : '',
-    };
 
     return (
         <View style={styles.container}>
@@ -115,6 +116,7 @@ const Review = () => {
                                 <TouchableOpacity
                                     style={styles.buttonSignOut}
                                     onPress={() => {
+                                        console.log('Discarding changes');
                                         setReviewText('');
                                         setRating(0);
                                         setLiked(false);

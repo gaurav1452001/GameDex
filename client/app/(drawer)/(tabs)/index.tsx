@@ -1,13 +1,11 @@
 import { View, StyleSheet, Image, TouchableOpacity, FlatList, ActivityIndicator, Text } from "react-native";
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { router } from 'expo-router';
-import LottieView from 'lottie-react-native';
 import { HomePageGameType } from '@/types/gameTypes';
 
 
 export default function HomeScreen() {
-  const animation = useRef<LottieView>(null);
   const [gamePages, setGamePages] = useState<HomePageGameType[]>([]);
   const [Offset, setOffset] = useState(0);
   const [hasMoreData, setHasMoreData] = useState(true);
@@ -40,7 +38,6 @@ export default function HomeScreen() {
   const fetchGames = async () => {
     if (isLoading) return; // Prevent multiple calls
     setIsLoading(true);
-
     try {
         const ip_Address = process.env.EXPO_PUBLIC_IP_ADDRESS || '';
         const response = await axios.get(`http://${ip_Address}:8000/posts/popular`, {

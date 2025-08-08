@@ -29,6 +29,27 @@ export default function ReviewsScreen() {
     );
   }
 
+
+ if(reviews.length === 0) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text style={{ color: '#bcbcbcff', fontSize: 16, fontWeight: 'bold', textAlign: 'center', letterSpacing: 0.5 }}>
+          No reviews available at the moment.
+        </Text>
+        <LottieView
+          autoPlay
+          ref={animation}
+          style={{
+            width: 200,
+            height: 200,
+            backgroundColor: '#181818',
+          }}
+          source={require('@/assets/animations/ghost.json')}
+        />
+      </View>
+    );
+ }
+
   return (
       <ScrollView 
         style={{ flex: 1, paddingHorizontal: 16, paddingTop: 20, backgroundColor: '#181818' }}

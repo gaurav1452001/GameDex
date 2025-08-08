@@ -6,13 +6,10 @@ import CustomDrawerContent from '../../components/CustomDrawerContent';
 import { useUser } from '@clerk/clerk-expo';
 import type { RootState } from '@/redux/store'
 import { useAppSelector, useAppDispatch } from '@/redux/hooks'
-import { clearLogger } from '@/redux/gameLogger/gameLoggerSlice';
 
 
 export default function AppLayout() {
   const { isSignedIn } = useUser();
-  const gamePage = useAppSelector((state: RootState) => state.gamePageData.data)
-  const dispatch = useAppDispatch();
 
   return (
     <Drawer
@@ -117,7 +114,7 @@ export default function AppLayout() {
       <Drawer.Screen name="keywords/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
       <Drawer.Screen name="reviews/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' }}} />
 
-      <Drawer.Screen name="games/review/index" options={{
+      <Drawer.Screen name="games/review/reviewScreen" options={{
         headerShown: true,
         drawerItemStyle: { display: 'none' },
         title: '    I  Played',

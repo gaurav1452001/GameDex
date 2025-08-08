@@ -35,6 +35,7 @@ export default function GameInfo() {
     const [expanded, setExpanded] = useState(false);
     const [activeTab, setActiveTab] = useState('details');
     const { user } = useUser();
+    
     useEffect(() => {
         const fetchGameInfo = async () => {
             dispatch(clearData());

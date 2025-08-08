@@ -1,7 +1,6 @@
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, SafeAreaView, FlatList } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { Ionicons } from '@expo/vector-icons'
-import { useNavigation } from '@react-navigation/native'
 import axios from 'axios'
 import { router, useLocalSearchParams } from 'expo-router'
 import LottieView from 'lottie-react-native'

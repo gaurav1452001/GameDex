@@ -65,7 +65,7 @@ const LoggerModal = () => {
                         </View>
                         <View style={styles.hLine} />
                         <View style={{ flexDirection: 'column', paddingVertical: 10, gap: 30 }}>
-                            <TouchableOpacity style={styles.lister} onPress={() => { dispatch(clearLogger());; router.push(`/(drawer)/games/review`) }}>
+                            <TouchableOpacity style={styles.lister} onPress={() => { dispatch(clearLogger()); router.push(`/games/review/reviewScreen`) }}>
                                 <Ionicons name="create-outline" size={20} color="#bababaff" />
                                 <Text style={styles.modalText}>Review or log</Text>
                             </TouchableOpacity>
