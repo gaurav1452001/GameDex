@@ -37,6 +37,28 @@ export const List = {
     )
 }
 
+export const user_game_track = {
+    externalId: v.string(), // Clerk or auth provider ID
+    currentlyPlaying: v.array(
+        v.object({
+            game_id: v.string(),
+            game_cover_url: v.string(),
+        })
+    ),
+    wantToPlay: v.array(
+        v.object({
+            game_id: v.string(),
+            game_cover_url: v.string(),
+        })
+    ),
+    finishedPlaying: v.array(
+        v.object({
+            game_id: v.string(),
+            game_cover_url: v.string(),
+        })
+    ),
+}
+
 export default defineSchema({
     users: defineTable(User).
         index("byExternalId", ["externalId"]),
@@ -45,5 +67,8 @@ export default defineSchema({
         .index("byUserAndGame", ["reviewDate"]),
 
     lists: defineTable(List)
-        .index("byUser", ["externalId"])
+        .index("byUser", ["externalId"]),
+
+    user_game_tracks: defineTable(user_game_track)
+        .index("byUserId", ["externalId"])
 })

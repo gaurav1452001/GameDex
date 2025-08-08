@@ -1,17 +1,42 @@
-import { View, Text, Modal, StyleSheet, Touchable, TouchableOpacity } from 'react-native'
+import { View, Text, Modal, StyleSheet, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
+import { useQuery, useMutation } from 'convex/react';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { clearLogger } from '@/redux/gameLogger/gameLoggerSlice';
 import { Ionicons } from '@expo/vector-icons';
 import StarRating from 'react-native-star-rating-widget';
 import { router } from 'expo-router';
+import { useUser } from '@clerk/clerk-expo';
+import { api } from "../convex/_generated/api";
+import { current } from '@reduxjs/toolkit';
 
 
-const LoggerModal = ({ setModalVisible }:any) => {
+
+const LoggerModal = ({ setModalVisible }: any) => {
     const dispatch = useAppDispatch();
     const loggerVisible = useAppSelector((state) => state.gamePageLogger.data);
     const gamePage = useAppSelector((state) => state.gamePageData.data);
     const [rating, setRating] = useState(0);
+    const { user } = useUser();
+    const user_game_tracker = useQuery(api.user_game_tracks.getGameStatus, {
+        externalId: user?.id as string,
+        game_id: gamePage?.id.toString() as string
+    });
+    const finishedPlaying = useMutation(api.user_game_tracks.addToFinishedPlaying);
+    const currentlyPlaying = useMutation(api.user_game_tracks.addToCurrentlyPlaying);
+    const wantToPlay = useMutation(api.user_game_tracks.addToWantToPlay);
+    const removeGameFromTrack = useMutation(api.user_game_tracks.removeGameFromTracking);
+
+    const handleCurrentUser = {
+        externalId: user?.id as string,
+        game_id: gamePage?.id.toString() as string,
+        game_cover_url: gamePage?.cover?.url as string
+    }
+
+    const handleRemoveTracking = {
+        externalId: user?.id as string,
+        game_id: gamePage?.id.toString() as string,
+    }
 
     const handleShowPoster = () => {
         dispatch(clearLogger());
@@ -40,18 +65,50 @@ const LoggerModal = ({ setModalVisible }:any) => {
                         </View>
                         <View style={styles.hLine} />
                         <View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingVertical: 10 }}>
-                            <TouchableOpacity style={styles.centerItems}>
-                                <Ionicons name="game-controller-outline" size={50} color="#7d7d7dff" />
-                                <Text style={styles.modalText}>Play</Text>
-                            </TouchableOpacity>
+
+                            {user_game_tracker === 'finishedPlaying' ? (
+                                <TouchableOpacity style={styles.centerItems} onPress={() => removeGameFromTrack(handleRemoveTracking)}>
+                                    <Ionicons name="checkmark-circle" size={50} color="#61d76fff" />
+                                    <Text style={styles.modalText}>Finish</Text>
+                                </TouchableOpacity>
+                            ) :
+                                <TouchableOpacity style={styles.centerItems} onPress={() => finishedPlaying(handleCurrentUser)}>
+                                    <Ionicons name="checkmark-circle-outline" size={50} color="#7d7d7dff" />
+                                    <Text style={styles.modalText}>Finish</Text>
+                                </TouchableOpacity>
+                            }
+
+                            {user_game_tracker === 'currentlyPlaying' ? (
+                                <TouchableOpacity style={styles.centerItems} onPress={() => removeGameFromTrack(handleRemoveTracking)}>
+                                    <Ionicons name="game-controller" size={50} color="#61d76fff" />
+                                    <Text style={styles.modalText}>Play</Text>
+                                </TouchableOpacity>
+                            ) :
+                                <TouchableOpacity style={styles.centerItems} onPress={() => currentlyPlaying(handleCurrentUser)}>
+                                    <Ionicons name="game-controller-outline" size={50} color="#7d7d7dff" />
+                                    <Text style={styles.modalText}>Play</Text>
+                                </TouchableOpacity>
+                            }
+
+
+                            {user_game_tracker === 'wantToPlay' ? (
+                                <TouchableOpacity style={styles.centerItems} onPress={() => removeGameFromTrack(handleRemoveTracking)}>
+                                    <Ionicons name="time" size={50} color="#61d76fff" />
+                                    <Text style={styles.modalText}>Wishlist</Text>
+                                </TouchableOpacity>
+                            ) :
+                                <TouchableOpacity style={styles.centerItems} onPress={() => wantToPlay(handleCurrentUser)}>
+                                    <Ionicons name="time-outline" size={50} color="#7d7d7dff" />
+                                    <Text style={styles.modalText}>Wishlist</Text>
+                                </TouchableOpacity>
+                            }
+
                             <TouchableOpacity style={styles.centerItems}>
                                 <Ionicons name="heart-outline" size={50} color="#7d7d7dff" />
                                 <Text style={styles.modalText}>Like</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.centerItems}>
-                                <Ionicons name="time-outline" size={50} color="#7d7d7dff" />
-                                <Text style={styles.modalText}>Later</Text>
-                            </TouchableOpacity>
+
+
                         </View>
                         <View style={styles.hLine} />
                         <View style={{ alignItems: 'center', paddingVertical: 15 }}>
