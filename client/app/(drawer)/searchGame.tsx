@@ -10,18 +10,25 @@ import { SearchGameType } from '@/types/gameTypes'
 export default function SearchGame() {
   const [searchQuery, setSearchQuery] = useState("")
   const navigation = useNavigation();
- // Handle back button press to clear search and go back
-  useEffect(()=>{
+  
+  useEffect(() => {
     const handleBackPress = () => {
       setSearchQuery("");
       navigation.goBack();
-      return true; // Prevent default back behavior
+      return true; 
     };
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+    
+    const unsubscribeFocus = navigation.addListener('focus', () => {
+      const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+      
+      const unsubscribeBlur = navigation.addListener('blur', () => {
+        backHandler.remove();
+      });
+      
+      return unsubscribeBlur;
+    });
 
-    return () => {
-      backHandler.remove();
-    };
+    return unsubscribeFocus;
   }, [navigation]);
 
   const [gamePages, setGamePages] = useState<SearchGameType[]>([]);

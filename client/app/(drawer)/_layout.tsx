@@ -4,17 +4,20 @@ import { TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import CustomDrawerContent from '../../components/CustomDrawerContent';
 import { useUser } from '@clerk/clerk-expo';
+import type { RootState } from '@/redux/store'
+import { useAppSelector, useAppDispatch } from '@/redux/hooks'
 
 
 export default function AppLayout() {
   const { isSignedIn } = useUser();
+
   return (
     <Drawer
       drawerContent={CustomDrawerContent}
       screenOptions={{
         headerShown: true,
         title: "Popular",
-        headerStyle: { backgroundColor: "#181818", shadowOpacity: 0, elevation: 0 },
+        headerStyle: { backgroundColor: "#0b0b0bff", shadowOpacity: 0, elevation: 0 },
         headerTitleStyle: { color: "#fff", fontWeight: "bold", fontSize: 21 },
         headerTintColor: "#fff",
         drawerStyle: { backgroundColor: "#191919ff", },
@@ -104,15 +107,21 @@ export default function AppLayout() {
         drawerLabel: 'Sign In',
         drawerItemStyle: { display: isSignedIn ? 'none' : 'flex' },
       }} />
-      
+
 
       <Drawer.Screen name="games/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
       <Drawer.Screen name="events/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
       <Drawer.Screen name="keywords/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
+      <Drawer.Screen name="reviews/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' }}} />
+      <Drawer.Screen name="lists/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' }}} />
 
+      <Drawer.Screen name="games/review/reviewScreen" options={{
+        headerShown: true,
+        drawerItemStyle: { display: 'none' },
+        title: '    I  Played',
+      }} />
     </Drawer>
 
   );
 }
-
 

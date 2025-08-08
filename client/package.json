@@ -11,10 +11,13 @@
     "lint": "expo lint"
   },
   "dependencies": {
+    "@clerk/backend": "^2.6.2",
     "@clerk/clerk-expo": "^2.14.4",
+    "@clerk/clerk-react": "^5.38.1",
     "@expo/vector-icons": "^14.1.0",
     "@gorhom/bottom-sheet": "^5.1.8",
     "@react-native-async-storage/async-storage": "2.1.2",
+    "@react-native-community/hooks": "^100.1.0",
     "@react-navigation/bottom-tabs": "^7.3.10",
     "@react-navigation/drawer": "^7.5.3",
     "@react-navigation/elements": "^2.3.8",
@@ -24,6 +27,7 @@
     "@rneui/base": "^4.0.0-rc.8",
     "@supabase/supabase-js": "^2.51.0",
     "axios": "^1.10.0",
+    "convex": "^1.25.4",
     "expo": "~53.0.16",
     "expo-blur": "~14.1.5",
     "expo-constants": "~17.1.6",
@@ -45,7 +49,10 @@
     "react-native": "0.79.5",
     "react-native-floating-action": "^1.22.0",
     "react-native-gesture-handler": "~2.24.0",
+    "react-native-image-zoom-viewer": "^3.0.1",
+    "react-native-keyboard-controller": "^1.18.2",
     "react-native-pager-view": "6.7.1",
+    "react-native-pell-rich-editor": "^1.10.0",
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.11.1",
@@ -53,7 +60,7 @@
     "react-native-svg": "^15.12.1",
     "react-native-url-polyfill": "^2.0.0",
     "react-native-web": "~0.20.0",
-    "react-native-webview": "13.13.5",
+    "react-native-webview": "^13.13.5",
     "react-redux": "^9.2.0"
   },
   "devDependencies": {

@@ -11,7 +11,6 @@ const websiteLogos: { [key: number]: any } = {
     4: require('@/assets/images/website_logos/4.png'),
     5: require('@/assets/images/website_logos/5.png'),
     6: require('@/assets/images/website_logos/6.png'),
-    7: require('@/assets/images/website_logos/1.png'),
     8: require('@/assets/images/website_logos/8.png'),
     9: require('@/assets/images/website_logos/9.png'),
     10: require('@/assets/images/website_logos/10.png'),
@@ -24,11 +23,10 @@ const websiteLogos: { [key: number]: any } = {
     17: require('@/assets/images/website_logos/17.png'),
     18: require('@/assets/images/website_logos/18.png'),
     19: require('@/assets/images/website_logos/19.png'),
-    20: require('@/assets/images/website_logos/1.png'),
-    21: require('@/assets/images/website_logos/1.png'),
     22: require('@/assets/images/website_logos/22.png'),
     23: require('@/assets/images/website_logos/23.png'),
     24: require('@/assets/images/website_logos/24.png'),
+    
     // Add more mappings as needed for other website types
 }
 
@@ -45,7 +43,7 @@ const Websites = () => {
                 <>
                     <View style={styles.hLine} />
                     <Text style={{ fontSize: 15, color: 'white', marginVertical: 10 }}>
-                        WEBSITES
+                        LINKS
                     </Text>
                 </>
             )}
