@@ -30,7 +30,7 @@ export default function Index() {
                 <Text style={styles.introText}>
                     Discover and explore games like never before.
                 </Text>
-                <Link href="/(drawer)/signIn" asChild>
+                <Link href="/(drawer)/(auth)/signIn" asChild>
                     <TouchableOpacity style={styles.skipButton}>
                         <Text style={styles.ButtonText}>Sign In</Text>
                     </TouchableOpacity>

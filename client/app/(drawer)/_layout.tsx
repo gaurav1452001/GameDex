@@ -4,8 +4,6 @@ import { TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import CustomDrawerContent from '../../components/CustomDrawerContent';
 import { useUser } from '@clerk/clerk-expo';
-import type { RootState } from '@/redux/store'
-import { useAppSelector, useAppDispatch } from '@/redux/hooks'
 
 
 export default function AppLayout() {
@@ -16,7 +14,7 @@ export default function AppLayout() {
       drawerContent={CustomDrawerContent}
       screenOptions={{
         headerShown: true,
-        title: "Popular",
+        title: 'Popular',
         headerStyle: { backgroundColor: "#0b0b0bff", shadowOpacity: 0, elevation: 0 },
         headerTitleStyle: { color: "#fff", fontWeight: "bold", fontSize: 21 },
         headerTintColor: "#fff",
@@ -27,17 +25,16 @@ export default function AppLayout() {
         drawerHideStatusBarOnOpen: true,
         drawerItemStyle: {
           borderRadius: 9,
-          marginVertical: 5,
+          marginVertical: 4,
         },
         headerRight: () => (
           <TouchableOpacity onPress={() => router.push('/(drawer)/searchGame')}>
             <Ionicons style={{ marginRight: 20, marginTop: 2, width: 30, height: 30, padding: 5 }} name="search-outline" size={23} color="#fff" />
           </TouchableOpacity>
         ),
-
       }}
     >
-
+      {/* Public routes - always visible */}
       <Drawer.Screen name="(tabs)" options={{
         drawerIcon: ({ color, size }) => (
           <Ionicons name="home-outline" color={color} size={17} />
@@ -54,52 +51,8 @@ export default function AppLayout() {
         drawerLabel: 'Search',
       }} />
 
-      <Drawer.Screen name="(protected)/profile" options={{
-        drawerIcon: ({ color, size }) => (
-          <Ionicons name="person-outline" color={color} size={17} />
-        ),
-        headerShown: false,
-        drawerLabel: 'Profile',
-        drawerItemStyle: { display: isSignedIn ? 'flex' : 'none' },
-      }} />
-
-      <Drawer.Screen name="(protected)/wishlist" options={{
-        drawerIcon: ({ color, size }) => (
-          <Ionicons name="heart-outline" color={color} size={17} />
-        ),
-        headerShown: false,
-        drawerLabel: 'Wishlist',
-        drawerItemStyle: { display: isSignedIn ? 'flex' : 'none' },
-      }} />
-
-      <Drawer.Screen name="(protected)/diary" options={{
-        drawerIcon: ({ color, size }) => (
-          <Ionicons name="bookmark" color={color} size={17} />
-        ),
-        headerShown: false,
-        drawerLabel: 'Diary',
-        drawerItemStyle: { display: isSignedIn ? 'flex' : 'none' },
-      }} />
-
-      <Drawer.Screen name="(protected)/lists" options={{
-        drawerIcon: ({ color, size }) => (
-          <Ionicons name="list-outline" color={color} size={17} />
-        ),
-        headerShown: false,
-        drawerLabel: 'Lists',
-        drawerItemStyle: { display: isSignedIn ? 'flex' : 'none' },
-      }} />
-
-      <Drawer.Screen name="(protected)/reviews" options={{
-        drawerIcon: ({ color, size }) => (
-          <Ionicons name="create" color={color} size={17} />
-        ),
-        headerShown: false,
-        drawerLabel: 'Reviews',
-        drawerItemStyle: { display: isSignedIn ? 'flex' : 'none' },
-      }} />
-
-      <Drawer.Screen name="signIn" options={{
+      {/* Auth routes - only show when not signed in */}
+      <Drawer.Screen name="(auth)/signIn" options={{
         drawerIcon: ({ color, size }) => (
           <Ionicons name="log-in-outline" color={color} size={17} />
         ),
@@ -108,12 +61,52 @@ export default function AppLayout() {
         drawerItemStyle: { display: isSignedIn ? 'none' : 'flex' },
       }} />
 
+      <Drawer.Screen name="(auth)/signUp" options={{
+        drawerIcon: ({ color, size }) => (
+          <Ionicons name="person-add-outline" color={color} size={17} />
+        ),
+        headerShown: false,
+        drawerLabel: 'Sign Up',
+        drawerItemStyle: { display: isSignedIn ? 'none' : 'flex' },
+      }} />
 
+      {/* Private routes - hide from default drawer, handle in CustomDrawerContent */}
+      <Drawer.Screen name="private/index" options={{
+        headerShown: false,
+        drawerItemStyle: { display: 'none' },
+      }} />
+
+      <Drawer.Screen name="private/profile" options={{
+        headerShown: false,
+        drawerItemStyle: { display: 'none' },
+      }} />
+
+      <Drawer.Screen name="private/wishlist" options={{
+        headerShown: false,
+        drawerItemStyle: { display: 'none' },
+      }} />
+
+      <Drawer.Screen name="private/diary" options={{
+        headerShown: false,
+        drawerItemStyle: { display: 'none' },
+      }} />
+
+      <Drawer.Screen name="private/lists" options={{
+        headerShown: false,
+        drawerItemStyle: { display: 'none' },
+      }} />
+
+      <Drawer.Screen name="private/reviews" options={{
+        headerShown: false,
+        drawerItemStyle: { display: 'none' },
+      }} />
+
+      {/* Hidden routes */}
       <Drawer.Screen name="games/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
       <Drawer.Screen name="events/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
       <Drawer.Screen name="keywords/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
-      <Drawer.Screen name="reviews/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' }}} />
-      <Drawer.Screen name="lists/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' }}} />
+      <Drawer.Screen name="reviews/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
+      <Drawer.Screen name="lists/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
 
       <Drawer.Screen name="games/review/reviewScreen" options={{
         headerShown: true,
@@ -121,7 +114,6 @@ export default function AppLayout() {
         title: '    I  Played',
       }} />
     </Drawer>
-
   );
 }
 
