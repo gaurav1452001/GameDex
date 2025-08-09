@@ -68,6 +68,17 @@ export const getAllLists = query({
     },
 });
 
+export const getListByUserId = query({
+    args: { externalId: v.string() },
+    handler: async (ctx, { externalId }) => {
+        return await ctx.db
+            .query('lists')
+            .filter(q => q.eq(q.field('externalId'), externalId))
+            .order('desc')
+            .collect();
+    },
+});
+
 export const deleteList = mutation({
     args: { listId: v.id('lists') },
     handler: async (ctx, { listId }) => {

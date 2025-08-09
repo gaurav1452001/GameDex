@@ -64,7 +64,8 @@ export default defineSchema({
         index("byExternalId", ["externalId"]),
 
     reviews: defineTable(Review)
-        .index("byUserAndGame", ["reviewDate"]),
+        .index("byUserAndGame", ["reviewDate"])
+        .index("byUserId", ["externalId"]),
 
     lists: defineTable(List)
         .index("byUser", ["externalId"]),

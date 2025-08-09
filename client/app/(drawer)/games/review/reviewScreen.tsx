@@ -9,7 +9,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { TextInput } from 'react-native'
 import { useMutation } from 'convex/react'
 import { api } from '@/convex/_generated/api'
-import { useUser } from '@clerk/clerk-react'
+import { useUser } from "@clerk/clerk-expo";
 import { router } from 'expo-router'
 
 

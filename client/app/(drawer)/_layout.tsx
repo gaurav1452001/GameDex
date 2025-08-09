@@ -14,7 +14,6 @@ export default function AppLayout() {
       drawerContent={CustomDrawerContent}
       screenOptions={{
         headerShown: true,
-        title: 'Popular',
         headerStyle: { backgroundColor: "#0b0b0bff", shadowOpacity: 0, elevation: 0 },
         headerTitleStyle: { color: "#fff", fontWeight: "bold", fontSize: 21 },
         headerTintColor: "#fff",
@@ -41,6 +40,7 @@ export default function AppLayout() {
         ),
         headerShown: true,
         drawerLabel: 'Home',
+        headerTitle: 'GameDex',
       }} />
 
       <Drawer.Screen name="searchGame" options={{
@@ -71,7 +71,7 @@ export default function AppLayout() {
       }} />
 
       {/* Private routes - hide from default drawer, handle in CustomDrawerContent */}
-      <Drawer.Screen name="private/index" options={{
+      <Drawer.Screen name="private" options={{
         headerShown: false,
         drawerItemStyle: { display: 'none' },
       }} />
@@ -96,7 +96,12 @@ export default function AppLayout() {
         drawerItemStyle: { display: 'none' },
       }} />
 
-      <Drawer.Screen name="private/reviews" options={{
+      <Drawer.Screen name="private/activity" options={{
+        headerShown: false,
+        drawerItemStyle: { display: 'none' },
+      }} />
+
+        <Drawer.Screen name="private/reviews" options={{
         headerShown: false,
         drawerItemStyle: { display: 'none' },
       }} />

@@ -65,7 +65,6 @@ export const getAllReviews = query({
 // export const getReviewByUserAndGame = query({
 //     args: {
 //         externalId: v.string(),
-//         gameId: v.string(),
 //     },
 //     handler: async (ctx, { externalId, gameId }) => {
 //         return await ctx.db
@@ -77,16 +76,16 @@ export const getAllReviews = query({
 //     },
 // });
 
-// export const getUserReviews = query({
-//     args: { externalId: v.string() },
-//     handler: async (ctx, { externalId }) => {
-//         return await ctx.db
-//             .query('reviews')
-//             .withIndex('byUserId', (q) => q.eq('externalId', externalId))
-//             .order('desc')
-//             .collect();
-//     },
-// });
+export const getUserReviews = query({
+    args: { externalId: v.string() },
+    handler: async (ctx, { externalId }) => {
+        return await ctx.db
+            .query('reviews')
+            .withIndex('byUserId', (q) => q.eq('externalId', externalId))
+            .order('desc')
+            .collect();
+    },
+});
 
 export const deleteReview = mutation({
     args: { reviewId: v.id('reviews') },

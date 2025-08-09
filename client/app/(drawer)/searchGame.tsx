@@ -15,20 +15,12 @@ export default function SearchGame() {
     const handleBackPress = () => {
       setSearchQuery("");
       navigation.goBack();
-      return true; 
+      return true;
     };
-    
-    const unsubscribeFocus = navigation.addListener('focus', () => {
-      const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
-      
-      const unsubscribeBlur = navigation.addListener('blur', () => {
-        backHandler.remove();
-      });
-      
-      return unsubscribeBlur;
-    });
 
-    return unsubscribeFocus;
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+    return () => backHandler.remove();
   }, [navigation]);
 
   const [gamePages, setGamePages] = useState<SearchGameType[]>([]);

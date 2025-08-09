@@ -1,4 +1,4 @@
-import { Text, View, ScrollView, Image, StyleSheet, TouchableOpacity, Linking, Modal, Touchable } from "react-native";
+import { Text, View, ScrollView, Image, StyleSheet, TouchableOpacity, Linking, Modal } from "react-native";
 import { SignedIn, useUser } from '@clerk/clerk-expo'
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams } from 'expo-router';

@@ -69,11 +69,11 @@ const LoggerModal = ({ setModalVisible }: any) => {
                             {user_game_tracker === 'finishedPlaying' ? (
                                 <TouchableOpacity style={styles.centerItems} onPress={() => removeGameFromTrack(handleRemoveTracking)}>
                                     <Ionicons name="checkmark-circle" size={50} color="#61d76fff" />
-                                    <Text style={styles.modalText}>Finish</Text>
+                                    <Text style={styles.modalText}>Finished</Text>
                                 </TouchableOpacity>
                             ) :
                                 <TouchableOpacity style={styles.centerItems} onPress={() => finishedPlaying(handleCurrentUser)}>
-                                    <Ionicons name="checkmark-circle-outline" size={50} color="#7d7d7dff" />
+                                    <Ionicons name="checkmark-circle" size={50} color="#7d7d7dff" />
                                     <Text style={styles.modalText}>Finish</Text>
                                 </TouchableOpacity>
                             }
@@ -81,11 +81,11 @@ const LoggerModal = ({ setModalVisible }: any) => {
                             {user_game_tracker === 'currentlyPlaying' ? (
                                 <TouchableOpacity style={styles.centerItems} onPress={() => removeGameFromTrack(handleRemoveTracking)}>
                                     <Ionicons name="game-controller" size={50} color="#61d76fff" />
-                                    <Text style={styles.modalText}>Play</Text>
+                                    <Text style={styles.modalText}>Playing</Text>
                                 </TouchableOpacity>
                             ) :
                                 <TouchableOpacity style={styles.centerItems} onPress={() => currentlyPlaying(handleCurrentUser)}>
-                                    <Ionicons name="game-controller-outline" size={50} color="#7d7d7dff" />
+                                    <Ionicons name="game-controller" size={50} color="#7d7d7dff" />
                                     <Text style={styles.modalText}>Play</Text>
                                 </TouchableOpacity>
                             }
@@ -94,17 +94,17 @@ const LoggerModal = ({ setModalVisible }: any) => {
                             {user_game_tracker === 'wantToPlay' ? (
                                 <TouchableOpacity style={styles.centerItems} onPress={() => removeGameFromTrack(handleRemoveTracking)}>
                                     <Ionicons name="time" size={50} color="#61d76fff" />
-                                    <Text style={styles.modalText}>Wishlist</Text>
+                                    <Text style={styles.modalText}>In Wishlist</Text>
                                 </TouchableOpacity>
                             ) :
                                 <TouchableOpacity style={styles.centerItems} onPress={() => wantToPlay(handleCurrentUser)}>
-                                    <Ionicons name="time-outline" size={50} color="#7d7d7dff" />
+                                    <Ionicons name="time" size={50} color="#7d7d7dff" />
                                     <Text style={styles.modalText}>Wishlist</Text>
                                 </TouchableOpacity>
                             }
 
                             <TouchableOpacity style={styles.centerItems}>
-                                <Ionicons name="heart-outline" size={50} color="#7d7d7dff" />
+                                <Ionicons name="heart" size={50} color="#7d7d7dff" />
                                 <Text style={styles.modalText}>Like</Text>
                             </TouchableOpacity>
 
