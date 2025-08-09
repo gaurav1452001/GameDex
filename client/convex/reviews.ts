@@ -86,10 +86,19 @@ export const getUserReviews = query({
             .collect();
     },
 });
-
 export const deleteReview = mutation({
-    args: { reviewId: v.id('reviews') },
-    handler: async (ctx, { reviewId }) => {
+    args: { 
+        reviewId: v.id('reviews'),
+        externalId: v.string(),
+    },
+    handler: async (ctx, { reviewId, externalId }) => {
+        const review = await ctx.db.get(reviewId);
+        if (!review) {
+            throw new Error('Review not found');
+        }
+        if (review.externalId !== externalId) {
+            throw new Error('Unauthorized: You can only delete your own review');
+        }
         await ctx.db.delete(reviewId);
         return reviewId;
     },
