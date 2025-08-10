@@ -1,31 +1,41 @@
 import { View, Text, TouchableOpacity, StyleSheet, TextInput, Modal, FlatList, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { updateList, clearList } from '@/redux/listCreationData/listCreationDataSlice';
-import { ScrollView } from "react-native-gesture-handler";
-import { router } from 'expo-router';
+import { useAppDispatch } from '@/redux/hooks';
+import { clearList } from '@/redux/listCreationData/listCreationDataSlice';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons'
 import { useUser } from '@clerk/clerk-expo';
 import axios from 'axios';
-import { useMutation } from 'convex/react'
+import { Authenticated,useMutation, useQuery } from 'convex/react'
 import { api } from '@/convex/_generated/api'
+import { Id } from "@/convex/_generated/dataModel";
 import { listGames } from '@/types/listTypes';
 import { SearchGameType } from '@/types/gameTypes';
 
 
 const CreateList = () => {
     const { user } = useUser();
+    const params = useLocalSearchParams();
     const dispatch = useAppDispatch();
-    const createReview = useMutation(api.lists.createList)
+    const updateList = useMutation(api.lists.updateList)
     const [listName, setListName] = useState('');
     const [listDesc, setListDesc] = useState('');
     const [listItems, setListItems] = useState<listGames[]>([]);
 
+    const listId: Id<"lists"> = params.listId as Id<"lists">;
+    const listData = useQuery(api.lists.getListById, { id: listId });
 
     const [modalVisible, setModalVisible] = useState(false);
     const [searchText, setSearchText] = useState("");
     const [gamePages, setGamePages] = useState<SearchGameType[]>([]);
 
+    useEffect(() => {
+            if (listData) {
+                setListName(listData.listName || '');
+                setListDesc(listData.listDesc || '');
+                setListItems(listData.list_game_ids || []);
+            }
+        }, [listData]);
 
     useEffect(() => {
         const fetchGames = async () => {
@@ -158,7 +168,8 @@ const CreateList = () => {
                 </View>
                 <TouchableOpacity onPress={() => {
                     if (listName.trim() && listItems.length > 0) {
-                        createReview({
+                        updateList({
+                            listId,
                             externalId: user?.id || '',
                             name: user?.firstName || '',
                             userImageUrl: user?.imageUrl || '',

@@ -11,7 +11,6 @@ import LottieView from 'lottie-react-native';
 import { Authenticated } from 'convex/react';
 import { useUser } from '@clerk/clerk-expo';
 import { update } from '@/redux/gameData/gameDataSlice';
-import { GamePageDataType } from '@/types/gameTypes';
 import axios from 'axios';
 import { useAppDispatch } from '@/redux/hooks';
 
@@ -27,7 +26,10 @@ const ReviewDetailScreen = () => {
     const review = useQuery(api.reviews.getReviewById, { id: reviewId });
     const deleteReview = useMutation(api.reviews.deleteReview);
     const { user } = useUser();
-
+    
+    //when the user goes to the individual review page, the below useEffect will dispatch the game data to the redux store
+    //this is done so that the game data is available in the redux store and can be used to easily update the game data in the review page
+    //the edit page was giving bugs therefore this is done, would remove later if fixed
     useEffect(() => {
         const fetchGameInfo = async () => {
             if (!review?.gameId) return; // Wait until review is loaded and gameId is available
@@ -78,7 +80,6 @@ const ReviewDetailScreen = () => {
 
     return (
         <View style={{ flex: 1 }}>
-
             <Authenticated>
                 {/* delete modal */}
                 <Modal
@@ -218,9 +219,6 @@ const ReviewDetailScreen = () => {
                     </View>
                 )}
             </Authenticated>
-            <View>
-
-            </View>
             <ScrollView style={{ backgroundColor: '#181818' }}>
                 <View style={styles.container}>
                     {review?.screenshots ? (
@@ -457,6 +455,3 @@ const styles = StyleSheet.create({
     },
 });
 
-function dispatch(arg0: { payload: GamePageDataType; type: "gameData/update"; }) {
-    throw new Error('Function not implemented.');
-}

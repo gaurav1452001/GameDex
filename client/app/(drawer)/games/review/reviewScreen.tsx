@@ -24,6 +24,7 @@ const Review = () => {
     const gamePage = useAppSelector((state: RootState) => state.gamePageData.data)
     const [reviewText, setReviewText] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
+    const finishedPlaying = useMutation(api.user_game_tracks.addToFinishedPlaying);
 
 
     useEffect(() => {
@@ -72,6 +73,11 @@ const Review = () => {
                         gameYear: gamePage?.first_release_date ? new Date(gamePage.first_release_date * 1000).getFullYear().toString() : '',
                     };
                     createReview(currentReviewData);
+                    finishedPlaying({
+                        externalId: user?.id || '',
+                        game_id: gamePage?.id.toString() || '',
+                        game_cover_url: gamePage?.cover?.url || ''
+                    });
                     setRating(0);
                     setLiked(false);
                     setReviewText('');

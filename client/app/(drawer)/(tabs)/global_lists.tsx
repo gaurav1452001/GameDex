@@ -80,7 +80,7 @@ export default function ReviewsScreen() {
                         {list.list_game_ids.map((game, index) => (
                             <TouchableWithoutFeedback key={index} onPress={() => router.push(`/lists/${list._id}`)}>
                                     <Image
-                                        source={{ uri: game.game_cover_url }}
+                                        source={{ uri: 'https:' + game?.game_cover_url?.replace('t_thumb', 't_cover_big_2x') }}
                                         style={{ width: 65, height: 98.5 }}
                                         resizeMode="contain"
                                     />

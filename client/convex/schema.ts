@@ -32,6 +32,7 @@ export const List = {
     list_game_ids: v.array(
         v.object({
             game_id: v.string(),
+            game_name: v.string(),
             game_cover_url: v.optional(v.string()),
         })
     )

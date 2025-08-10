@@ -51,21 +51,26 @@ const Lists = () => {
 
   if (lists.length === 0) {
     return (
-      <View style={styles.loadingContainer}>
-        <Text style={{ color: '#bcbcbcff', fontSize: 16, fontWeight: 'bold', textAlign: 'center', letterSpacing: 0.5 }}>
-          No lists available at the moment.
-        </Text>
-        <LottieView
-          autoPlay
-          ref={animation}
-          style={{
-            width: 200,
-            height: 200,
-            backgroundColor: '#181818',
-          }}
-          source={require('@/assets/animations/ghost.json')}
-        />
-      </View>
+      <>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => router.push('/(drawer)/(tabs)')} style={{ marginRight: 15 }}>
+            <Ionicons name="arrow-back" size={24} color="#fff" />
+          </TouchableOpacity>
+          <Text style={{ color: '#ffffff', fontSize: 18, fontWeight: 'bold' }}>
+            {((user?.firstName || user?.fullName || 'User').slice(0, 15))}'s Lists
+          </Text>
+        </View>
+        <View style={styles.loadingContainer}>
+
+          <Text style={{ color: '#bcbcbcff', fontSize: 16, fontWeight: 'bold', textAlign: 'center', letterSpacing: 0.5, paddingHorizontal: 20 }}>
+            You don't have any lists yet.
+            {'\n'}Start by creating one!
+          </Text>
+          <TouchableOpacity onPress={() => router.push('/(drawer)/private/createList')} style={{ position: 'absolute', bottom: 35, right: 20 }}>
+            <ListAddButton />
+          </TouchableOpacity>
+        </View>
+      </>
     );
   }
 
@@ -99,7 +104,7 @@ const Lists = () => {
               {list.list_game_ids.map((game, index) => (
                 <TouchableWithoutFeedback key={index} onPress={() => router.push(`/lists/${list._id}`)}>
                   <Image
-                    source={{ uri: game.game_cover_url }}
+                    source={{ uri: 'https:' + game?.game_cover_url?.replace('t_thumb', 't_cover_big_2x') }}
                     style={{ width: 65, height: 98.5 }}
                     resizeMode="contain"
                   />

@@ -45,12 +45,22 @@ const Reviews = () => {
 
   if (reviews.length === 0) {
     return (
-      <View style={styles.loadingContainer}>
-        <Text style={{ color: '#bcbcbcff', fontSize: 16, fontWeight: 'bold', textAlign: 'center', letterSpacing: 0.5 }}>
-          You don't have any reviews yet.
-          {'\n'}Start reviewing games to see them here!
-        </Text>
-      </View>
+      <>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => router.push('/(drawer)/(tabs)')} style={{ marginRight: 15 }}>
+            <Ionicons name="arrow-back" size={24} color="#fff" />
+          </TouchableOpacity>
+          <Text style={{ color: '#ffffff', fontSize: 18, fontWeight: 'bold' }}>
+            {((user?.firstName || user?.fullName || 'User').slice(0, 15))}'s Reviews
+          </Text>
+        </View>
+        <View style={styles.loadingContainer}>
+          <Text style={{ color: '#bcbcbcff', fontSize: 16, fontWeight: 'bold', textAlign: 'center', letterSpacing: 0.5 }}>
+            You don't have any reviews yet.
+            {'\n'}Start reviewing games to see them here!
+          </Text>
+        </View>
+      </>
     );
   }
 
@@ -65,7 +75,7 @@ const Reviews = () => {
           {((user?.firstName || user?.fullName || 'User').slice(0, 15))}'s Reviews
         </Text>
       </View>
-      
+
       <ScrollView
         style={{ flex: 1, paddingHorizontal: 16, paddingTop: 20, backgroundColor: '#181818' }}
         contentContainerStyle={{ paddingBottom: 50 }}

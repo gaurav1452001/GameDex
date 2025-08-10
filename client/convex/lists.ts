@@ -11,7 +11,8 @@ export const createList = mutation({
         list_game_ids: v.array(
             v.object({
                 game_id: v.string(),
-                game_cover_url: v.string(),
+                game_name: v.string(),
+                game_cover_url: v.optional(v.string()),
             })
         )
     },
@@ -27,21 +28,33 @@ export const createList = mutation({
 export const updateList = mutation({
     args: {
         listId: v.id('lists'),
+        externalId: v.string(),
         name: v.string(),
         userImageUrl: v.optional(v.string()),
         listName: v.string(),
-        listDesc: v.string(),
-        gameCover: v.string(),
+        listDesc: v.optional(v.string()),
         list_game_ids: v.array(
             v.object({
                 game_id: v.string(),
-                game_cover_url: v.string(),
+                game_name: v.string(),
+                game_cover_url: v.optional(v.string()),
             })
         )
     },
     handler: async (ctx, args) => {
         if (args.list_game_ids.length === 0) {
             throw new Error('List must contain at least one game');
+        }
+
+        // Fetch the existing list
+        const existingList = await ctx.db.get(args.listId);
+        if (!existingList) {
+            throw new Error('List not found');
+        }
+
+        // Verify externalId matches
+        if (existingList.externalId !== args.externalId) {
+            throw new Error('External ID does not match the owner of the list');
         }
 
         const { listId, ...updateData } = args;
@@ -80,8 +93,18 @@ export const getListByUserId = query({
 });
 
 export const deleteList = mutation({
-    args: { listId: v.id('lists') },
-    handler: async (ctx, { listId }) => {
+    args: { 
+        listId: v.id('lists'),
+        externalId: v.string(),
+    },
+    handler: async (ctx, { listId, externalId }) => {
+        const list = await ctx.db.get(listId);
+        if (!list) {
+            throw new Error('List not found');
+        }
+        if (list.externalId !== externalId) {
+            throw new Error('External ID does not match the owner of the list');
+        }
         await ctx.db.delete(listId);
         return listId;
     },
