@@ -100,6 +100,11 @@ export default function AppLayout() {
         drawerItemStyle: { display: 'none' },
       }} />
 
+      <Drawer.Screen name="private/createList" options={{
+        headerShown: false,
+        drawerItemStyle: { display: 'none' },
+      }} />
+
       <Drawer.Screen name="private/activity" options={{
         headerShown: false,
         drawerItemStyle: { display: 'none' },

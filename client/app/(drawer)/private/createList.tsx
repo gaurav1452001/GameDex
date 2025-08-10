@@ -1,0 +1,266 @@
+import { View, Text, TouchableOpacity, StyleSheet, TextInput, Modal, FlatList, Image } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { updateList, clearList } from '@/redux/listCreationData/listCreationDataSlice';
+import { ScrollView } from "react-native-gesture-handler";
+import { router } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons'
+import { useUser } from '@clerk/clerk-expo';
+import axios from 'axios';
+import { SearchGameType } from '@/types/gameTypes';
+
+const CreateList = () => {
+    const { user } = useUser();
+    const dispatch = useAppDispatch();
+    const [listName, setListName] = useState('');
+    const [listDesc, setListDesc] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
+    const [searchText, setSearchText] = useState("");
+    const [gamePages, setGamePages] = useState<SearchGameType[]>([]);
+
+    useEffect(() => {
+        const fetchGames = async () => {
+            try {
+                const ip_address = process.env.EXPO_PUBLIC_IP_ADDRESS || '';
+                const response = await axios.get(`http://${ip_address}:8000/posts/search`, {
+                    params: {
+                        searchText: searchText
+                    }
+                });
+                setGamePages(response.data);
+            } catch (error) {
+                console.error('Error fetching games:', error);
+            }
+        };
+        fetchGames();
+    }, [searchText]);
+
+    return (
+        <View style={{ flex: 1, backgroundColor: '#0b0b0bff' }}>
+            <Modal
+                visible={modalVisible}
+                animationType="fade"
+                transparent={true}
+                onRequestClose={() => {
+                    setGamePages([]);
+                    setModalVisible(false);
+                }}
+            >
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center', paddingHorizontal: 16, paddingVertical: 5, }}>
+                            <TextInput
+                                style={{ fontSize: 17, color: '#d4d4d4ff', flex: 3.2, }}
+                                placeholder="Search Game..."
+                                placeholderTextColor="#7e7e7eff"
+                                autoCapitalize='none'
+                                autoFocus={true}
+                                autoCorrect={false}
+                                value={searchText}
+                                onChangeText={setSearchText}
+                                returnKeyType='done'
+                                maxLength={100}
+                            />
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setGamePages([]);
+                                    setModalVisible(false);
+                                }}
+                                style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-end', }}
+                            >
+                                <Ionicons name="close" size={22} color="#9a9a9aff" />
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{ height: 1, backgroundColor: '#5e5e5eff' }} />
+                        <FlatList
+                            data={gamePages}
+                            keyExtractor={(item) => item.id.toString()}
+                            showsVerticalScrollIndicator={true}
+                            style={{ flexGrow: 0 }}
+                            contentContainerStyle={{ paddingBottom: 10, paddingHorizontal: 10, }}
+                            renderItem={({ item: gamePage }) => (
+                                <TouchableOpacity onPress={() => router.push(`/(drawer)/games/${gamePage.id}`)} key={gamePage.id}>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 8 }}>
+                                        {gamePage.cover?.url ? (
+                                            <Image
+                                                source={{ uri: 'https:' + gamePage.cover.url.replace('t_thumb', 't_cover_big_2x') }}
+                                                style={styles.displayImage}
+                                                resizeMode="cover"
+                                            />
+                                        ) : (
+                                            <View style={styles.displayImage}>
+                                                <Text style={{ color: '#f0f0f0', fontSize: 10, fontWeight: 'bold', textAlign: 'center' }}>
+                                                    {gamePage.name}
+                                                </Text>
+                                            </View>
+                                        )}
+                                        <View style={{ flex: 1, flexDirection: 'column', marginLeft: 10 }}>
+                                            <Text style={{ color: '#fff', fontSize: 15, fontWeight: '500' }}>
+                                                {gamePage?.name}{' '}
+                                                <Text style={{ color: '#aaa', fontSize: 11, fontWeight: 'normal' }}>
+                                                    {gamePage?.first_release_date
+                                                        ? new Date(gamePage.first_release_date * 1000).getFullYear()
+                                                        : null
+                                                    }
+                                                </Text>
+                                            </Text>
+                                            <Text style={{ color: '#aaa', fontSize: 12, fontWeight: 'bold' }}>
+                                                {gamePage?.involved_companies?.[0]?.company?.name}
+                                                {gamePage?.involved_companies?.length > 1 && ', '}
+                                                {gamePage?.involved_companies?.[1]?.company?.name}
+                                            </Text>
+
+                                        </View>
+                                    </View>
+                                    <View style={{ height: 1, backgroundColor: '#3e3e3eff', marginVertical: 3 }} />
+                                </TouchableOpacity>
+                            )}
+                            ListEmptyComponent={
+                                <Text style={{ color: '#aaa', textAlign: 'center', marginTop: 20 }}>
+                                    No games found.
+                                </Text>
+                            }
+                        />
+                    </View>
+                </View>
+            </Modal>
+
+            <View style={styles.header}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <TouchableOpacity onPress={() => router.push('/(drawer)/(tabs)')} style={{ marginRight: 25 }}>
+                        <Ionicons name="close" size={22} color="#fff" />
+                    </TouchableOpacity>
+                    <Text style={{ color: '#ffffff', fontSize: 18, fontWeight: 'bold' }}>
+                        New List
+                    </Text>
+                </View>
+                <TouchableOpacity>
+                    <Ionicons name="checkmark" size={22} color="#fff" />
+                </TouchableOpacity>
+            </View>
+            <ScrollView
+                style={{ flex: 1, backgroundColor: '#181818' }}
+                contentContainerStyle={{ paddingBottom: 50, paddingHorizontal: 16, paddingTop: 19, }}
+                showsVerticalScrollIndicator={false}>
+
+                <TextInput
+                    style={{ fontSize: 17, borderBottomWidth: 1, borderColor: '#ccc', padding: 5, color: '#fff', }}
+                    placeholder="List Name"
+                    placeholderTextColor="#666"
+                    autoCapitalize='none'
+                    autoFocus={true}
+                    autoCorrect={false}
+                    value={listName}
+                    onChangeText={setListName}
+                    onSubmitEditing={() => {
+                        if (listName.trim()) {
+                            console.log('Creating list:', listName)
+                        }
+                    }}
+                    returnKeyType='done'
+                    maxLength={100}
+                    scrollEnabled={true}
+                    textAlignVertical="top"
+                    spellCheck={false}
+                />
+
+                <TextInput
+                    style={{ fontSize: 14, padding: 5, color: '#fff', marginBottom: 20, marginTop: 10 }}
+                    placeholder="Add description..."
+                    placeholderTextColor="#666"
+                    autoCapitalize='none'
+                    autoFocus={true}
+                    multiline={true}
+                    value={listDesc}
+                    onChangeText={setListDesc}
+                    onSubmitEditing={() => {
+                        if (listDesc.trim()) {
+                            console.log('Creating list:', listDesc)
+                        }
+                    }}
+                    maxLength={1000}
+                    scrollEnabled={true}
+                    textAlignVertical="top"
+                    spellCheck={false}
+                />
+                <TouchableOpacity
+                    style={{
+                        backgroundColor: '#2d2d2dff',
+                        padding: 15,
+                        borderRadius: 8,
+                        alignItems: 'center',
+                        marginTop: 20,
+                    }}
+                    onPress={() => {
+                        setModalVisible(true);
+                    }}
+                >
+                    <Text style={{ color: '#fff', fontSize: 16, fontWeight: 'bold' }}>
+                        Add Entry
+                    </Text>
+                </TouchableOpacity>
+            </ScrollView>
+        </View>
+    )
+}
+
+export default CreateList;
+
+
+const styles = StyleSheet.create({
+    view: {
+        flex: 1,
+        backgroundColor: '#181818',
+        padding: 16,
+    },
+    mainView: {
+        backgroundColor: '#181818',
+        flexDirection: 'column',
+        justifyContent: 'center',
+    },
+    displayImage: {
+        width: 57,
+        height: 84.873,
+        borderColor: '#535353ff',
+        backgroundColor: '#404040',
+        justifyContent: 'center',
+        marginRight: 4,
+        borderWidth: 1,
+    },
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingHorizontal: 16,
+        paddingTop: 60,
+        paddingBottom: 20,
+        backgroundColor: '#2a2a2a',
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        backgroundColor: "rgba(3, 3, 3, 0.65)",
+    },
+    modalView: {
+        marginHorizontal: 20,
+        backgroundColor: "#363636ff",
+        borderRadius: 5,
+        height: '80%',
+        overflow: "hidden",
+    },
+    modalText: {
+        marginBottom: 25,
+        color: "white",
+        textAlign: "center",
+        fontSize: 20,
+        fontWeight: "bold",
+        paddingHorizontal: 20,
+    },
+    modalTextContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        width: "100%",
+        borderWidth: 1,
+        borderColor: "#2c2c2cff",
+    },
+});

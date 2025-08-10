@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 import gameDataReducer from './gameData/gameDataSlice'
 import  gameLoggerReducer  from './gameLogger/gameLoggerSlice'
+import listCreationDataSlice from './listCreationData/listCreationDataSlice'
 export const store = configureStore({
     reducer: {
         gamePageData: gameDataReducer,
         gamePageLogger: gameLoggerReducer,
+        listCreationData: listCreationDataSlice
     }
 })
 

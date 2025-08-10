@@ -28,11 +28,11 @@ export const List = {
     name: v.string(),
     userImageUrl: v.optional(v.string()),
     listName: v.string(),
-    listDesc: v.string(),
+    listDesc: v.optional(v.string()),
     list_game_ids: v.array(
         v.object({
             game_id: v.string(),
-            game_cover_url: v.string(),
+            game_cover_url: v.optional(v.string()),
         })
     )
 }

@@ -8,7 +8,6 @@ import StarRating from 'react-native-star-rating-widget';
 import { router } from 'expo-router';
 import { useUser } from '@clerk/clerk-expo';
 import { api } from "../convex/_generated/api";
-import { current } from '@reduxjs/toolkit';
 
 
 

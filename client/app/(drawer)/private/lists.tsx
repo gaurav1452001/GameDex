@@ -7,6 +7,7 @@ import LottieView from 'lottie-react-native';
 import { useUser } from '@clerk/clerk-expo';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import ListAddButton from '@/components/listAddButton';
 
 const Lists = () => {
   const animation = useRef<LottieView>(null);
@@ -71,49 +72,52 @@ const Lists = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#181818' }}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={{ marginRight: 15 }}>
+        <TouchableOpacity onPress={() => router.push('/(drawer)/(tabs)')} style={{ marginRight: 15 }}>
           <Ionicons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
         <Text style={{ color: '#ffffff', fontSize: 18, fontWeight: 'bold' }}>
           {((user?.firstName || user?.fullName || 'User').slice(0, 15))}'s Lists
         </Text>
       </View>
-    <ScrollView
-      style={{ flex: 1, paddingHorizontal: 16, paddingTop: 10, backgroundColor: '#181818' }}
-      contentContainerStyle={{ paddingBottom: 50 }}
-      showsVerticalScrollIndicator={false}
-    >
+      <ScrollView
+        style={{ flex: 1, paddingHorizontal: 16, paddingTop: 10, backgroundColor: '#181818' }}
+        contentContainerStyle={{ paddingBottom: 50 }}
+        showsVerticalScrollIndicator={false}
+      >
 
-      {lists?.map((list) => (
-        <View key={list._id} style={{ marginTop: 15 }}>
-          <TouchableOpacity onPress={() => router.push(`/lists/${list._id}`)} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-            <Text style={{ color: '#c7c7c7ff', fontSize: 15, fontWeight: 900, flex: 2 }}>
-              {list.listName}
-            </Text>
-            <Text style={{ color: '#9b9b9bff', fontSize: 11, flex: 1, textAlign: 'right' }} numberOfLines={1}>
-              {list.list_game_ids.length} {list.list_game_ids.length === 1 ? 'game' : 'games'}
-            </Text>
-          </TouchableOpacity>
-          <ScrollView style={{ marginRight: -16 }} horizontal showsHorizontalScrollIndicator={false}>
-            {list.list_game_ids.map((game, index) => (
-              <TouchableWithoutFeedback key={index} onPress={() => router.push(`/lists/${list._id}`)}>
-                <Image
-                  source={{ uri: game.game_cover_url }}
-                  style={{ width: 65, height: 98.5 }}
-                  resizeMode="contain"
-                />
-              </TouchableWithoutFeedback>
-            ))}
-          </ScrollView>
-          <TouchableOpacity onPress={() => router.push(`/lists/${list._id}`)}>
-            <Text style={{ color: '#bababaff', fontSize: 13, marginTop: 5, marginBottom: 10 }} numberOfLines={2}>
-              {list.listDesc}
-            </Text>
-          </TouchableOpacity>
-          <View style={styles.hLine} />
-        </View>
-      ))}
-    </ScrollView>
+        {lists?.map((list) => (
+          <View key={list._id} style={{ marginTop: 15 }}>
+            <TouchableOpacity onPress={() => router.push(`/lists/${list._id}`)} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+              <Text style={{ color: '#c7c7c7ff', fontSize: 15, fontWeight: 900, flex: 2 }}>
+                {list.listName}
+              </Text>
+              <Text style={{ color: '#9b9b9bff', fontSize: 11, flex: 1, textAlign: 'right' }} numberOfLines={1}>
+                {list.list_game_ids.length} {list.list_game_ids.length === 1 ? 'game' : 'games'}
+              </Text>
+            </TouchableOpacity>
+            <ScrollView style={{ marginRight: -16 }} horizontal showsHorizontalScrollIndicator={false}>
+              {list.list_game_ids.map((game, index) => (
+                <TouchableWithoutFeedback key={index} onPress={() => router.push(`/lists/${list._id}`)}>
+                  <Image
+                    source={{ uri: game.game_cover_url }}
+                    style={{ width: 65, height: 98.5 }}
+                    resizeMode="contain"
+                  />
+                </TouchableWithoutFeedback>
+              ))}
+            </ScrollView>
+            <TouchableOpacity onPress={() => router.push(`/lists/${list._id}`)}>
+              <Text style={{ color: '#bababaff', fontSize: 13, marginTop: 5, marginBottom: 10 }} numberOfLines={2}>
+                {list.listDesc}
+              </Text>
+            </TouchableOpacity>
+            <View style={styles.hLine} />
+          </View>
+        ))}
+      </ScrollView>
+      <TouchableOpacity onPress={() => router.push('/(drawer)/private/createList')} style={{ position: 'absolute', bottom: 35, right: 20 }}>
+        <ListAddButton />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }

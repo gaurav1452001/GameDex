@@ -1,11 +1,10 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { View, Text, SafeAreaView, TouchableOpacity } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity,StyleSheet } from 'react-native';
 import Finished from './index';
 import Playing from './playing';
 import Wishlist from './wishlist';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { StyleSheet } from 'react-native';
 import { useUser } from '@clerk/clerk-expo';
 
 const Tab = createMaterialTopTabNavigator();

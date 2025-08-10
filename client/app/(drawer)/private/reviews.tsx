@@ -58,7 +58,7 @@ const Reviews = () => {
     <SafeAreaView style={{ flex: 1, backgroundColor: '#181818' }}>
 
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={{ marginRight: 15 }}>
+        <TouchableOpacity onPress={() => router.push('/(drawer)/(tabs)')} style={{ marginRight: 15 }}>
           <Ionicons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
         <Text style={{ color: '#ffffff', fontSize: 18, fontWeight: 'bold' }}>

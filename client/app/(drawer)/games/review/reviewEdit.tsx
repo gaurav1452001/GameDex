@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native'
 import StarRating from 'react-native-star-rating-widget'
 import { Ionicons } from '@expo/vector-icons'
 import { TextInput } from 'react-native'
-import { useMutation, useQuery } from 'convex/react'
+import { Authenticated, useMutation, useQuery } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import { router, useLocalSearchParams } from 'expo-router'
 import { Id } from "@/convex/_generated/dataModel";
@@ -94,16 +94,17 @@ const Review = () => {
 
     // Update the game header to use review data
     return (
-        <View style={styles.container}>
-            <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={100}>
-                <Modal
-                    animationType="none"
-                    transparent={true}
+        <Authenticated>
+            <View style={styles.container}>
+                <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={100}>
+                    <Modal
+                        animationType="none"
+                        transparent={true}
                     visible={modalVisible}
                     onRequestClose={() => {
                         setModalVisible(!modalVisible);
                     }}
-                >
+                    >
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
                             <View style={{ flexDirection: 'column', marginBottom: 25 }}>
@@ -118,13 +119,13 @@ const Review = () => {
                                 <TouchableOpacity
                                     style={styles.buttonClose}
                                     onPress={() => setModalVisible(!modalVisible)}
-                                >
+                                    >
                                     <Text style={styles.textStyle}>Cancel</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     style={styles.buttonSignOut}
                                     onPress={handleDiscard}
-                                >
+                                    >
                                     <Text style={styles.textStyle}>Discard</Text>
                                 </TouchableOpacity>
                             </View>
@@ -136,7 +137,7 @@ const Review = () => {
                     contentContainerStyle={styles.contentContainer}
                     showsVerticalScrollIndicator={false}
                     keyboardShouldPersistTaps="handled"
-                >
+                    >
                     <View style={styles.gameHeader}>
                         <View style={styles.gameInfo}>
                             <Text style={styles.gameName}>
@@ -150,7 +151,7 @@ const Review = () => {
                             source={{ uri: reviewData?.gameCover }}
                             style={styles.gameCover}
                             resizeMode="cover"
-                        />
+                            />
                     </View>
                     <View style={styles.hLine} />
                     <View style={styles.dateSection}>
@@ -177,7 +178,7 @@ const Review = () => {
                                 enableHalfStar={true}
                                 emptyColor="#555555ff"
                                 color="#61d76fff"
-                            />
+                                />
                             <Text style={styles.ratedText}>Rated</Text>
                         </View>
                         <TouchableOpacity onPress={() => setLiked(!liked)}>
@@ -202,7 +203,7 @@ const Review = () => {
                             textAlignVertical="top"
                             spellCheck={false}
                             autoCorrect={false}
-                        />
+                            />
                         <Text style={styles.characterCount}>
                             {reviewText.length}/1000
                         </Text>
@@ -210,6 +211,7 @@ const Review = () => {
                 </ScrollView>
             </KeyboardAvoidingView>
         </View>
+    </Authenticated>
     )
 }
 
