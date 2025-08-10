@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, Image, StyleSheet, Touchable, TouchableOpacity, Modal } from 'react-native'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -8,11 +8,16 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { StarRatingDisplay } from "react-native-star-rating-widget";
 import { Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
-import { Authenticated, Unauthenticated } from 'convex/react';
+import { Authenticated } from 'convex/react';
 import { useUser } from '@clerk/clerk-expo';
+import { update } from '@/redux/gameData/gameDataSlice';
+import { GamePageDataType } from '@/types/gameTypes';
+import axios from 'axios';
+import { useAppDispatch } from '@/redux/hooks';
 
 
 const ReviewDetailScreen = () => {
+    const dispatch = useAppDispatch();
     const { id } = useLocalSearchParams();
     const animation = useRef<LottieView>(null);
     const [reviewModalVisible, setReviewModalVisible] = useState(false);
@@ -21,7 +26,24 @@ const ReviewDetailScreen = () => {
     const reviewId: Id<"reviews"> = id as Id<"reviews">;
     const review = useQuery(api.reviews.getReviewById, { id: reviewId });
     const deleteReview = useMutation(api.reviews.deleteReview);
-    const { user, isLoaded } = useUser();
+    const { user } = useUser();
+
+    useEffect(() => {
+        const fetchGameInfo = async () => {
+            if (!review?.gameId) return; // Wait until review is loaded and gameId is available
+            try {
+                const ip_address = process.env.EXPO_PUBLIC_IP_ADDRESS || '';
+                const response = await axios.get(`http://${ip_address}:8000/posts/search/${review?.gameId}`);
+                console.log('Game Info:', response.data);
+                dispatch(update(response.data));
+            } catch (error) {
+                console.error('Error fetching game info:', error);
+            }
+        };
+        fetchGameInfo();
+    }, [review]);
+
+
     const checkUser = () => {
         if (user?.id === review?.externalId) {
             return true;
@@ -69,7 +91,7 @@ const ReviewDetailScreen = () => {
                 >
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
-                            <Text style={{fontSize: 22, fontWeight: 'bold', color: '#fff', textAlign: 'center', marginBottom: 8}}>
+                            <Text style={{ fontSize: 22, fontWeight: 'bold', color: '#fff', textAlign: 'center', marginBottom: 8 }}>
                                 Delete Review
                             </Text>
                             <Text style={styles.modalText}>
@@ -113,7 +135,7 @@ const ReviewDetailScreen = () => {
                                     <Text style={{ flex: 6, color: '#fff', fontSize: 16, letterSpacing: 0.5, marginBottom: 10 }}>
                                         {review.gameName}
                                     </Text>
-                                    <View style={{ flex:1, justifyContent:'flex-start', alignItems:'flex-end' }}>
+                                    <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'flex-end' }}>
                                         <TouchableOpacity onPress={() => setReviewModalVisible(false)} >
                                             <Ionicons name="close" size={24} color="#aaa" />
                                         </TouchableOpacity>
@@ -150,9 +172,13 @@ const ReviewDetailScreen = () => {
                                         gap: 20,
                                     }}
                                     onPress={() => {
-                                        deleteReview({ reviewId, externalId: user?.id as string });
                                         setReviewModalVisible(false);
-                                        router.back();
+                                        router.push({
+                                            pathname: `/(drawer)/games/review/reviewEdit`,
+                                            params: {
+                                                reviewId: review?._id,
+                                            }
+                                        });
                                     }}
                                 >
                                     <Ionicons name="create" size={20} color="#aaa" />
@@ -430,3 +456,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
 });
+
+function dispatch(arg0: { payload: GamePageDataType; type: "gameData/update"; }) {
+    throw new Error('Function not implemented.');
+}

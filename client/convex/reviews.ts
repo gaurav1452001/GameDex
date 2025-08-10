@@ -27,18 +27,34 @@ export const createReview = mutation({
 
 export const updateReview = mutation({
     args: {
-        reviewId: v.id('reviews'),
+        reviewId: v.id("reviews"),
+        externalId: v.string(),
+        name: v.string(),
+        imageUrl: v.optional(v.string()),
+        gameId: v.string(),
+        gameName: v.string(),
+        gameCover: v.string(),
         starRating: v.number(),
         isLiked: v.boolean(),
         reviewText: v.string(),
         reviewDate: v.string(),
+        screenshots: v.optional(v.string()),
+        gameYear: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
+        const { reviewId, ...updateData } = args;
+        
+        // Verify the user owns this review
+        const existingReview = await ctx.db.get(reviewId);
+        if (!existingReview || existingReview.externalId !== args.externalId) {
+            throw new Error("Review not found or unauthorized");
+        }
+        
+        // Validate star rating
         if (args.starRating < 0 || args.starRating > 5) {
             throw new Error('Rating must be between 0 and 5');
         }
-
-        const { reviewId, ...updateData } = args;
+        
         await ctx.db.patch(reviewId, updateData);
         return reviewId;
     },
@@ -70,7 +86,7 @@ export const getAllReviews = query({
 //         return await ctx.db
 //             .query('reviews')
 //             .withIndex('byUserAndGame', (q) =>
-//                 q.eq('externalId', externalId).eq('gameId', gameId)
+//                 q.eq('byUserAndGame', externalId).eq('gameId', gameId)
 //             )
 //             .first();
 //     },
