@@ -6,7 +6,7 @@ import LottieView from "lottie-react-native";
 import { useRef } from "react";
 import { router } from "expo-router";
 
-export default function ReviewsScreen() {
+export default function ListsScreen() {
     const animation = useRef<LottieView>(null);
     const lists = useQuery(api.lists.getAllLists);
 
@@ -61,39 +61,39 @@ export default function ReviewsScreen() {
             </View>
 
             {lists?.map((list) => (
-                <View key={list._id} style={{ marginTop: 15 }}>
-                    <TouchableOpacity onPress={() => router.push(`/lists/${list._id}`)} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 2 }}>
+                <TouchableOpacity onPress={() => router.push(`/lists/${list?._id}`)} key={list._id} style={{ marginTop: 15 }}>
+                    <View  style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 2 }}>
                         <Text style={{ color: '#c7c7c7ff', fontSize: 15, fontWeight: 900, flex: 2 }}>
-                            {list.listName}
+                            {list?.listName}
                         </Text>
                         <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
                             <Text style={{ color: '#828282ff', marginRight: 8, fontSize: 11, fontWeight: 'bold' }} numberOfLines={1}>
-                                {list.name?.length > 9 ? `${list.name.substring(0, 9)}...` : list.name}
+                                {list?.name?.length > 9 ? `${list?.name?.substring(0, 9)}...` : list.name}
                             </Text>
                             <Image
-                                source={{ uri: list.userImageUrl }}
+                                source={{ uri: list?.userImageUrl }}
                                 style={{ width: 28, height: 28, borderRadius: 50, borderWidth: 1, borderColor: '#404040' }}
                             />
                         </View>
-                    </TouchableOpacity>
+                    </View>
                     <ScrollView style={{ marginRight: -16 }} horizontal showsHorizontalScrollIndicator={false}>
-                        {list.list_game_ids.map((game, index) => (
+                        {list?.list_game_ids?.map((game, index) => (
                             <TouchableWithoutFeedback key={index} onPress={() => router.push(`/lists/${list._id}`)}>
                                     <Image
-                                        source={{ uri: 'https:' + game?.game_cover_url?.replace('t_thumb', 't_cover_big_2x') }}
-                                        style={{ width: 65, height: 98.5 }}
+                                        source={{ uri: 'https:' + game?.game_cover_url?.replace('t_thumb', 't_cover_big') }}
+                                        style={{ width: 80, height: 121 }}
                                         resizeMode="contain"
                                     />
                             </TouchableWithoutFeedback>
                         ))}
                     </ScrollView>
-                    <TouchableOpacity onPress={() => router.push(`/lists/${list._id}`)}>
+                    <View>
                         <Text style={{ color: '#bababaff', fontSize: 13, marginTop: 5, marginBottom: 10 }} numberOfLines={2}>
                             {list.listDesc}
                         </Text>
-                    </TouchableOpacity>
+                    </View>
                     <View style={styles.hLine} />
-                </View>
+                </TouchableOpacity>
             ))}
         </ScrollView>
     );

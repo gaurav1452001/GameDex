@@ -13,7 +13,7 @@ import { listGames } from '@/types/listTypes';
 import { SearchGameType } from '@/types/gameTypes';
 
 
-const CreateList = () => {
+const EditList = () => {
     const { user } = useUser();
     const params = useLocalSearchParams();
     const dispatch = useAppDispatch();
@@ -296,7 +296,7 @@ const CreateList = () => {
     )
 }
 
-export default CreateList;
+export default EditList;
 
 
 const styles = StyleSheet.create({

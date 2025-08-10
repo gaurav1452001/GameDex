@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     },
 });
 
-export default function MyTabs() {
+export default function PrivateTabs() {
     const { user } = useUser();
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#0b0b0bff', paddingTop: 45 }}>

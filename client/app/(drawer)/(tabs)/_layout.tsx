@@ -10,7 +10,7 @@ export default function MyTabs() {
   return (
     <Tab.Navigator
       screenOptions={{
-      tabBarItemStyle: { flex: 1 },
+      tabBarItemStyle: { width: 'auto' },
       tabBarStyle: { backgroundColor: '#0b0b0bff' },
       tabBarLabelStyle: { color: '#fff', fontSize: 13, letterSpacing: 0.5 },
       tabBarActiveTintColor: '#ffffffff',

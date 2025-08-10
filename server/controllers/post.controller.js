@@ -197,6 +197,8 @@ export const getGameInfo = async (req, res) => {
 //get the information about gaming events
 export const getGamingEvents = async (req, res) => {
     try {
+        const { currentOffset } = req.query;
+        const offsetNum = parseInt(currentOffset);
         // Fetch popular game IDs first
         const eventInfo = await fetch("https://api.igdb.com/v4/events", {
             method: "POST",
@@ -205,7 +207,7 @@ export const getGamingEvents = async (req, res) => {
             "Client-ID": process.env.client_id,
             Authorization: `Bearer ${process.env.bearer_token}`,
             },
-            body: "fields start_time, description, name, event_logo.image_id; sort start_time desc; limit 50;"
+            body: `fields start_time, description, name, event_logo.image_id; sort start_time desc;offset ${offsetNum}; limit 10;`
         });
         const data = await eventInfo.json();
         res.status(200).json(data);

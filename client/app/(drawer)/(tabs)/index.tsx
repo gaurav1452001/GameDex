@@ -12,7 +12,7 @@ export default function HomeScreen() {
   const [isLoading, setIsLoading] = useState(false);
 
   const renderLoader = () => {
-    if (!isLoading || !hasMoreData) return null;
+    // if (!isLoading || !hasMoreData) return null;
     return (
       <View style={{ backgroundColor: '#181818', justifyContent: 'center', alignItems: 'center', height: 100 }}>
         <ActivityIndicator size="large" color="#4692d0ff" />
