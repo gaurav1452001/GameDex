@@ -79,26 +79,20 @@ const Lists = () => {
         </Text>
       </View>
     <ScrollView
-      style={{ flex: 1, paddingHorizontal: 16, paddingTop: 20, backgroundColor: '#181818' }}
+      style={{ flex: 1, paddingHorizontal: 16, paddingTop: 10, backgroundColor: '#181818' }}
       contentContainerStyle={{ paddingBottom: 50 }}
       showsVerticalScrollIndicator={false}
     >
 
       {lists?.map((list) => (
         <View key={list._id} style={{ marginTop: 15 }}>
-          <TouchableOpacity onPress={() => router.push(`/lists/${list._id}`)} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 2 }}>
+          <TouchableOpacity onPress={() => router.push(`/lists/${list._id}`)} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
             <Text style={{ color: '#c7c7c7ff', fontSize: 15, fontWeight: 900, flex: 2 }}>
               {list.listName}
             </Text>
-            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-              <Text style={{ color: '#828282ff', marginRight: 8, fontSize: 11, fontWeight: 'bold' }} numberOfLines={1}>
-                {list.name?.length > 9 ? `${list.name.substring(0, 9)}...` : list.name}
-              </Text>
-              <Image
-                source={{ uri: list.userImageUrl }}
-                style={{ width: 28, height: 28, borderRadius: 50, borderWidth: 1, borderColor: '#404040' }}
-              />
-            </View>
+            <Text style={{ color: '#9b9b9bff', fontSize: 11, flex: 1, textAlign: 'right' }} numberOfLines={1}>
+              {list.list_game_ids.length} {list.list_game_ids.length === 1 ? 'game' : 'games'}
+            </Text>
           </TouchableOpacity>
           <ScrollView style={{ marginRight: -16 }} horizontal showsHorizontalScrollIndicator={false}>
             {list.list_game_ids.map((game, index) => (
@@ -130,8 +124,8 @@ const styles = StyleSheet.create({
   hLine: {
     height: 1,
     backgroundColor: '#333',
-    marginTop: 15,
-    marginRight: -16
+    marginTop: 10,
+    marginHorizontal: -16
   },
   reviewGameDate: {
     color: '#7a7a7aff',

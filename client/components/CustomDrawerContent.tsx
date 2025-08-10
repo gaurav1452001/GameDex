@@ -57,6 +57,15 @@ export default function CustomDrawerContent(props: any) {
                     />
 
                     <DrawerItem
+                        label="Games"
+                        labelStyle={{ color: '#9f9f9fff', fontSize: 14 }}
+                        onPress={() => router.push('/(drawer)/private/(tabs)')}
+                        icon={({ color, size }) => (
+                            <Ionicons name="person-outline" size={17} color={'#9f9f9fff'} />
+                        )}
+                    />
+
+                    <DrawerItem
                         label="Activity"
                         labelStyle={{ color: '#9f9f9fff', fontSize: 14 }}
                         onPress={() => router.push('/(drawer)/private/activity')}
@@ -70,15 +79,6 @@ export default function CustomDrawerContent(props: any) {
                         onPress={() => router.push('/(drawer)/private/diary')}
                         icon={({ color, size }) => (
                             <Ionicons name="bookmark-outline" size={17} color={'#9f9f9fff'} />
-                        )}
-                    />
-
-                    <DrawerItem
-                        label="Wishlist"
-                        labelStyle={{ color: '#9f9f9fff', fontSize: 14 }}
-                        onPress={() => router.push('/(drawer)/private/wishlist')}
-                        icon={({ color, size }) => (
-                            <Ionicons name="heart-outline" size={17} color={'#9f9f9fff'} />
                         )}
                     />
 

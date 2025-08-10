@@ -43,6 +43,8 @@ export default function AppLayout() {
         headerTitle: 'GameDex',
       }} />
 
+
+
       <Drawer.Screen name="searchGame" options={{
         drawerIcon: ({ color, size }) => (
           <Ionicons name="search-outline" color={color} size={17} />
@@ -76,12 +78,14 @@ export default function AppLayout() {
         drawerItemStyle: { display: 'none' },
       }} />
 
-      <Drawer.Screen name="private/profile" options={{
+      <Drawer.Screen name="private/(tabs)" options={{
+        drawerIcon: ({ color, size }) => (
+          <Ionicons name="home-outline" color={color} size={17} />
+        ),
         headerShown: false,
-        drawerItemStyle: { display: 'none' },
       }} />
 
-      <Drawer.Screen name="private/wishlist" options={{
+      <Drawer.Screen name="private/profile" options={{
         headerShown: false,
         drawerItemStyle: { display: 'none' },
       }} />
@@ -118,7 +122,12 @@ export default function AppLayout() {
         drawerItemStyle: { display: 'none' },
         title: '    I  Played',
       }} />
+
+      <Drawer.Screen name="games/review/reviewEdit" options={{
+        headerShown: true,
+        drawerItemStyle: { display: 'none' },
+      }} />
     </Drawer>
   );
-}
+} 
 

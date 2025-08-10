@@ -42,19 +42,19 @@ export const user_game_track = {
     currentlyPlaying: v.array(
         v.object({
             game_id: v.string(),
-            game_cover_url: v.string(),
+            game_cover_url: v.optional(v.string()),
         })
     ),
     wantToPlay: v.array(
         v.object({
             game_id: v.string(),
-            game_cover_url: v.string(),
+            game_cover_url: v.optional(v.string()),
         })
     ),
     finishedPlaying: v.array(
         v.object({
             game_id: v.string(),
-            game_cover_url: v.string(),
+            game_cover_url: v.optional(v.string()),
         })
     ),
 }
