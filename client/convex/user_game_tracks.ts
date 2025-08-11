@@ -240,6 +240,59 @@ export const getUserGameTrack = query({
     },
 });
 
+//Get the number of games finished playing by a user
+export const getFinishedGamesCount = query({
+    args: { externalId: v.string() },
+    handler: async (ctx, { externalId }) => {
+        const userTrack = await ctx.db
+            .query('user_game_tracks')
+            .filter((q) => q.eq(q.field('externalId'), externalId))
+            .first();   
+
+        if (!userTrack) {
+            throw new Error('User track record not found');
+        }
+
+        return userTrack.finishedPlaying.length;
+    },
+});
+
+//Get the number of games currently playing by a user
+export const getPlayingGamesCount = query({
+    args: { externalId: v.string() },
+    handler: async (ctx, { externalId }) => {
+        const userTrack = await ctx.db
+            .query('user_game_tracks')
+            .filter((q) => q.eq(q.field('externalId'), externalId))
+            .first();   
+
+        if (!userTrack) {
+            throw new Error('User track record not found');
+        }
+
+        return userTrack.currentlyPlaying.length;
+    },
+});
+
+//Get the number of games WishListed by a user
+export const getWishlistGamesCount = query({
+    args: { externalId: v.string() },
+    handler: async (ctx, { externalId }) => {
+        const userTrack = await ctx.db
+            .query('user_game_tracks')
+            .filter((q) => q.eq(q.field('externalId'), externalId))
+            .first();   
+
+        if (!userTrack) {
+            throw new Error('User track record not found');
+        }
+
+        return userTrack.wantToPlay.length;
+    },
+});
+
+
+
 // Get game status for a specific user and game
 export const getGameStatus = query({
     args: { 

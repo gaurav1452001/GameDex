@@ -102,6 +102,31 @@ export const getUserReviews = query({
             .collect();
     },
 });
+
+export const getFourUserReviews = query({
+    args: { externalId: v.string() },
+    handler: async (ctx, { externalId }) => {
+        return await ctx.db
+            .query('reviews')
+            .withIndex('byUserId', (q) => q.eq('externalId', externalId))
+            .order('desc')
+            .take(4);
+    },
+});
+
+// Get the number of reviews for a specific user
+export const getUserReviewsCount = query({
+    args: { externalId: v.string() },
+    handler: async (ctx, { externalId }) => {
+        const reviews = await ctx.db
+            .query('reviews')
+            .withIndex('byUserId', (q) => q.eq('externalId', externalId))
+            .collect();
+        return reviews.length;
+    },
+});
+
+
 export const deleteReview = mutation({
     args: { 
         reviewId: v.id('reviews'),

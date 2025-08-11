@@ -91,15 +91,15 @@ const Lists = () => {
       >
 
         {lists?.map((list) => (
-          <View key={list._id} style={{ marginTop: 15 }}>
-            <TouchableOpacity onPress={() => router.push(`/lists/${list._id}`)} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+          <TouchableOpacity onPress={() => router.push(`/lists/${list._id}`)} key={list._id} style={{ marginTop: 15 }}>
+            <View  style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
               <Text style={{ color: '#c7c7c7ff', fontSize: 15, fontWeight: 900, flex: 2 }}>
                 {list.listName}
               </Text>
               <Text style={{ color: '#9b9b9bff', fontSize: 11, flex: 1, textAlign: 'right' }} numberOfLines={1}>
                 {list.list_game_ids.length} {list.list_game_ids.length === 1 ? 'game' : 'games'}
               </Text>
-            </TouchableOpacity>
+            </View>
             <ScrollView style={{ marginRight: -16 }} horizontal showsHorizontalScrollIndicator={false}>
               {list.list_game_ids.map((game, index) => (
                 <TouchableWithoutFeedback key={index} onPress={() => router.push(`/lists/${list._id}`)}>
@@ -111,13 +111,13 @@ const Lists = () => {
                 </TouchableWithoutFeedback>
               ))}
             </ScrollView>
-            <TouchableOpacity onPress={() => router.push(`/lists/${list._id}`)}>
+            <View>
               <Text style={{ color: '#bababaff', fontSize: 13, marginTop: 5, marginBottom: 10 }} numberOfLines={2}>
                 {list.listDesc}
               </Text>
-            </TouchableOpacity>
+            </View>
             <View style={styles.hLine} />
-          </View>
+          </TouchableOpacity>
         ))}
       </ScrollView>
       <TouchableOpacity onPress={() => router.push('/(drawer)/private/createList')} style={{ position: 'absolute', bottom: 35, right: 20 }}>

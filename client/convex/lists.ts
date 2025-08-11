@@ -92,6 +92,18 @@ export const getListByUserId = query({
     },
 });
 
+//count all lists by user id
+export const getListCountByUserId = query({
+    args: { externalId: v.string() },
+    handler: async (ctx, { externalId }) => {
+        const countLists = await ctx.db
+            .query('lists')
+            .filter(q => q.eq(q.field('externalId'), externalId))
+            .collect();
+        return countLists.length;
+    },
+});
+
 export const deleteList = mutation({
     args: { 
         listId: v.id('lists'),

@@ -80,7 +80,7 @@ export default function ListsScreen() {
                         {list?.list_game_ids?.map((game, index) => (
                             <TouchableWithoutFeedback key={index} onPress={() => router.push(`/lists/${list._id}`)}>
                                     <Image
-                                        source={{ uri: 'https:' + game?.game_cover_url?.replace('t_thumb', 't_cover_big') }}
+                                        source={{ uri: 'https:' + game?.game_cover_url?.replace('t_thumb', 't_cover_big_2x') }}
                                         style={{ width: 80, height: 121 }}
                                         resizeMode="contain"
                                     />

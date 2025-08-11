@@ -14,7 +14,12 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as auth from "../auth.js";
+import type * as commentsLists from "../commentsLists.js";
+import type * as commentsReviews from "../commentsReviews.js";
+import type * as follows from "../follows.js";
 import type * as http from "../http.js";
+import type * as likesLists from "../likesLists.js";
+import type * as likesReviews from "../likesReviews.js";
 import type * as lists from "../lists.js";
 import type * as reviews from "../reviews.js";
 import type * as user_game_tracks from "../user_game_tracks.js";
@@ -30,7 +35,12 @@ import type * as users from "../users.js";
  */
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  commentsLists: typeof commentsLists;
+  commentsReviews: typeof commentsReviews;
+  follows: typeof follows;
   http: typeof http;
+  likesLists: typeof likesLists;
+  likesReviews: typeof likesReviews;
   lists: typeof lists;
   reviews: typeof reviews;
   user_game_tracks: typeof user_game_tracks;
