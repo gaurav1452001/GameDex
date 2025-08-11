@@ -48,26 +48,22 @@ export const commentsReviews = {
     userId: v.id("users"),
     reviewId: v.id("reviews"),
     commentText: v.string(),
-    createdAt: v.string(),
 };
 
 export const likesReviews = {
     userId: v.id("users"),
     reviewId: v.id("reviews"),
-    createdAt: v.string(),
 };
 
 export const commentsLists = {
     userId: v.id("users"),
     listId: v.id("lists"),
     commentText: v.string(),
-    createdAt: v.string(),
 };
 
 export const likesLists = {
     userId: v.id("users"),
     listId: v.id("lists"),
-    createdAt: v.string(),
 };
 
 export const user_game_track = {

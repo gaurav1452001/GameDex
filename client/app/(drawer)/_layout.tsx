@@ -110,11 +110,6 @@ export default function AppLayout() {
         drawerItemStyle: { display: 'none' },
       }} />
 
-      <Drawer.Screen name="private/activity" options={{
-        headerShown: false,
-        drawerItemStyle: { display: 'none' },
-      }} />
-
         <Drawer.Screen name="private/reviews" options={{
         headerShown: false,
         drawerItemStyle: { display: 'none' },

@@ -8,6 +8,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
 import { useUser } from '@clerk/clerk-expo';
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 const ReviewDetailScreen = () => {
@@ -20,6 +21,25 @@ const ReviewDetailScreen = () => {
     const [isExpanded, setIsExpanded] = useState(false);
     const [listModalVisible, setListModalVisible] = useState(false);
     const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+    const [isLiking, setIsLiking] = useState(false);
+
+    const likeList = useMutation(api.likesLists.addLike);
+    const unlikeList = useMutation(api.likesLists.removeLike);
+    const getLikesByList = useQuery(api.likesLists.getLikesByList, { listId });
+    const loggedInUser = useQuery(
+        api.users.getUserByExternalId,
+        user?.id ? { externalId: user.id } : "skip"
+    );
+
+    const likeStatusList = useQuery(
+        api.likesLists.hasUserLikedList,
+        user && loggedInUser?._id
+            ? {
+                userId: loggedInUser._id as Id<'users'>,
+                listId: listId
+            }
+            : "skip"
+    );
 
     useEffect(() => {
         setIsExpanded(false);
@@ -50,7 +70,7 @@ const ReviewDetailScreen = () => {
     }
 
     return (
-        <View style={{ flex: 1, backgroundColor: '#181818' }}>
+        <ScrollView style={{ flex: 1, backgroundColor: '#181818' }}>
             <Authenticated>
                 {/* delete modal */}
                 <Modal
@@ -221,22 +241,60 @@ const ReviewDetailScreen = () => {
                     style={styles.gradient}
                 />
             </View>
-            <View style={{ paddingHorizontal: 16, marginBottom: 20 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
-                    <TouchableOpacity onPress={() => router.push({
-                        pathname:`/(drawer)/profile`,
-                        params:{
-                            userId: list.externalId as string
-                        }
+            <View style={{ paddingHorizontal: 16, marginBottom: 10 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                    <View>
+                        <TouchableOpacity onPress={() => router.push({
+                            pathname: `/(drawer)/profile`,
+                            params: {
+                                userId: list.externalId as string
+                            }
                         })}>
-                        <Image
-                            source={{ uri: list.userImageUrl }}
-                            style={{ width: 30, height: 30, borderRadius: 20, marginRight: 10, borderWidth: 1, borderColor: '#404040' }}
-                        />
-                    </TouchableOpacity>
-                    <Text style={styles.reviewText}>
-                        {list.name?.length > 25 ? `${list.name.substring(0, 25)}...` : list.name}
-                    </Text>
+                            <Image
+                                source={{ uri: list.userImageUrl }}
+                                style={{ width: 30, height: 30, borderRadius: 20, marginRight: 10, borderWidth: 1, borderColor: '#404040' }}
+                            />
+                        </TouchableOpacity>
+                        <Text style={styles.reviewText}>
+                            {list.name?.length > 25 ? `${list.name.substring(0, 25)}...` : list.name}
+                        </Text>
+                    </View>
+                    <Authenticated>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', gap: 5, marginTop: 5 }}>
+                            <TouchableOpacity
+                                onPress={async () => {
+                                    if (isLiking) return;
+                                    setIsLiking(true);
+                                    if (likeStatusList) {
+                                        await unlikeList({ userId: loggedInUser?._id as Id<'users'>, listId });
+                                    } else {
+                                        await likeList({ userId: loggedInUser?._id as Id<'users'>, listId });
+                                    }
+                                    setTimeout(() => setIsLiking(false), 800);
+                                }}
+                            >
+                                <Ionicons
+                                    name={likeStatusList ? "heart" : "heart-outline"}
+                                    size={20}
+                                    color={likeStatusList ? "#d98138ff" : "#7a7a7aff"}
+                                />
+                            </TouchableOpacity>
+                            {
+                                likeStatusList ? (
+                                    <Text style={{ color: '#d98138ff', fontSize: 12, letterSpacing: 0.5 }}>
+                                        Liked
+                                    </Text>
+                                ) : (
+                                    <Text style={{ color: '#7a7a7aff', fontSize: 12, letterSpacing: 0.5 }}>
+                                        Like?
+                                    </Text>
+                                )
+                            }
+                            <Text style={{ color: '#7a7a7aff', fontSize: 12, letterSpacing: 0.5 }}>
+                                {getLikesByList?.length || 0} Likes
+                            </Text>
+                        </View>
+                    </Authenticated>
                 </View>
                 <View style={{ flexDirection: 'column', gap: 12 }}>
                     <Text style={{ color: '#ffffff', fontSize: 18, fontWeight: 'bold', marginTop: 10 }}>
@@ -253,24 +311,23 @@ const ReviewDetailScreen = () => {
                 </View>
             </View>
             <View style={styles.view}>
-                <FlatList
-                    data={list.list_game_ids}
-                    keyExtractor={(item) => item.game_id.toString()}
-                    numColumns={4}
-                    contentContainerStyle={styles.mainView}
-                    renderItem={({ item: gamePage }) => (
-                        <TouchableOpacity onPress={() => router.push(`/(drawer)/games/${gamePage.game_id}`)} key={gamePage.game_id}>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
+                    {list.list_game_ids?.map((gamePage) => (
+                        <TouchableOpacity
+                            onPress={() => router.push(`/(drawer)/games/${gamePage.game_id}`)}
+                            key={gamePage.game_id}
+                        >
                             <Image
                                 source={{ uri: 'https:' + gamePage?.game_cover_url?.replace('t_thumb', 't_cover_big_2x') }}
                                 style={styles.displayImage}
                                 resizeMode="cover"
                             />
                         </TouchableOpacity>
-                    )}
-                    showsVerticalScrollIndicator={false}
-                />
+                    ))}
+                </View>
             </View>
-        </View>
+            <View style={styles.hLine} />
+        </ScrollView>
     )
 }
 
@@ -284,7 +341,6 @@ const styles = StyleSheet.create({
     view: {
         flex: 1,
         justifyContent: "center",
-        alignItems: "center",
         backgroundColor: '#181818',
     },
     expandButton: {
@@ -377,6 +433,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     mainView: {
+        flex: 1,
         backgroundColor: '#181818',
         justifyContent: 'center',
     },

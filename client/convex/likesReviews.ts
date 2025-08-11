@@ -1,11 +1,5 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
-// Schema definition
-export const likesReviews = {
-    userId: v.id("users"),
-    reviewId: v.id("reviews"),
-    createdAt: v.string(),
-};
 
 // Query: Get likes by reviewId
 export const getLikesByReview = query({
@@ -15,6 +9,22 @@ export const getLikesByReview = query({
             .query("likesReviews")
             .withIndex("byReview", (q) => q.eq("reviewId", args.reviewId))
             .collect();
+    },
+});
+
+// Query: Check if user has liked a review
+export const hasUserLikedReview = query({
+    args: {
+        userId: v.id("users"),
+        reviewId: v.id("reviews"),
+    },
+    handler: async (ctx, args) => {
+        const like = await ctx.db
+            .query("likesReviews")
+            .withIndex("byUser", (q) => q.eq("userId", args.userId))
+            .filter((q) => q.eq(q.field("reviewId"), args.reviewId))
+            .first();
+        return !!like;
     },
 });
 
@@ -58,13 +68,11 @@ export const addLikeReview = mutation({
     args: {
         userId: v.id("users"),
         reviewId: v.id("reviews"),
-        createdAt: v.string(),
     },
     handler: async (ctx, args) => {
         return await ctx.db.insert("likesReviews", {
             userId: args.userId,
             reviewId: args.reviewId,
-            createdAt: args.createdAt,
         });
     },
 });

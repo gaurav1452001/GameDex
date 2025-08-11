@@ -67,15 +67,6 @@ export default function CustomDrawerContent(props: any) {
                             <Ionicons name="person-outline" size={17} color={'#9f9f9fff'} />
                         )}
                     />
-
-                    <DrawerItem
-                        label="Activity"
-                        labelStyle={{ color: '#9f9f9fff', fontSize: 14 }}
-                        onPress={() => router.push('/(drawer)/private/activity')}
-                        icon={({ color, size }) => (
-                            <Ionicons name="person-outline" size={17} color={'#9f9f9fff'} />
-                        )}
-                    />
                     <DrawerItem
                         label="Diary"
                         labelStyle={{ color: '#9f9f9fff', fontSize: 14 }}

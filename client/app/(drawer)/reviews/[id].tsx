@@ -21,11 +21,30 @@ const ReviewDetailScreen = () => {
     const animation = useRef<LottieView>(null);
     const [reviewModalVisible, setReviewModalVisible] = useState(false);
     const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-    
+    const [isLiking, setIsLiking] = useState(false);
     const reviewId: Id<"reviews"> = id as Id<"reviews">;
     const review = useQuery(api.reviews.getReviewById, { id: reviewId });
+    const likeReview = useMutation(api.likesReviews.addLikeReview);
+    const unlikeReview = useMutation(api.likesReviews.removeLikeReview);
+    const getLikesByReview = useQuery(api.likesReviews.getLikesByReview, { reviewId });
     const deleteReview = useMutation(api.reviews.deleteReview);
     const { user } = useUser();
+
+    const loggedInUser = useQuery(
+        api.users.getUserByExternalId,
+        user?.id ? { externalId: user.id } : "skip"
+    );
+
+    const likeStatus = useQuery(
+        api.likesReviews.hasUserLikedReview,
+        user && loggedInUser?._id
+            ? {
+                userId: loggedInUser._id as Id<'users'>,
+                reviewId: reviewId
+            }
+            : "skip"
+    );
+
 
     //when the user goes to the individual review page, the below useEffect will dispatch the game data to the redux store
     //this is done so that the game data is available in the redux store and can be used to easily update the game data in the review page
@@ -314,10 +333,47 @@ const ReviewDetailScreen = () => {
                         )}
                     </TouchableOpacity>
                 </View>
-                <View style={{ marginHorizontal: 16 }}>
+                <View style={{ marginHorizontal: 16, gap: 10 }}>
                     <Text style={styles.reviewTextDesc}>
                         {review.reviewText}
                     </Text>
+                    <Authenticated>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', gap: 10 }}>
+                            <TouchableOpacity
+                                onPress={async () => {
+                                    if (isLiking) return;
+                                    setIsLiking(true);
+                                    if (likeStatus) {
+                                        await unlikeReview({ userId: loggedInUser?._id as Id<'users'>, reviewId });
+                                    } else {
+                                        await likeReview({ userId: loggedInUser?._id as Id<'users'>, reviewId });
+                                    }
+                                    setTimeout(() => setIsLiking(false), 800);
+                                }}
+                            >
+                                <Ionicons
+                                    name={likeStatus ? "heart" : "heart-outline"}
+                                    size={20}
+                                    color={likeStatus ? "#d98138ff" : "#7a7a7aff"}
+                                />
+                            </TouchableOpacity>
+                            {
+                                likeStatus ? (
+                                    <Text style={{ color: '#d98138ff', fontSize: 12, letterSpacing: 0.5 }}>
+                                        Liked
+                                    </Text>
+                                ) : (
+                                    <Text style={{ color: '#7a7a7aff', fontSize: 12, letterSpacing: 0.5 }}>
+                                        Like?
+                                    </Text>
+                                )
+                            }
+
+                            <Text style={{ color: '#7a7a7aff', fontSize: 12, letterSpacing: 0.5 }}>
+                                {getLikesByReview?.length || 0} Likes
+                            </Text>
+                        </View>
+                    </Authenticated>
                 </View>
                 <View style={styles.hLine} />
             </ScrollView>

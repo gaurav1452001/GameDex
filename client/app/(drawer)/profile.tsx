@@ -185,8 +185,8 @@ export default function Profile() {
                 <View style={{ height: 1, backgroundColor: '#363636ff', marginTop: 30, width: '100%' }} />
 
                 <View style={{ flex: 1, paddingHorizontal: 16 }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 20 }}>
-                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', marginTop: 10, letterSpacing: 1 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
+                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', letterSpacing: 1 }}>
                             Games Finished
                         </Text>
                         <Text style={{ color: '#717171ff', fontSize: 15, textAlign: 'right' }}>
@@ -194,8 +194,8 @@ export default function Profile() {
                         </Text>
                     </View>
 
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 20 }}>
-                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', marginTop: 10, letterSpacing: 1 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
+                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', letterSpacing: 1 }}>
                             Games Wishlist
                         </Text>
                         <Text style={{ color: '#717171ff', fontSize: 15, textAlign: 'right' }}>
@@ -203,8 +203,8 @@ export default function Profile() {
                         </Text>
                     </View>
 
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 20 }}>
-                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', marginTop: 10, letterSpacing: 1 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
+                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left',letterSpacing: 1 }}>
                             Games Playing
                         </Text>
                         <Text style={{ color: '#717171ff', fontSize: 15, textAlign: 'right' }}>
@@ -212,8 +212,8 @@ export default function Profile() {
                         </Text>
                     </View>
 
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 20 }}>
-                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', marginTop: 10, letterSpacing: 1 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
+                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', letterSpacing: 1 }}>
                             Reviews
                         </Text>
                         <Text style={{ color: '#717171ff', fontSize: 15, textAlign: 'right' }}>
@@ -221,8 +221,8 @@ export default function Profile() {
                         </Text>
                     </View>
 
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 20 }}>
-                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', marginTop: 10, letterSpacing: 1 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
+                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', letterSpacing: 1 }}>
                             Lists
                         </Text>
                         <Text style={{ color: '#717171ff', fontSize: 15, textAlign: 'right' }}>
@@ -230,8 +230,8 @@ export default function Profile() {
                         </Text>
                     </View>
 
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 20 }}>
-                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', marginTop: 10, letterSpacing: 1 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
+                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left',  letterSpacing: 1 }}>
                             Likes
                         </Text>
                         <Text style={{ color: '#717171ff', fontSize: 15, textAlign: 'right' }}>
@@ -239,8 +239,8 @@ export default function Profile() {
                         </Text>
                     </View>
 
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 20 }}>
-                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', marginTop: 10, letterSpacing: 1 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
+                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left',letterSpacing: 1 }}>
                             Following
                         </Text>
                         <Text style={{ color: '#717171ff', fontSize: 15, textAlign: 'right' }}>
@@ -248,8 +248,8 @@ export default function Profile() {
                         </Text>
                     </View>
 
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 20 }}>
-                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', marginTop: 10, letterSpacing: 1 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
+                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', letterSpacing: 1 }}>
                             Followers
                         </Text>
                         <Text style={{ color: '#717171ff', fontSize: 15, textAlign: 'right' }}>
