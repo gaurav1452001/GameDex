@@ -42,7 +42,6 @@ export const List = {
 export const follows = {
     followerId: v.id("users"), // who follows
     followingId: v.id("users"), // who is being followed
-    createdAt: v.string(),
 }
 
 export const commentsReviews = {

@@ -51,7 +51,7 @@ export default function CustomDrawerContent(props: any) {
                         label="Profile"
                         labelStyle={{ color: '#9f9f9fff', fontSize: 14 }}
                         onPress={() => router.push({
-                            pathname:'/(drawer)/private/profile',
+                            pathname:'/(drawer)/profile',
                             params: { userId: user?.id as string }
                         })}
                         icon={({ color, size }) => (

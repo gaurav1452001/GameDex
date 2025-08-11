@@ -64,3 +64,14 @@ export const removeLikeReview = mutation({
         return false;
     },
 });
+
+export const getLikesCountByUser = query({
+    args: { userId: v.id("users") },
+    handler: async (ctx, args) => {
+        const likes = await ctx.db
+            .query("likesReviews")
+            .withIndex("byUser", (q) => q.eq("userId", args.userId))
+            .collect();
+        return likes.length;
+    },
+});

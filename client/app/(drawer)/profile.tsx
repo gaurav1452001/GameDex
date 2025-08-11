@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, ScrollView } from 'react-native';
+import React, { use } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, ScrollView, Touchable } from 'react-native';
 import { useUser, useClerk } from '@clerk/clerk-expo';
 import { Image } from 'expo-image';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -14,8 +14,17 @@ import { Authenticated, useMutation, useQuery } from 'convex/react'
 export default function Profile() {
     const params = useLocalSearchParams();
     const userId = params?.userId;
+    const { user } = useUser();
+    const OtherUser = useQuery(api.users.getUserByExternalId, { externalId: userId as string });
+    const loggedInUser = useQuery(api.users.getUserByExternalId, { externalId: user?.id as string });
+    const follow = useMutation(api.follows.createFollow);
+    const unfollow = useMutation(api.follows.removeFollow);
 
-    const user = useQuery(api.users.getUserByExternalId, { externalId: userId as string });
+
+    const following = useQuery(api.follows.isFollowing, {
+        followerId: loggedInUser?._id as Id<'users'>,    // You (the logged-in user)
+        followingId: OtherUser?._id as Id<'users'>       // The user being viewed
+    });
 
     const finishedCount = useQuery(api.user_game_tracks.getFinishedGamesCount, {
         externalId: userId as string
@@ -35,6 +44,20 @@ export default function Profile() {
     const recentReviews = useQuery(api.reviews.getFourUserReviews, {
         externalId: userId as string
     });
+    const likesListsCount = useQuery(api.likesLists.getLikesCountByUser, {
+        userId: OtherUser?._id as Id<'users'>
+    }) ?? 0;
+    const likesReviewsCount = useQuery(api.likesReviews.getLikesCountByUser, {
+        userId: OtherUser?._id as Id<'users'>
+    }) ?? 0;
+    const likes = likesListsCount + likesReviewsCount;
+    const followerCount = useQuery(api.follows.getFollowerCount, {
+        userId: OtherUser?._id as Id<'users'>
+    });
+    const followingCount = useQuery(api.follows.getFollowingCount, {
+        userId: OtherUser?._id as Id<'users'>
+    });
+
 
     if (!userId) {
         return (
@@ -53,17 +76,36 @@ export default function Profile() {
                     <Ionicons name="arrow-back" size={24} color="#fff" />
                 </TouchableOpacity>
                 <Text style={{ color: '#c6c6c6ff', fontSize: 18, fontWeight: 'bold' }}>
-                    {user?.name || 'Profile'}
+                    {OtherUser?.name || 'Profile'}
                 </Text>
             </View>
             <ScrollView contentContainerStyle={{ paddingBottom: 50 }} showsVerticalScrollIndicator={false}>
 
                 <View style={styles.scrollContent}>
                     <Image
-                        source={{ uri: user?.imageUrl || 'https://via.placeholder.com/150' }}
+                        source={{ uri: OtherUser?.imageUrl || 'https://via.placeholder.com/150' }}
                         style={styles.avatar}
                         contentFit="cover"
                     />
+                    <TouchableOpacity style={{ marginTop: 10 }}>
+                        {OtherUser?._id !== loggedInUser?._id && (
+                            following ? (
+                                <TouchableOpacity onPress={() => {
+                                    unfollow({ followerId: loggedInUser?._id as Id<'users'>, followingId: OtherUser?._id as Id<'users'> })
+                                }}>
+                                    <Text style={styles.following}>Following</Text>
+                                </TouchableOpacity>
+                            ) : (
+                                <TouchableOpacity onPress={() => {
+                                    follow({
+                                        followerId: loggedInUser?._id as Id<'users'>, followingId: OtherUser?._id as Id<'users'>
+                                    })
+                                }}>
+                                    <Text style={styles.follower}>Follow</Text>
+                                </TouchableOpacity>
+                            )
+                        )}
+                    </TouchableOpacity>
                     <Text style={styles.userBio}>
                         this is an example bio of the user
                     </Text>
@@ -132,7 +174,7 @@ export default function Profile() {
                 </View>
                 <View style={{ height: 1, backgroundColor: '#363636ff', marginTop: 30, width: '100%' }} />
 
-                <View style={{ flex: 1,paddingHorizontal: 16 }}>
+                <View style={{ flex: 1, paddingHorizontal: 16 }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 20 }}>
                         <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', marginTop: 10, letterSpacing: 1 }}>
                             Games Finished
@@ -183,7 +225,7 @@ export default function Profile() {
                             Likes
                         </Text>
                         <Text style={{ color: '#717171ff', fontSize: 15, textAlign: 'right' }}>
-                            {listsCount ? listsCount : 0}
+                            {likes ? likes : 0}
                         </Text>
                     </View>
 
@@ -192,7 +234,7 @@ export default function Profile() {
                             Following
                         </Text>
                         <Text style={{ color: '#717171ff', fontSize: 15, textAlign: 'right' }}>
-                            {listsCount ? listsCount : 0}
+                            {followingCount ? followingCount : 0}
                         </Text>
                     </View>
 
@@ -201,7 +243,7 @@ export default function Profile() {
                             Followers
                         </Text>
                         <Text style={{ color: '#717171ff', fontSize: 15, textAlign: 'right' }}>
-                            {listsCount ? listsCount : 0}
+                            {followerCount ? followerCount : 0}
                         </Text>
                     </View>
 
@@ -217,6 +259,23 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#181818',
     },
+    following: {
+        color: '#84e661ff',
+        fontSize: 14,
+        borderWidth: 1,
+        borderColor: '#84e661ff',
+        padding: 4,
+        letterSpacing: 1
+    },
+    follower: {
+        color: '#8c8c8cff',
+        fontSize: 14,
+        borderWidth: 1,
+        borderColor: '#8c8c8cff',
+        padding: 4,
+        letterSpacing: 1
+    },
+
     scrollContent: {
         paddingHorizontal: 16,
         alignItems: 'center',

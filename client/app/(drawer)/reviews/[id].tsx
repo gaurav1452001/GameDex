@@ -252,7 +252,7 @@ const ReviewDetailScreen = () => {
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', marginBottom: 8 }}>
                             <TouchableOpacity onPress={() => {
                                 router.push({
-                                    pathname: `/(drawer)/private/profile`,
+                                    pathname: `/(drawer)/profile`,
                                     params: {
                                         userId: review?.externalId as string
                                     }

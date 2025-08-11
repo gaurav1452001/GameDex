@@ -60,3 +60,15 @@ export const removeLike = mutation({
         return false;
     },
 });
+
+// Query: Get the total number of likes a user has given across all lists
+export const getLikesCountByUser = query({
+    args: { userId: v.id("users") },
+    handler: async (ctx, args) => {
+        const likes = await ctx.db
+            .query("likesLists")
+            .withIndex("byUser", (q) => q.eq("userId", args.userId))
+            .collect();
+        return likes.length;
+    },
+});

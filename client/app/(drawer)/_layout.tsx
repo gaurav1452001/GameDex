@@ -53,6 +53,11 @@ export default function AppLayout() {
         drawerLabel: 'Search',
       }} />
 
+      <Drawer.Screen name="profile" options={{
+        headerShown: false,
+        drawerItemStyle: { display: 'none' },
+      }} />
+
       {/* Auth routes - only show when not signed in */}
       <Drawer.Screen name="(auth)/signIn" options={{
         drawerIcon: ({ color, size }) => (
