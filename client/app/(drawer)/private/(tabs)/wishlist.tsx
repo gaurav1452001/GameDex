@@ -19,7 +19,7 @@ export default function Wishlist() {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#61d76fff" />
-        <Text style={styles.loadingText}>Loading...</Text>
+        <Text style={styles.loadingText}>Loading...</Text>  
       </View>
     );
   }

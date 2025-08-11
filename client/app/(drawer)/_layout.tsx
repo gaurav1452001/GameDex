@@ -110,7 +110,7 @@ export default function AppLayout() {
         drawerItemStyle: { display: 'none' },
       }} />
 
-        <Drawer.Screen name="private/reviews" options={{
+      <Drawer.Screen name="private/reviews" options={{
         headerShown: false,
         drawerItemStyle: { display: 'none' },
       }} />
@@ -121,6 +121,11 @@ export default function AppLayout() {
       <Drawer.Screen name="keywords/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
       <Drawer.Screen name="reviews/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
       <Drawer.Screen name="lists/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
+      <Drawer.Screen name="lists/list_comments" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
+      <Drawer.Screen name="lists" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
+      <Drawer.Screen name="reviews/review_comments" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
+      <Drawer.Screen name="reviews" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
+
 
       <Drawer.Screen name="games/review/reviewScreen" options={{
         headerShown: true,
@@ -134,5 +139,5 @@ export default function AppLayout() {
       }} />
     </Drawer>
   );
-} 
+}
 

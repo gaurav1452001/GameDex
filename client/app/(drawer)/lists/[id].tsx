@@ -11,16 +11,13 @@ import { useUser } from '@clerk/clerk-expo';
 import { ScrollView } from 'react-native-gesture-handler';
 
 
-const ReviewDetailScreen = () => {
+const ListScreen = () => {
     const { user } = useUser();
     const { id } = useLocalSearchParams();
     const animation = useRef<LottieView>(null);
     const listId: Id<"lists"> = id as Id<"lists">;
     const list = useQuery(api.lists.getListById, { id: listId });
-    const deleteList = useMutation(api.lists.deleteList);
     const [isExpanded, setIsExpanded] = useState(false);
-    const [listModalVisible, setListModalVisible] = useState(false);
-    const [deleteModalVisible, setDeleteModalVisible] = useState(false);
     const [isLiking, setIsLiking] = useState(false);
 
     const likeList = useMutation(api.likesLists.addLike);
@@ -45,13 +42,6 @@ const ReviewDetailScreen = () => {
         setIsExpanded(false);
     }, [id]);
 
-    const checkUser = () => {
-        if (user?.id === list?.externalId) {
-            return true;
-        }
-        return false;
-    }
-
     if (!list) {
         return (
             <View style={styles.loadingContainer}>
@@ -71,149 +61,7 @@ const ReviewDetailScreen = () => {
 
     return (
         <ScrollView style={{ flex: 1, backgroundColor: '#181818' }}>
-            <Authenticated>
-                {/* delete modal */}
-                <Modal
-                    animationType="fade"
-                    transparent={true}
-                    visible={deleteModalVisible}
-                    onRequestClose={() => {
-                        setDeleteModalVisible(!deleteModalVisible);
-                    }}
-                >
-                    <View style={styles.centeredView}>
-                        <View style={styles.modalView}>
-                            <Text style={{ fontSize: 22, fontWeight: 'bold', color: '#fff', textAlign: 'center', marginBottom: 8 }}>
-                                Delete List
-                            </Text>
-                            <Text style={styles.modalText}>
-                                Are you sure you want to delete this list?
-                            </Text>
-                            <View style={styles.modalTextContainer}>
-                                <TouchableOpacity
-                                    style={styles.buttonClose}
-                                    onPress={() => setDeleteModalVisible(!deleteModalVisible)}
-                                >
-                                    <Text style={styles.textStyle}>Cancel</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={styles.buttonSignOut}
-                                    onPress={() => {
-                                        deleteList({ listId, externalId: user?.id as string });
-                                        setDeleteModalVisible(!deleteModalVisible);
-                                        router.push('/(drawer)/private/lists');
-                                    }}
-                                >
-                                    <Text style={styles.textStyle}>Delete</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    </View>
-                </Modal>
-
-                {/* option to delete and edit the review */}
-                <Modal
-                    animationType="slide"
-                    transparent={true}
-                    visible={listModalVisible}
-                    onRequestClose={() => {
-                        setListModalVisible(false);
-                    }}
-                >
-                    <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
-                        <View style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'center' }}>
-                            <View style={{ backgroundColor: '#222', paddingHorizontal: 24, paddingVertical: 13, width: '100%' }}>
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 0 }}>
-                                    <Text style={{ flex: 6, color: '#fff', fontSize: 16, letterSpacing: 0.5, marginBottom: 10 }}>
-                                        {list.listName}
-                                    </Text>
-                                    <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'flex-end' }}>
-                                        <TouchableOpacity onPress={() => setListModalVisible(false)} >
-                                            <Ionicons name="close" size={24} color="#aaa" />
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                                {list._creationTime && (
-                                    <Text style={{ color: '#aaa', letterSpacing: 0.5, fontSize: 14, marginBottom: 15, borderBottomColor: '#404040' }}>
-                                        Created on {new Date(list._creationTime).toLocaleDateString('en-US', {
-                                            year: 'numeric',
-                                            month: 'short',
-                                            day: 'numeric',
-                                        })}
-                                    </Text>
-                                )}
-                                <View style={{ height: 1, backgroundColor: '#404040', marginBottom: 12, marginHorizontal: -24 }} />
-                                <TouchableOpacity
-                                    style={{
-                                        paddingVertical: 12,
-                                        marginBottom: 12,
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        gap: 20,
-                                    }}
-                                    onPress={() => {
-                                        setListModalVisible(false);
-                                        setDeleteModalVisible(true);
-                                    }}
-                                >
-                                    <Ionicons name="trash" size={20} color="#e17b50ff" />
-                                    <Text style={{ fontSize: 16, color: '#e17b50ff' }}>Delete List</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={{
-                                        paddingVertical: 12,
-                                        marginBottom: 12,
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        gap: 20,
-                                    }}
-                                    onPress={() => {
-                                        setListModalVisible(false);
-                                        router.push({
-                                            pathname: `/(drawer)/private/listEdit`,
-                                            params: {
-                                                listId: list?._id,
-                                            }
-                                        });
-                                    }}
-                                >
-                                    <Ionicons name="create" size={20} color="#aaa" />
-                                    <Text style={{ fontSize: 16, color: '#aaa' }}>Edit List</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    </View>
-                </Modal>
-            </Authenticated>
-            <Authenticated>
-                {checkUser() ? (
-                    <View style={styles.header}>
-                        <View style={{ flexDirection: 'row', paddingLeft: 15, alignItems: 'center' }}>
-                            <TouchableOpacity onPress={() => router.back()} style={{ marginRight: 15 }}>
-                                <Ionicons name="arrow-back" size={24} color="#fff" />
-                            </TouchableOpacity>
-                            <Text style={{ color: '#ffffff', fontSize: 18, fontWeight: 'bold' }}>
-                                {((list?.name).slice(0, 15))}'s List
-                            </Text>
-                        </View>
-                        <TouchableOpacity style={{ paddingHorizontal: 8, borderColor: '#aaa' }} onPress={() => {
-                            setListModalVisible(true);
-                        }}>
-                            <Ionicons name="ellipsis-vertical" size={22} color="#fff" />
-                        </TouchableOpacity>
-                    </View>) : (
-                    <View style={styles.header}>
-                        <View style={{ flexDirection: 'row', paddingLeft: 10 }}>
-                            <TouchableOpacity onPress={() => router.back()} style={{ marginRight: 15 }}>
-                                <Ionicons name="arrow-back" size={24} color="#fff" />
-                            </TouchableOpacity>
-                            <Text style={{ color: '#ffffff', fontSize: 18, fontWeight: 'bold' }}>
-                                {((list?.name).slice(0, 15))}'s List
-                            </Text>
-                        </View>
-                    </View>
-                )}
-            </Authenticated>
+            
             <View style={styles.container}>
                 {list?.list_game_ids ? (
                     <Image
@@ -243,7 +91,7 @@ const ReviewDetailScreen = () => {
             </View>
             <View style={{ paddingHorizontal: 16, marginBottom: 10 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                    <View>
+                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
                         <TouchableOpacity onPress={() => router.push({
                             pathname: `/(drawer)/profile`,
                             params: {
@@ -331,7 +179,7 @@ const ReviewDetailScreen = () => {
     )
 }
 
-export default ReviewDetailScreen
+export default ListScreen
 
 const styles = StyleSheet.create({
     container: {
