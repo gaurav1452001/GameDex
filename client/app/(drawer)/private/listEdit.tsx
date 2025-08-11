@@ -21,6 +21,7 @@ const EditList = () => {
     const [listName, setListName] = useState('');
     const [listDesc, setListDesc] = useState('');
     const [listItems, setListItems] = useState<listGames[]>([]);
+    const [isChanging, setIsChanging] = useState(false);
 
     const listId: Id<"lists"> = params.listId as Id<"lists">;
     const listData = useQuery(api.lists.getListById, { id: listId });
@@ -170,6 +171,10 @@ const EditList = () => {
                     </Text>
                 </View>
                 <TouchableOpacity onPress={() => {
+                    if (isChanging) {
+                        return;
+                    }
+                    setIsChanging(true);
                     if (listName.trim() && listItems.length > 0) {
                         updateList({
                             listId,
@@ -185,6 +190,9 @@ const EditList = () => {
                         }).catch((error) => {
                             console.error('Error creating list:', error);
                         });
+                        setTimeout(() => {
+                            setIsChanging(false);
+                        }, 1000);
                     } else {
                         alert('Please enter a List name or add at least one game to your List.');
                     }

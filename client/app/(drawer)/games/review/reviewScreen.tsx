@@ -19,6 +19,7 @@ const Review = () => {
     const navigation = useNavigation();
     const { user } = useUser();
     const createReview = useMutation(api.reviews.createReview)
+    const [isChanging, setIsChanging] = useState(false);
     const [rating, setRating] = useState(0);
     const [liked, setLiked] = useState(false);
     const gamePage = useAppSelector((state: RootState) => state.gamePageData.data)
@@ -58,6 +59,10 @@ const Review = () => {
             ),
             headerRight: () => (
                 <TouchableOpacity onPress={() => {
+                    if(isChanging){
+                        return;
+                    }
+                    setIsChanging(true);
                     const currentReviewData = {
                         externalId: user?.id || '',
                         name: user?.firstName || '',
@@ -82,6 +87,9 @@ const Review = () => {
                     setLiked(false);
                     setReviewText('');
                     router.push(`/games/${gamePage?.id}`);
+                    setTimeout(() => {
+                        setIsChanging(false);
+                    }, 1000);
                 }} style={{ marginRight: 15 }}>
                     <Ionicons name="checkmark" size={24} color="#fff" />
                 </TouchableOpacity>

@@ -134,8 +134,8 @@ const styles = StyleSheet.create({
         borderColor: '#535353ff',
         backgroundColor: '#404040',
         justifyContent: 'center',
-        width: 80,
-        height: 120,
+        width: 65,
+        height: 98.5,
         borderWidth: 1,
     }
 })

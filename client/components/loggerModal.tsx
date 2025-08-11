@@ -17,6 +17,7 @@ const LoggerModal = ({ setModalVisible }: any) => {
     const gamePage = useAppSelector((state) => state.gamePageData.data);
     const [rating, setRating] = useState(0);
     const { user } = useUser();
+    const [isChanging, setIsChanging] = useState(false);
     const user_game_tracker = useQuery(api.user_game_tracks.getGameStatus, {
         externalId: user?.id as string,
         game_id: gamePage?.id.toString() as string
@@ -66,24 +67,60 @@ const LoggerModal = ({ setModalVisible }: any) => {
                         <View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingVertical: 10 }}>
 
                             {user_game_tracker === 'finishedPlaying' ? (
-                                <TouchableOpacity style={styles.centerItems} onPress={() => removeGameFromTrack(handleRemoveTracking)}>
+                                <TouchableOpacity style={styles.centerItems} onPress={() => {
+                                    if (isChanging) {
+                                        return;
+                                    }
+                                    setIsChanging(true);
+                                    removeGameFromTrack(handleRemoveTracking);
+                                    setTimeout(() => {
+                                        setIsChanging(false);
+                                    }, 1000);
+                                }}>
                                     <Ionicons name="checkmark-circle" size={50} color="#61d76fff" />
                                     <Text style={styles.modalText}>Finished</Text>
                                 </TouchableOpacity>
                             ) :
-                                <TouchableOpacity style={styles.centerItems} onPress={() => finishedPlaying(handleCurrentUser)}>
+                                <TouchableOpacity style={styles.centerItems} onPress={() => {
+                                    if (isChanging) {
+                                        return;
+                                    }
+                                    setIsChanging(true);
+                                    finishedPlaying(handleCurrentUser);
+                                    setTimeout(() => {
+                                        setIsChanging(false);
+                                    }, 1000);
+                                }}>
                                     <Ionicons name="checkmark-circle" size={50} color="#7d7d7dff" />
                                     <Text style={styles.modalText}>Finish</Text>
                                 </TouchableOpacity>
                             }
 
                             {user_game_tracker === 'currentlyPlaying' ? (
-                                <TouchableOpacity style={styles.centerItems} onPress={() => removeGameFromTrack(handleRemoveTracking)}>
+                                <TouchableOpacity style={styles.centerItems} onPress={() => {
+                                    if (isChanging) {
+                                        return;
+                                    }
+                                    setIsChanging(true);
+                                    removeGameFromTrack(handleRemoveTracking);
+                                    setTimeout(() => {
+                                        setIsChanging(false);
+                                    }, 1000);
+                                }}>
                                     <Ionicons name="game-controller" size={50} color="#61d76fff" />
                                     <Text style={styles.modalText}>Playing</Text>
                                 </TouchableOpacity>
                             ) :
-                                <TouchableOpacity style={styles.centerItems} onPress={() => currentlyPlaying(handleCurrentUser)}>
+                                <TouchableOpacity style={styles.centerItems} onPress={() => {
+                                    if (isChanging) {
+                                        return;
+                                    }
+                                    setIsChanging(true);
+                                    currentlyPlaying(handleCurrentUser);
+                                    setTimeout(() => {
+                                        setIsChanging(false);
+                                    }, 1000);
+                                }}>
                                     <Ionicons name="game-controller" size={50} color="#7d7d7dff" />
                                     <Text style={styles.modalText}>Play</Text>
                                 </TouchableOpacity>
@@ -91,12 +128,30 @@ const LoggerModal = ({ setModalVisible }: any) => {
 
 
                             {user_game_tracker === 'wantToPlay' ? (
-                                <TouchableOpacity style={styles.centerItems} onPress={() => removeGameFromTrack(handleRemoveTracking)}>
+                                <TouchableOpacity style={styles.centerItems} onPress={() => {
+                                    if (isChanging) {
+                                        return;
+                                    }
+                                    setIsChanging(true);
+                                    removeGameFromTrack(handleRemoveTracking);
+                                    setTimeout(() => {
+                                        setIsChanging(false);
+                                    }, 1000);
+                                }}>
                                     <Ionicons name="time" size={50} color="#61d76fff" />
                                     <Text style={styles.modalText}>In Wishlist</Text>
                                 </TouchableOpacity>
                             ) :
-                                <TouchableOpacity style={styles.centerItems} onPress={() => wantToPlay(handleCurrentUser)}>
+                                <TouchableOpacity style={styles.centerItems} onPress={() => {
+                                    if (isChanging) {
+                                        return;
+                                    }
+                                    setIsChanging(true);
+                                    wantToPlay(handleCurrentUser);
+                                    setTimeout(() => {
+                                        setIsChanging(false);
+                                    }, 1000);
+                                }}>
                                     <Ionicons name="time" size={50} color="#7d7d7dff" />
                                     <Text style={styles.modalText}>Wishlist</Text>
                                 </TouchableOpacity>
@@ -137,10 +192,6 @@ const LoggerModal = ({ setModalVisible }: any) => {
                             <TouchableOpacity style={styles.lister} onPress={handleShowPoster}>
                                 <Ionicons name="share-outline" size={20} color="#bababaff" />
                                 <Text style={styles.modalText}>Show Poster</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.lister}>
-                                <Ionicons name="ellipsis-horizontal-outline" size={20} color="#bababaff" />
-                                <Text style={styles.modalText}>Review or log</Text>
                             </TouchableOpacity>
                         </View>
                     </View>

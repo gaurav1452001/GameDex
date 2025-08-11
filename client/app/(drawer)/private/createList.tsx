@@ -20,7 +20,7 @@ const CreateList = () => {
     const [listName, setListName] = useState('');
     const [listDesc, setListDesc] = useState('');
     const [listItems, setListItems] = useState<listGames[]>([]);
-
+    const [isChanging, setIsChanging] = useState(false);
 
     const [modalVisible, setModalVisible] = useState(false);
     const [searchText, setSearchText] = useState("");
@@ -160,6 +160,10 @@ const CreateList = () => {
                     </Text>
                 </View>
                 <TouchableOpacity onPress={() => {
+                    if(isChanging) {
+                        return;
+                    }
+                    setIsChanging(true);
                     if (listName.trim() && listItems.length > 0) {
                         createReview({
                             externalId: user?.id || '',
@@ -174,6 +178,9 @@ const CreateList = () => {
                         }).catch((error) => {
                             console.error('Error creating list:', error);
                         });
+                        setTimeout(() => {
+                            setIsChanging(false);
+                        }, 1000);
                     } else {
                         alert('Please enter a List name or add at least one game to your List.');
                     }

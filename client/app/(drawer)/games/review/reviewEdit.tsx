@@ -19,7 +19,7 @@ const Review = () => {
     const reviewId: Id<"reviews"> = params.reviewId as Id<"reviews">;
     const reviewData = useQuery(api.reviews.getReviewById, { id: reviewId });
     const updateReview = useMutation(api.reviews.updateReview);
-    
+    const [isChanging, setIsChanging] = useState(false);
     const [rating, setRating] = useState(0);
     const [liked, setLiked] = useState(false);
     const [reviewText, setReviewText] = useState('');
@@ -50,31 +50,39 @@ const Review = () => {
                 </TouchableOpacity>
             ),
             headerRight: () => (
-                <TouchableOpacity onPress={async () => {
-                    if (!reviewData) return;
-                    
-                    const updatedReviewData = {
-                        externalId: reviewData.externalId,
-                        name: reviewData.name,
-                        imageUrl: reviewData.imageUrl,
-                        gameId: reviewData.gameId,
-                        gameName: reviewData.gameName,
-                        gameCover: reviewData.gameCover,
-                        starRating: rating,
-                        isLiked: liked,
-                        reviewText: reviewText,
-                        screenshots: reviewData.screenshots,
-                        reviewDate: reviewData.reviewDate,
-                        gameYear: reviewData.gameYear,
-                    };
+                <TouchableOpacity
+                    onPress={async () => {
+                        if (!reviewData) return;
 
-                    await updateReview({
-                        reviewId: reviewId,
-                        ...updatedReviewData
-                    });
-                    
-                    router.push(`/(drawer)/reviews/${reviewId}`);
-                }} style={{ marginRight: 15 }}>
+                        setIsChanging(true);
+                        setTimeout(async () => {
+                            const updatedReviewData = {
+                                externalId: reviewData.externalId,
+                                name: reviewData.name,
+                                imageUrl: reviewData.imageUrl,
+                                gameId: reviewData.gameId,
+                                gameName: reviewData.gameName,
+                                gameCover: reviewData.gameCover,
+                                starRating: rating,
+                                isLiked: liked,
+                                reviewText: reviewText,
+                                screenshots: reviewData.screenshots,
+                                reviewDate: reviewData.reviewDate,
+                                gameYear: reviewData.gameYear,
+                            };
+
+                            await updateReview({
+                                reviewId: reviewId,
+                                ...updatedReviewData
+                            });
+
+                            setIsChanging(false);
+                            router.push(`/(drawer)/reviews/${reviewId}`);
+                        }, 500); // 500ms delay
+                    }}
+                    style={{ marginRight: 15 }}
+                    disabled={isChanging}
+                >
                     <Ionicons name="checkmark" size={24} color="#fff" />
                 </TouchableOpacity>
             ),
