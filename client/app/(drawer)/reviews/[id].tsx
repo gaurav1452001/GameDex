@@ -21,7 +21,7 @@ const ReviewDetailScreen = () => {
     const animation = useRef<LottieView>(null);
     const [reviewModalVisible, setReviewModalVisible] = useState(false);
     const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-
+    
     const reviewId: Id<"reviews"> = id as Id<"reviews">;
     const review = useQuery(api.reviews.getReviewById, { id: reviewId });
     const deleteReview = useMutation(api.reviews.deleteReview);

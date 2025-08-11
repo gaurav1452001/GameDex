@@ -18,6 +18,30 @@ export const getLikesByReview = query({
     },
 });
 
+//count likes by userId
+export const getLikesCountByUser = query({
+    args: { userId: v.id("users") },
+    handler: async (ctx, args) => {
+        const likes = await ctx.db
+            .query("likesReviews")
+            .withIndex("byUser", (q) => q.eq("userId", args.userId))
+            .collect();
+        return likes.length;
+    },
+});
+
+//count likes by reviewId
+export const getLikesCountByReview = query({
+    args: { reviewId: v.id("reviews") },
+    handler: async (ctx, args) => {
+        const likes = await ctx.db
+            .query("likesReviews")  
+            .withIndex("byReview", (q) => q.eq("reviewId", args.reviewId))
+            .collect();
+        return likes.length;
+    },
+});
+
 // Query: Get likes by userId
 export const getLikesByUser = query({
     args: { userId: v.id("users") },
@@ -26,9 +50,9 @@ export const getLikesByUser = query({
             .query("likesReviews")
             .withIndex("byUser", (q) => q.eq("userId", args.userId))
             .collect();
-    },
-});
-
+        },
+    });
+    
 // Mutation: Add a like
 export const addLikeReview = mutation({
     args: {
@@ -62,16 +86,5 @@ export const removeLikeReview = mutation({
             return true;
         }
         return false;
-    },
-});
-
-export const getLikesCountByUser = query({
-    args: { userId: v.id("users") },
-    handler: async (ctx, args) => {
-        const likes = await ctx.db
-            .query("likesReviews")
-            .withIndex("byUser", (q) => q.eq("userId", args.userId))
-            .collect();
-        return likes.length;
     },
 });

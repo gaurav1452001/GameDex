@@ -1,6 +1,6 @@
 import React, { use } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, ScrollView, Touchable } from 'react-native';
-import { useUser, useClerk } from '@clerk/clerk-expo';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { useUser } from '@clerk/clerk-expo';
 import { Image } from 'expo-image';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -16,15 +16,23 @@ export default function Profile() {
     const userId = params?.userId;
     const { user } = useUser();
     const OtherUser = useQuery(api.users.getUserByExternalId, { externalId: userId as string });
-    const loggedInUser = useQuery(api.users.getUserByExternalId, { externalId: user?.id as string });
+    const loggedInUser = useQuery(
+        api.users.getUserByExternalId,
+        user?.id ? { externalId: user.id } : "skip"
+    );
+    const following = useQuery(
+        api.follows.isFollowing,
+        user && loggedInUser?._id && OtherUser?._id
+            ? {
+                followerId: loggedInUser._id as Id<'users'>,
+                followingId: OtherUser._id as Id<'users'>
+            }
+            : "skip"
+    );
     const follow = useMutation(api.follows.createFollow);
     const unfollow = useMutation(api.follows.removeFollow);
 
 
-    const following = useQuery(api.follows.isFollowing, {
-        followerId: loggedInUser?._id as Id<'users'>,    // You (the logged-in user)
-        followingId: OtherUser?._id as Id<'users'>       // The user being viewed
-    });
 
     const finishedCount = useQuery(api.user_game_tracks.getFinishedGamesCount, {
         externalId: userId as string
@@ -87,25 +95,27 @@ export default function Profile() {
                         style={styles.avatar}
                         contentFit="cover"
                     />
-                    <TouchableOpacity style={{ marginTop: 10 }}>
-                        {OtherUser?._id !== loggedInUser?._id && (
-                            following ? (
-                                <TouchableOpacity onPress={() => {
-                                    unfollow({ followerId: loggedInUser?._id as Id<'users'>, followingId: OtherUser?._id as Id<'users'> })
-                                }}>
-                                    <Text style={styles.following}>Following</Text>
-                                </TouchableOpacity>
-                            ) : (
-                                <TouchableOpacity onPress={() => {
-                                    follow({
-                                        followerId: loggedInUser?._id as Id<'users'>, followingId: OtherUser?._id as Id<'users'>
-                                    })
-                                }}>
-                                    <Text style={styles.follower}>Follow</Text>
-                                </TouchableOpacity>
-                            )
-                        )}
-                    </TouchableOpacity>
+                    <Authenticated>
+                        <TouchableOpacity style={{ marginTop: 10 }}>
+                            {OtherUser?._id !== loggedInUser?._id && (
+                                following ? (
+                                    <TouchableOpacity onPress={() => {
+                                        unfollow({ followerId: loggedInUser?._id as Id<'users'>, followingId: OtherUser?._id as Id<'users'> })
+                                    }}>
+                                        <Text style={styles.following}>Following</Text>
+                                    </TouchableOpacity>
+                                ) : (
+                                    <TouchableOpacity onPress={() => {
+                                        follow({
+                                            followerId: loggedInUser?._id as Id<'users'>, followingId: OtherUser?._id as Id<'users'>
+                                        })
+                                    }}>
+                                        <Text style={styles.follower}>Follow</Text>
+                                    </TouchableOpacity>
+                                )
+                            )}
+                        </TouchableOpacity>
+                    </Authenticated>
                     <Text style={styles.userBio}>
                         this is an example bio of the user
                     </Text>

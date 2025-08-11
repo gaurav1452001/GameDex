@@ -14,6 +14,30 @@ export const getLikesByList = query({
     },
 });
 
+// Query: count all likes for a list
+export const getLikesCountByList = query({
+    args: { listId: v.id("lists") },
+    handler: async (ctx, args) => {
+        const likes = await ctx.db
+            .query("likesLists")
+            .withIndex("byList", (q) => q.eq("listId", args.listId))
+            .collect();
+        return likes.length;
+    },
+});
+
+
+// count all likes a user has given across all lists
+export const getLikesCountByUser = query({
+    args: { userId: v.id("users") },
+    handler: async (ctx, args) => {
+        const likes = await ctx.db
+            .query("likesLists")
+            .withIndex("byUser", (q) => q.eq("userId", args.userId))
+            .collect();
+        return likes.length;
+    },
+});
 // Query: Get all lists liked by a user
 export const getLikesByUser = query({
     args: { userId: v.id("users") },
@@ -58,17 +82,5 @@ export const removeLike = mutation({
             return true;
         }
         return false;
-    },
-});
-
-// Query: Get the total number of likes a user has given across all lists
-export const getLikesCountByUser = query({
-    args: { userId: v.id("users") },
-    handler: async (ctx, args) => {
-        const likes = await ctx.db
-            .query("likesLists")
-            .withIndex("byUser", (q) => q.eq("userId", args.userId))
-            .collect();
-        return likes.length;
     },
 });
