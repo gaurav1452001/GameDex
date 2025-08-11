@@ -1,4 +1,4 @@
-import React, { use } from 'react';
+import React, { use, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useUser } from '@clerk/clerk-expo';
 import { Image } from 'expo-image';
@@ -15,6 +15,7 @@ export default function Profile() {
     const params = useLocalSearchParams();
     const userId = params?.userId;
     const { user } = useUser();
+    const [isFollowing, setIsFollowing] = useState(false);
     const OtherUser = useQuery(api.users.getUserByExternalId, { externalId: userId as string });
     const loggedInUser = useQuery(
         api.users.getUserByExternalId,
@@ -96,25 +97,31 @@ export default function Profile() {
                         contentFit="cover"
                     />
                     <Authenticated>
-                        <TouchableOpacity style={{ marginTop: 10 }}>
+                        <View style={{ marginTop: 10 }}>
                             {OtherUser?._id !== loggedInUser?._id && (
                                 following ? (
                                     <TouchableOpacity onPress={() => {
+                                        if (isFollowing) return;
+                                        setIsFollowing(true);
                                         unfollow({ followerId: loggedInUser?._id as Id<'users'>, followingId: OtherUser?._id as Id<'users'> })
+                                        setTimeout(() => setIsFollowing(false), 800);
                                     }}>
                                         <Text style={styles.following}>Following</Text>
                                     </TouchableOpacity>
                                 ) : (
                                     <TouchableOpacity onPress={() => {
+                                        if (isFollowing) return;
+                                        setIsFollowing(true);
                                         follow({
                                             followerId: loggedInUser?._id as Id<'users'>, followingId: OtherUser?._id as Id<'users'>
                                         })
+                                        setTimeout(() => setIsFollowing(false), 800);
                                     }}>
                                         <Text style={styles.follower}>Follow</Text>
                                     </TouchableOpacity>
                                 )
                             )}
-                        </TouchableOpacity>
+                        </View>
                     </Authenticated>
                     <Text style={styles.userBio}>
                         this is an example bio of the user
@@ -204,7 +211,7 @@ export default function Profile() {
                     </View>
 
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
-                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left',letterSpacing: 1 }}>
+                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', letterSpacing: 1 }}>
                             Games Playing
                         </Text>
                         <Text style={{ color: '#717171ff', fontSize: 15, textAlign: 'right' }}>
@@ -231,7 +238,7 @@ export default function Profile() {
                     </View>
 
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
-                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left',  letterSpacing: 1 }}>
+                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', letterSpacing: 1 }}>
                             Likes
                         </Text>
                         <Text style={{ color: '#717171ff', fontSize: 15, textAlign: 'right' }}>
@@ -240,7 +247,7 @@ export default function Profile() {
                     </View>
 
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
-                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left',letterSpacing: 1 }}>
+                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', letterSpacing: 1 }}>
                             Following
                         </Text>
                         <Text style={{ color: '#717171ff', fontSize: 15, textAlign: 'right' }}>

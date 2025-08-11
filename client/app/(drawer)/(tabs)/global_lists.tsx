@@ -62,7 +62,7 @@ export default function ListsScreen() {
 
             {lists?.map((list) => (
                 <TouchableOpacity onPress={() => router.push(`/lists/${list?._id}`)} key={list._id} style={{ marginTop: 15 }}>
-                    <View  style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 2 }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 2 }}>
                         <Text style={{ color: '#c7c7c7ff', fontSize: 15, fontWeight: 900, flex: 2 }}>
                             {list?.listName}
                         </Text>
@@ -79,19 +79,17 @@ export default function ListsScreen() {
                     <ScrollView style={{ marginRight: -16 }} horizontal showsHorizontalScrollIndicator={false}>
                         {list?.list_game_ids?.map((game, index) => (
                             <TouchableWithoutFeedback key={index} onPress={() => router.push(`/lists/${list._id}`)}>
-                                    <Image
-                                        source={{ uri: 'https:' + game?.game_cover_url?.replace('t_thumb', 't_cover_big_2x') }}
-                                        style={{ width: 80, height: 121 }}
-                                        resizeMode="contain"
-                                    />
+                                <Image
+                                    source={{ uri: 'https:' + game?.game_cover_url?.replace('t_thumb', 't_cover_big_2x') }}
+                                    style={{ width: 80, height: 121 }}
+                                    resizeMode="contain"
+                                />
                             </TouchableWithoutFeedback>
                         ))}
                     </ScrollView>
-                    <View>
-                        <Text style={{ color: '#bababaff', fontSize: 13, marginTop: 5, marginBottom: 10 }} numberOfLines={2}>
-                            {list.listDesc}
-                        </Text>
-                    </View>
+                    <Text style={{ color: '#bababaff', fontSize: 13, marginTop: 5, marginBottom: 5 }} numberOfLines={2}>
+                        {list.listDesc}
+                    </Text>
                     <View style={styles.hLine} />
                 </TouchableOpacity>
             ))}
