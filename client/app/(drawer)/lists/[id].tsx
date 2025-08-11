@@ -19,7 +19,6 @@ const ListScreen = () => {
     const list = useQuery(api.lists.getListById, { id: listId });
     const [isExpanded, setIsExpanded] = useState(false);
     const [isLiking, setIsLiking] = useState(false);
-
     const likeList = useMutation(api.likesLists.addLike);
     const unlikeList = useMutation(api.likesLists.removeLike);
     const getLikesByList = useQuery(api.likesLists.getLikesByList, { listId });
@@ -61,11 +60,13 @@ const ListScreen = () => {
 
     return (
         <ScrollView style={{ flex: 1, backgroundColor: '#181818' }}>
-            
+
             <View style={styles.container}>
-                {list?.list_game_ids ? (
+                {list?.list_game_ids && list.list_game_ids[0] && list.list_game_ids[0].game_screenshots && list.list_game_ids[0].game_screenshots.length > 0 ? (
                     <Image
-                        source={{ uri: 'https:' + list?.list_game_ids[0]?.game_cover_url?.replace('t_thumb', 't_1080p_2x') }}
+                        source={{
+                            uri: 'https:' + list.list_game_ids[0].game_screenshots[0]?.replace('t_thumb', 't_1080p_2x')
+                        }}
                         style={{
                             width: '100%',
                             height: 200,
@@ -91,7 +92,7 @@ const ListScreen = () => {
             </View>
             <View style={{ paddingHorizontal: 16, marginBottom: 10 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
                         <TouchableOpacity onPress={() => router.push({
                             pathname: `/(drawer)/profile`,
                             params: {
@@ -165,11 +166,19 @@ const ListScreen = () => {
                             onPress={() => router.push(`/(drawer)/games/${gamePage.game_id}`)}
                             key={gamePage.game_id}
                         >
-                            <Image
-                                source={{ uri: 'https:' + gamePage?.game_cover_url?.replace('t_thumb', 't_cover_big_2x') }}
-                                style={styles.displayImage}
-                                resizeMode="cover"
-                            />
+                            {gamePage.game_cover_url ? (
+                                <Image
+                                    source={{ uri: 'https:' + gamePage.game_cover_url.replace('t_thumb', 't_cover_big_2x') }}
+                                    style={styles.displayImage}
+                                    resizeMode="cover"
+                                />
+                            ) : (
+                                <View style={styles.displayImage}>
+                                    <Text style={{ color: '#f0f0f0', fontSize: 10, fontWeight: 'bold', textAlign: 'center', justifyContent: 'center' }}>
+                                        {gamePage.game_name}
+                                    </Text>
+                                </View>
+                            )}
                         </TouchableOpacity>
                     ))}
                 </View>
@@ -327,6 +336,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         borderWidth: 0.4,
         borderColor: 'gray',
+        justifyContent: 'center',
         backgroundColor: '#404040',
     },
     displayText: {

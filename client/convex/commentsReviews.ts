@@ -18,13 +18,16 @@ export const getCommentsByReview = query({
 export const addComment = mutation({
     args: {
         userId: v.id("users"),
+        userName: v.string(),
+        userImageUrl: v.optional(v.string()),
         reviewId: v.id("reviews"),
         commentText: v.string(),
-        createdAt: v.string(),
     },
     handler: async (ctx, args) => {
         return await ctx.db.insert("commentsReviews", {
             userId: args.userId,
+            userName: args.userName,
+            userImageUrl: args.userImageUrl,
             reviewId: args.reviewId,
             commentText: args.commentText,
         });

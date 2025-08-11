@@ -1,21 +1,14 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
-// Schema definition
-export const commentsLists = {
-    userId: v.id("users"),
-    listId: v.id("lists"),
-    commentText: v.string(),
-    createdAt: v.string(),
-};
-
 // Mutation: Add a comment to a list
 export const addComment = mutation({
     args: {
         userId: v.id("users"),
+        userName: v.string(),
+        userImageUrl: v.optional(v.string()),
         listId: v.id("lists"),
         commentText: v.string(),
-        createdAt: v.string(),
     },
     handler: async (ctx, args) => {
         return await ctx.db.insert("commentsLists", args);

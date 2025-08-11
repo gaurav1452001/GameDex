@@ -35,6 +35,7 @@ export const List = {
             game_id: v.string(),
             game_name: v.string(),
             game_cover_url: v.optional(v.string()),
+            game_screenshots: v.optional(v.array(v.string())),
         })
     )
 }
@@ -46,6 +47,8 @@ export const follows = {
 
 export const commentsReviews = {
     userId: v.id("users"),
+    userName: v.string(),
+    userImageUrl: v.optional(v.string()),
     reviewId: v.id("reviews"),
     commentText: v.string(),
 };
@@ -57,6 +60,8 @@ export const likesReviews = {
 
 export const commentsLists = {
     userId: v.id("users"),
+    userName: v.string(),
+    userImageUrl: v.optional(v.string()),
     listId: v.id("lists"),
     commentText: v.string(),
 };

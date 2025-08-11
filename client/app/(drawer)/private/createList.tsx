@@ -97,7 +97,10 @@ const CreateList = () => {
                                             {
                                                 game_id: gamePage.id.toString(),
                                                 game_name: gamePage.name,
-                                                game_cover_url: gamePage.cover?.url || ""
+                                                game_cover_url: gamePage.cover?.url || "",
+                                                game_screenshots: gamePage?.screenshots
+                                                    ? gamePage.screenshots.map(s => s.url)
+                                                    : []
                                             }
                                         ]);
                                     }

@@ -15,4 +15,5 @@ export interface listGames {
         game_id: string;
         game_name: string;
         game_cover_url?: string;
+        game_screenshots?: string[];
 }

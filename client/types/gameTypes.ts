@@ -243,4 +243,8 @@ export interface SearchGameType {
         };
     }>;
     first_release_date: number;
+    screenshots: Array<{
+        id: number;
+        url: string;
+    }>;
 }

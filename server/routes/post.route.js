@@ -1,10 +1,9 @@
 import express from 'express'
-import { getGames, getScreenshots, getPlaytime, getPopularGames, searchGames,getGameInfo,getGamingEvents,getEventInfo,getKeywordGames } from '../controllers/post.controller.js'
+import { getGames, getPlaytime, getPopularGames, searchGames,getGameInfo,getGamingEvents,getEventInfo,getKeywordGames } from '../controllers/post.controller.js'
 
 const router = express.Router()
 
 router.get('/', getGames);
-router.get('/screenshot', getScreenshots);
 router.get('/playtime/:id', getPlaytime);
 router.get('/popular', getPopularGames);
 router.get('/search', searchGames);

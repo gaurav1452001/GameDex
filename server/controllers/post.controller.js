@@ -61,32 +61,6 @@ export const getKeywordGames = async (req, res) => {
     }
 };
 
-export const getScreenshots = async (req, res) => {
-    try {
-        // You need to get the game id from req.query or req.params
-        const { id } = req.query; // or req.params if using route params
-        const response = await fetch("https://api.igdb.com/v4/games", {
-            method: "POST",
-            headers: {
-                Accept: "application/json",
-                "Client-ID": process.env.client_id,
-                Authorization: `Bearer ${process.env.bearer_token}`,
-            },
-            body: `fields screenshots.*; where id = ${id};`
-        });
-        const data = await response.json();
-        // data is an array, get the first screenshot url if exists
-        const firstScreenshotUrl = data[0]?.screenshots?.[0]?.url
-            ? 'https:' + data[0].screenshots[0].url
-            : null;
-        res.status(200).json({ screenshotUrl: firstScreenshotUrl });
-    } catch (err) {
-        console.error(err);
-        res
-            .status(500)
-            .json({ message: "Failed to fetch screenshots", error: err.message });
-    }
-};
 
 export const getPlaytime = async (req, res) => {
     try {
@@ -158,7 +132,7 @@ export const searchGames = async (req, res) => {
             "Client-ID": process.env.client_id,
             Authorization: `Bearer ${process.env.bearer_token}`,
             },
-            body: `fields name,rating,cover.url,platforms,first_release_date,involved_companies.company.name;search "${searchText}";limit 50;`
+            body: `fields screenshots.url,name,rating,cover.url,platforms,first_release_date,involved_companies.company.name;search "${searchText}";limit 50;`
         });
         const data = await popularityResponse.json();
         res.status(200).json(data);
@@ -194,6 +168,8 @@ export const getGameInfo = async (req, res) => {
             .json({ message: "Failed to fetch popular games", error: err.message });
     }
 }
+
+
 //get the information about gaming events
 export const getGamingEvents = async (req, res) => {
     try {

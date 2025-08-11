@@ -13,6 +13,7 @@ export const createList = mutation({
                 game_id: v.string(),
                 game_name: v.string(),
                 game_cover_url: v.optional(v.string()),
+                game_screenshots: v.optional(v.array(v.string())),
             })
         )
     },
@@ -38,6 +39,7 @@ export const updateList = mutation({
                 game_id: v.string(),
                 game_name: v.string(),
                 game_cover_url: v.optional(v.string()),
+                game_screenshots: v.optional(v.array(v.string())),
             })
         )
     },

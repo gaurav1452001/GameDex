@@ -6,7 +6,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons'
 import { useUser } from '@clerk/clerk-expo';
 import axios from 'axios';
-import { Authenticated,useMutation, useQuery } from 'convex/react'
+import { useMutation, useQuery } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import { Id } from "@/convex/_generated/dataModel";
 import { listGames } from '@/types/listTypes';
@@ -107,7 +107,10 @@ const EditList = () => {
                                             {
                                                 game_id: gamePage.id.toString(),
                                                 game_name: gamePage.name,
-                                                game_cover_url: gamePage.cover?.url || ""
+                                                game_cover_url: gamePage.cover?.url || "",
+                                                game_screenshots: gamePage?.screenshots
+                                                    ? gamePage.screenshots.map(s => s.url)
+                                                    : []
                                             }
                                         ]);
                                     }

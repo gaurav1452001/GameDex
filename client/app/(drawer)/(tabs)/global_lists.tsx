@@ -79,11 +79,19 @@ export default function ListsScreen() {
                     <ScrollView style={{ marginRight: -16 }} horizontal showsHorizontalScrollIndicator={false}>
                         {list?.list_game_ids?.map((game, index) => (
                             <TouchableWithoutFeedback key={index} onPress={() => router.push(`/lists/${list._id}`)}>
-                                <Image
-                                    source={{ uri: 'https:' + game?.game_cover_url?.replace('t_thumb', 't_cover_big_2x') }}
-                                    style={{ width: 80, height: 121 }}
-                                    resizeMode="contain"
-                                />
+                                {game.game_cover_url ? (
+                                    <Image
+                                        source={{ uri: 'https:' + game.game_cover_url.replace('t_thumb', 't_cover_big_2x') }}
+                                        style={styles.displayImage}
+                                        resizeMode="cover"
+                                    />
+                                ) : (
+                                    <View style={styles.displayImage}>
+                                        <Text style={{ color: '#f0f0f0', fontSize: 10, fontWeight: 'bold', textAlign: 'center', justifyContent: 'center' }}>
+                                            {game.game_name}
+                                        </Text>
+                                    </View>
+                                )}
                             </TouchableWithoutFeedback>
                         ))}
                     </ScrollView>
@@ -128,7 +136,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         width: 80,
         height: 120,
-        marginRight: 12,
         borderWidth: 1,
     }
 })
