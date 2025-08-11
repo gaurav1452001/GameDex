@@ -1,6 +1,7 @@
-import { internalMutation, QueryCtx } from './_generated/server';
+import { internalMutation, query, QueryCtx } from './_generated/server';
 import { UserJSON } from '@clerk/backend';
 import { v, Validator } from 'convex/values';
+import { use } from 'react';
 
 export const upsertFromClerk = internalMutation({
     args: { data: v.any() as Validator<UserJSON> }, // no runtime validation, trust Clerk
@@ -34,9 +35,43 @@ export const deleteFromClerk = internalMutation({
     },
 });
 
+// async function userByExternalId(ctx: QueryCtx, externalId: string) {
+//     return await ctx.db
+//         .query('users')
+//         .withIndex('byExternalId', (q) => q.eq('externalId', externalId))
+//         .unique();
+// }
+
+
+//get user info by externalId
 async function userByExternalId(ctx: QueryCtx, externalId: string) {
     return await ctx.db
-        .query('users')
-        .withIndex('byExternalId', (q) => q.eq('externalId', externalId))
+        .query("users")
+        .withIndex("byExternalId", (q) => q.eq("externalId", externalId))
         .unique();
 }
+
+
+export const getUserByExternalId = query({
+    args: { externalId: v.string() },
+    handler: async (ctx, args) => {
+        return await ctx.db
+            .query("users")
+            .withIndex("byExternalId", (q) => q.eq("externalId", args.externalId))
+            .unique();
+    },
+});
+
+export const getAllUsers = query({
+    args: {},
+    handler: async (ctx) => {
+        return await ctx.db.query("users").collect();
+    },
+});
+
+export const getUserById = query({
+    args: { id: v.id("users") },
+    handler: async (ctx, args) => {
+        return await ctx.db.get(args.id);
+    },
+});

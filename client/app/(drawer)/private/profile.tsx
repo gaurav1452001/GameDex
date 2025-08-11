@@ -4,34 +4,39 @@ import { useUser, useClerk } from '@clerk/clerk-expo';
 import { Image } from 'expo-image';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
-import { useQuery } from 'convex/react';
+import { router, useLocalSearchParams } from 'expo-router';
 import { StarRatingDisplay } from "react-native-star-rating-widget";
 import { api } from '@/convex/_generated/api';
+import { Id } from "@/convex/_generated/dataModel";
+import { Authenticated, useMutation, useQuery } from 'convex/react'
 
 
 export default function Profile() {
-    const { user } = useUser();
+    const params = useLocalSearchParams();
+    const userId = params?.userId;
+
+    const user = useQuery(api.users.getUserByExternalId, { externalId: userId as string });
+
     const finishedCount = useQuery(api.user_game_tracks.getFinishedGamesCount, {
-        externalId: user?.id as string
+        externalId: userId as string
     });
     const playingCount = useQuery(api.user_game_tracks.getPlayingGamesCount, {
-        externalId: user?.id as string
+        externalId: userId as string
     });
     const wishlistCount = useQuery(api.user_game_tracks.getWishlistGamesCount, {
-        externalId: user?.id as string
+        externalId: userId as string
     });
     const reviewsCount = useQuery(api.reviews.getUserReviewsCount, {
-        externalId: user?.id as string
+        externalId: userId as string
     });
     const listsCount = useQuery(api.lists.getListCountByUserId, {
-        externalId: user?.id as string
+        externalId: userId as string
     });
     const recentReviews = useQuery(api.reviews.getFourUserReviews, {
-        externalId: user?.id as string
+        externalId: userId as string
     });
 
-    if (!user) {
+    if (!userId) {
         return (
             <SafeAreaView style={styles.container}>
                 <View style={styles.loadingContainer}>
@@ -48,7 +53,7 @@ export default function Profile() {
                     <Ionicons name="arrow-back" size={24} color="#fff" />
                 </TouchableOpacity>
                 <Text style={{ color: '#c6c6c6ff', fontSize: 18, fontWeight: 'bold' }}>
-                    {user?.firstName || 'Profile'}
+                    {user?.name || 'Profile'}
                 </Text>
             </View>
             <ScrollView contentContainerStyle={{ paddingBottom: 50 }} showsVerticalScrollIndicator={false}>
@@ -127,9 +132,9 @@ export default function Profile() {
                 </View>
                 <View style={{ height: 1, backgroundColor: '#363636ff', marginTop: 30, width: '100%' }} />
 
-                <View style={styles.scrollContent}>
+                <View style={{ flex: 1,paddingHorizontal: 16 }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 20 }}>
-                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', width: '100%', marginTop: 10, letterSpacing: 1 }}>
+                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', marginTop: 10, letterSpacing: 1 }}>
                             Games Finished
                         </Text>
                         <Text style={{ color: '#717171ff', fontSize: 15, textAlign: 'right' }}>
@@ -138,7 +143,7 @@ export default function Profile() {
                     </View>
 
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 20 }}>
-                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', width: '100%', marginTop: 10, letterSpacing: 1 }}>
+                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', marginTop: 10, letterSpacing: 1 }}>
                             Games Wishlist
                         </Text>
                         <Text style={{ color: '#717171ff', fontSize: 15, textAlign: 'right' }}>
@@ -147,7 +152,7 @@ export default function Profile() {
                     </View>
 
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 20 }}>
-                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', width: '100%', marginTop: 10, letterSpacing: 1 }}>
+                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', marginTop: 10, letterSpacing: 1 }}>
                             Games Playing
                         </Text>
                         <Text style={{ color: '#717171ff', fontSize: 15, textAlign: 'right' }}>
@@ -156,7 +161,7 @@ export default function Profile() {
                     </View>
 
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 20 }}>
-                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', width: '100%', marginTop: 10, letterSpacing: 1 }}>
+                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', marginTop: 10, letterSpacing: 1 }}>
                             Reviews
                         </Text>
                         <Text style={{ color: '#717171ff', fontSize: 15, textAlign: 'right' }}>
@@ -165,7 +170,7 @@ export default function Profile() {
                     </View>
 
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 20 }}>
-                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', width: '100%', marginTop: 10, letterSpacing: 1 }}>
+                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', marginTop: 10, letterSpacing: 1 }}>
                             Lists
                         </Text>
                         <Text style={{ color: '#717171ff', fontSize: 15, textAlign: 'right' }}>
@@ -174,7 +179,7 @@ export default function Profile() {
                     </View>
 
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 20 }}>
-                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', width: '100%', marginTop: 10, letterSpacing: 1 }}>
+                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', marginTop: 10, letterSpacing: 1 }}>
                             Likes
                         </Text>
                         <Text style={{ color: '#717171ff', fontSize: 15, textAlign: 'right' }}>
@@ -183,7 +188,7 @@ export default function Profile() {
                     </View>
 
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 20 }}>
-                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', width: '100%', marginTop: 10, letterSpacing: 1 }}>
+                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', marginTop: 10, letterSpacing: 1 }}>
                             Following
                         </Text>
                         <Text style={{ color: '#717171ff', fontSize: 15, textAlign: 'right' }}>
@@ -192,7 +197,7 @@ export default function Profile() {
                     </View>
 
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 20 }}>
-                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', width: '100%', marginTop: 10, letterSpacing: 1 }}>
+                        <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', marginTop: 10, letterSpacing: 1 }}>
                             Followers
                         </Text>
                         <Text style={{ color: '#717171ff', fontSize: 15, textAlign: 'right' }}>

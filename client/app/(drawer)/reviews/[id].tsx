@@ -26,7 +26,7 @@ const ReviewDetailScreen = () => {
     const review = useQuery(api.reviews.getReviewById, { id: reviewId });
     const deleteReview = useMutation(api.reviews.deleteReview);
     const { user } = useUser();
-    
+
     //when the user goes to the individual review page, the below useEffect will dispatch the game data to the redux store
     //this is done so that the game data is available in the redux store and can be used to easily update the game data in the review page
     //the edit page was giving bugs therefore this is done, would remove later if fixed
@@ -250,10 +250,20 @@ const ReviewDetailScreen = () => {
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginHorizontal: 16 }}>
                     <View style={styles.reviewInfo}>
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', marginBottom: 8 }}>
-                            <Image
-                                source={{ uri: review.imageUrl }}
-                                style={{ width: 35, height: 35, borderRadius: 20, marginRight: 10, borderWidth: 1, borderColor: '#404040' }}
-                            />
+                            <TouchableOpacity onPress={() => {
+                                router.push({
+                                    pathname: `/(drawer)/private/profile`,
+                                    params: {
+                                        userId: review?.externalId as string
+                                    }
+                                }
+                                )
+                            }}>
+                                <Image
+                                    source={{ uri: review.imageUrl }}
+                                    style={{ width: 35, height: 35, borderRadius: 20, marginRight: 10, borderWidth: 1, borderColor: '#404040' }}
+                                />
+                            </TouchableOpacity>
                             <Text style={styles.reviewText}>
                                 {review.name?.length > 25 ? `${review.name.substring(0, 25)}...` : review.name}
                             </Text>

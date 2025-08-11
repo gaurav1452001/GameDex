@@ -6,6 +6,7 @@ export const User = {
     externalId: v.string(),
     name: v.string(),
     imageUrl: v.optional(v.string()),
+    bio: v.optional(v.string()),
 }
 
 export const Review = {
@@ -93,8 +94,8 @@ export const user_game_track = {
 }
 
 export default defineSchema({
-    users: defineTable(User).
-        index("byExternalId", ["externalId"]),
+    users: defineTable(User)
+        .index("byExternalId", ["externalId"]),
 
     reviews: defineTable(Review)
         .index("byUserAndGame", ["reviewDate"])
@@ -121,7 +122,7 @@ export default defineSchema({
     commentsLists: defineTable(commentsLists)
         .index("byList", ["listId"])
         .index("byUser", ["userId"]),
-        
+
     likesLists: defineTable(likesLists)
         .index("byList", ["listId"])
         .index("byUser", ["userId"]),

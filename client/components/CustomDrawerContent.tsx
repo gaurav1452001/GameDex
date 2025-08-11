@@ -50,7 +50,10 @@ export default function CustomDrawerContent(props: any) {
                     <DrawerItem
                         label="Profile"
                         labelStyle={{ color: '#9f9f9fff', fontSize: 14 }}
-                        onPress={() => router.push('/(drawer)/private/profile')}
+                        onPress={() => router.push({
+                            pathname:'/(drawer)/private/profile',
+                            params: { userId: user?.id as string }
+                        })}
                         icon={({ color, size }) => (
                             <Ionicons name="person-outline" size={17} color={'#9f9f9fff'} />
                         )}

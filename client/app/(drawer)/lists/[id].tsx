@@ -223,10 +223,17 @@ const ReviewDetailScreen = () => {
             </View>
             <View style={{ paddingHorizontal: 16, marginBottom: 20 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
-                    <Image
-                        source={{ uri: list.userImageUrl }}
-                        style={{ width: 30, height: 30, borderRadius: 20, marginRight: 10, borderWidth: 1, borderColor: '#404040' }}
-                    />
+                    <TouchableOpacity onPress={() => router.push({
+                        pathname:`/(drawer)/private/profile`,
+                        params:{
+                            userId: list.externalId as string
+                        }
+                        })}>
+                        <Image
+                            source={{ uri: list.userImageUrl }}
+                            style={{ width: 30, height: 30, borderRadius: 20, marginRight: 10, borderWidth: 1, borderColor: '#404040' }}
+                        />
+                    </TouchableOpacity>
                     <Text style={styles.reviewText}>
                         {list.name?.length > 25 ? `${list.name.substring(0, 25)}...` : list.name}
                     </Text>
