@@ -47,7 +47,7 @@ export default function Playing() {
     return (
       <View style={styles.loadingContainer}>
         <Text style={{ color: '#bcbcbcff', fontSize: 16, fontWeight: 'bold', textAlign: 'center', letterSpacing: 0.5 }}>
-          You don't have any games in your wishlist yet.
+          You are not currently playing any games.
           {'\n'}Start adding games to see them here!
         </Text>
       </View>

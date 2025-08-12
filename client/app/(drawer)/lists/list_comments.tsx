@@ -243,7 +243,7 @@ const ListComments = () => {
                     </View>
                 </View>
             </Modal>
-            <View>
+            <ScrollView>
                 {comments?.map((comment) => (
                     <View key={comment?._id}>
                         <View style={{ flexDirection: 'row', marginTop: 16, paddingHorizontal: 16 }}>
@@ -273,7 +273,7 @@ const ListComments = () => {
                         <View style={{ height: 1, backgroundColor: '#3d3d3dff', marginTop: 10, marginLeft: 62 }} />
                     </View>
                 ))}
-            </View>
+            </ScrollView>
             <Authenticated>
                 {user && (
                     <TouchableOpacity onPress={() => setIsModalVisible(true)} style={{ position: 'absolute', bottom: 35, right: 20 }}>

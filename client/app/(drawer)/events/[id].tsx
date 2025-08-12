@@ -48,7 +48,9 @@ export default function EventInfo() {
 
     return (
         <ScrollView style={{ backgroundColor: '#181818' }}>
+
             <View style={styles.container}>
+
                 {eventPage.event_logo?.image_id ? (
                     <Image
                         source={{
@@ -137,6 +139,9 @@ export default function EventInfo() {
                     </>
                     )}
             </View>
+            <TouchableOpacity onPress={() => router.back()} style={{ position: 'absolute', top: 50, left: 20 }}>
+                <Ionicons name="arrow-back" size={24} color="#ffffffff" />
+            </TouchableOpacity>
         </ScrollView>
     );
 }

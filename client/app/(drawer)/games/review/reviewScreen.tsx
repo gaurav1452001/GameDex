@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native'
 import StarRating from 'react-native-star-rating-widget'
 import { Ionicons } from '@expo/vector-icons'
 import { TextInput } from 'react-native'
-import { useMutation } from 'convex/react'
+import { useMutation, useQuery } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import { useUser } from "@clerk/clerk-expo";
 import { router } from 'expo-router'
@@ -26,6 +26,10 @@ const Review = () => {
     const [reviewText, setReviewText] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const finishedPlaying = useMutation(api.user_game_tracks.addToFinishedPlaying);
+    const checkFinishedPlaying = useQuery(api.user_game_tracks.getGameStatus, {
+        externalId: user?.id || '',
+        game_id: gamePage?.id?.toString() || ''
+    });
 
 
     useEffect(() => {
@@ -59,7 +63,7 @@ const Review = () => {
             ),
             headerRight: () => (
                 <TouchableOpacity onPress={() => {
-                    if(isChanging){
+                    if (isChanging) {
                         return;
                     }
                     setIsChanging(true);
@@ -69,15 +73,31 @@ const Review = () => {
                         imageUrl: user?.imageUrl || undefined,
                         gameId: gamePage?.id?.toString() || '',
                         gameName: gamePage?.name || '',
-                        gameCover: gamePage?.cover?.url ? 'https:' + gamePage?.cover?.url.replace('t_thumb', 't_cover_big_2x') : '',
+                        gameCover: gamePage?.cover?.url
+                            ? 'https:' + gamePage.cover.url.replace('t_thumb', 't_cover_big_2x')
+                            : '',
                         starRating: rating,
                         isLiked: liked,
                         reviewText: reviewText,
-                        screenshots: gamePage?.screenshots ? 'https:' + gamePage?.screenshots[0]?.url.replace('t_thumb', 't_screenshot_huge') : '',
+                        screenshots: gamePage?.screenshots && gamePage.screenshots[0]?.url
+                            ? 'https:' + gamePage.screenshots[0].url.replace('t_thumb', 't_screenshot_huge')
+                            : '',
                         reviewDate: new Date().toISOString(),
-                        gameYear: gamePage?.first_release_date ? new Date(gamePage.first_release_date * 1000).getFullYear().toString() : '',
+                        gameYear: gamePage?.first_release_date
+                            ? new Date(gamePage.first_release_date * 1000).getFullYear().toString()
+                            : '',
                     };
                     createReview(currentReviewData);
+                    if (checkFinishedPlaying === 'finishedPlaying') {
+                        setRating(0);
+                        setLiked(false);
+                        setReviewText('');
+                        router.push(`/games/${gamePage?.id}`);
+                        setTimeout(() => {
+                            setIsChanging(false);
+                        }, 1000);
+                        return;
+                    }
                     finishedPlaying({
                         externalId: user?.id || '',
                         game_id: gamePage?.id.toString() || '',

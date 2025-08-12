@@ -1,5 +1,5 @@
 import { View, Text, Modal, StyleSheet, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useQuery, useMutation } from 'convex/react';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { clearLogger } from '@/redux/gameLogger/gameLoggerSlice';
@@ -8,24 +8,42 @@ import StarRating from 'react-native-star-rating-widget';
 import { router } from 'expo-router';
 import { useUser } from '@clerk/clerk-expo';
 import { api } from "../convex/_generated/api";
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 
 const LoggerModal = ({ setModalVisible }: any) => {
     const dispatch = useAppDispatch();
+    const [listAdder, setListAdder] = useState(false);
     const loggerVisible = useAppSelector((state) => state.gamePageLogger.data);
     const gamePage = useAppSelector((state) => state.gamePageData.data);
+    const [isRating, setIsRating] = useState(false);
     const [rating, setRating] = useState(0);
     const { user } = useUser();
     const [isChanging, setIsChanging] = useState(false);
+    const [addingToList, setAddingToList] = useState(false);
     const user_game_tracker = useQuery(api.user_game_tracks.getGameStatus, {
         externalId: user?.id as string,
         game_id: gamePage?.id.toString() as string
     });
+    const AllLists = useQuery(api.lists.getAllLists);
+    const addToList = useMutation(api.lists.addGameToList);
+    const updateRating = useMutation(api.reviews.upsertLatestReviewByUserAndGame);
     const finishedPlaying = useMutation(api.user_game_tracks.addToFinishedPlaying);
     const currentlyPlaying = useMutation(api.user_game_tracks.addToCurrentlyPlaying);
     const wantToPlay = useMutation(api.user_game_tracks.addToWantToPlay);
     const removeGameFromTrack = useMutation(api.user_game_tracks.removeGameFromTracking);
+
+    const latestReview = useQuery(api.reviews.getLatestReviewByUserAndGame, {
+        externalId: user?.id || '',
+        gameId: gamePage?.id?.toString() || ''
+    });
+
+    useEffect(() => {
+        if (latestReview) {
+            setRating(latestReview.starRating || 0);
+        }
+    }, [latestReview]);
 
     const handleCurrentUser = {
         externalId: user?.id as string,
@@ -45,6 +63,63 @@ const LoggerModal = ({ setModalVisible }: any) => {
 
     return (
         <View>
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={listAdder}
+                onRequestClose={() => setListAdder(false)}
+            >
+                <View style={styles.modalContainer2}>
+                    <View style={{ height: '50%', width: '90%', backgroundColor: '#181818ff', borderRadius: 10, padding: 16 }}>
+                        <ScrollView style={{ flex: 1 }}>
+                            {AllLists?.length ? (
+                                AllLists.map((list) => (
+                                    <TouchableOpacity
+                                        key={list?._id}
+                                        style={{
+                                            paddingVertical: 12,
+                                            borderBottomWidth: 0.5,
+                                            borderBottomColor: '#333',
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            justifyContent: 'space-between'
+                                        }}
+                                        onPress={
+                                            async () => {
+                                                if (addingToList) {
+                                                    return;
+                                                }
+                                                setAddingToList(true);
+                                                await addToList({
+                                                    listId: list._id,
+                                                    externalId: user?.id as string,
+                                                    game_id: gamePage?.id?.toString() as string,
+                                                    game_name: gamePage?.name as string,
+                                                    game_cover_url: gamePage?.cover?.url as string,
+                                                    game_screenshots: gamePage?.screenshots?.map((s: any) => s.url) as string[],
+                                                });
+                                                setListAdder(false);
+                                                setTimeout(() => {
+                                                    setAddingToList(false);
+                                                }, 800);
+                                            }}
+                                    >
+                                        <Text style={styles.modalText}>{list?.listName}</Text>
+                                        <Ionicons name="add-circle-outline" size={22} color="#61d76fff" />
+                                    </TouchableOpacity>
+                                ))
+                            ) : (
+                                <Text style={styles.modalText}>No lists found.</Text>
+                            )}
+                        </ScrollView>
+                        <TouchableOpacity onPress={() => setListAdder(false)} style={{ marginTop: 16, justifyContent: 'center', alignItems: 'center' }}>
+                            <Text style={{ color: '#61d76fff', fontSize: 16 }}>Cancel</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+
+
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -157,12 +232,6 @@ const LoggerModal = ({ setModalVisible }: any) => {
                                 </TouchableOpacity>
                             }
 
-                            <TouchableOpacity style={styles.centerItems}>
-                                <Ionicons name="heart" size={50} color="#7d7d7dff" />
-                                <Text style={styles.modalText}>Like</Text>
-                            </TouchableOpacity>
-
-
                         </View>
                         <View style={styles.hLine} />
                         <View style={{ alignItems: 'center', paddingVertical: 15 }}>
@@ -171,13 +240,52 @@ const LoggerModal = ({ setModalVisible }: any) => {
                                 starStyle={{ marginHorizontal: -2 }}
                                 onChange={setRating}
                                 starSize={55}
+                                onRatingEnd={(rating) => {
+                                    console.log("Rating ended with value: ", rating);
+                                }}
                                 enableHalfStar={true}
                                 emptyColor="#555555ff"
                                 color="#61d76fff"
                             />
-                            <Text style={[styles.modalText, { marginTop: 10 }]}>
-                                Rate
-                            </Text>
+                            <TouchableOpacity onPress={() => {
+                                if (isRating || rating === 0) {
+                                    return;
+                                }
+                                setIsRating(true);
+                                updateRating({
+                                    externalId: user?.id || '',
+                                    name: user?.firstName || '',
+                                    imageUrl: user?.imageUrl || undefined,
+                                    gameId: gamePage?.id?.toString() || '',
+                                    gameName: gamePage?.name || '',
+                                    gameCover: gamePage?.cover?.url ? 'https:' + gamePage?.cover?.url.replace('t_thumb', 't_cover_big_2x') : '',
+                                    starRating: rating,
+                                    isLiked: false,
+                                    reviewText: '',
+                                    screenshots: gamePage?.screenshots ? 'https:' + gamePage?.screenshots[0]?.url.replace('t_thumb', 't_screenshot_huge') : '',
+                                    reviewDate: new Date().toISOString(),
+                                    gameYear: gamePage?.first_release_date ? new Date(gamePage.first_release_date * 1000).getFullYear().toString() : '',
+                                });
+                                if (user_game_tracker !== 'finishedPlaying') {
+                                    finishedPlaying(handleCurrentUser);
+                                }
+                                setTimeout(() => {
+                                    setIsRating(false);
+                                }, 800);
+                            }}>
+                                <Text style={{
+                                    color: latestReview ? '#61d76fff' : '#616161ff',
+                                    fontSize: 12,
+                                    marginTop: 10,
+                                    borderColor: latestReview ? '#61d76fff' : '#616161ff',
+                                    borderWidth: 1,
+                                    paddingVertical: 2,
+                                    paddingHorizontal: 8,
+                                    borderRadius: 5
+                                }}>
+                                    {latestReview ? 'Update Rating' : 'Rate'}
+                                </Text>
+                            </TouchableOpacity>
                         </View>
                         <View style={styles.hLine} />
                         <View style={{ flexDirection: 'column', paddingVertical: 10, gap: 30 }}>
@@ -185,7 +293,12 @@ const LoggerModal = ({ setModalVisible }: any) => {
                                 <Ionicons name="create-outline" size={20} color="#bababaff" />
                                 <Text style={styles.modalText}>Review or log</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.lister}>
+
+                            <TouchableOpacity style={styles.lister}
+                                onPress={() => {
+                                    setListAdder(true);
+                                }}
+                            >
                                 <Ionicons name="list-outline" size={20} color="#bababaff" />
                                 <Text style={styles.modalText} >Add to Lists</Text>
                             </TouchableOpacity>
@@ -210,6 +323,14 @@ const styles = StyleSheet.create({
         height: '100%',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.65)',
+    },
+
+    modalContainer2: {
+        flex: 1,
+        justifyContent: 'center',
+        height: '100%',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.35)',
     },
     lister: {
         flexDirection: 'row',

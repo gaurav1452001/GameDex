@@ -26,6 +26,40 @@ export const createList = mutation({
     },
 });
 
+//add a game to a already existing list
+export const addGameToList = mutation({
+    args: {
+        listId: v.id('lists'),
+        externalId: v.string(),
+        game_id: v.string(),
+        game_name: v.string(),
+        game_cover_url: v.optional(v.string()),
+        game_screenshots: v.optional(v.array(v.string())),
+    },
+    handler: async (ctx, args) => {
+        const { listId, externalId, ...gameData } = args;   
+        // Fetch the existing list
+        const existingList = await ctx.db.get(listId);
+        if (!existingList) {
+            throw new Error('List not found');
+        }
+        // Verify externalId matches
+        if (existingList.externalId !== externalId) {
+            throw new Error('External ID does not match the owner of the list');
+        }
+        // Check if the game already exists in the list
+        const gameExists = existingList.list_game_ids.some(game => game.game_id === gameData.game_id);
+        if (gameExists) {
+            return gameExists;
+        }
+        // Add the game to the list
+        await ctx.db.patch(listId, {
+            list_game_ids: [...existingList.list_game_ids, gameData]
+        });
+        return listId;
+    },
+});
+
 export const updateList = mutation({
     args: {
         listId: v.id('lists'),

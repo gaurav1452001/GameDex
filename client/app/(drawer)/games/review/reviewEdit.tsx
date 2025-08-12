@@ -30,7 +30,7 @@ const Review = () => {
         if (reviewData) {
             setRating(reviewData.starRating);
             setLiked(reviewData.isLiked);
-            setReviewText(reviewData.reviewText);
+            setReviewText(reviewData.reviewText ?? '');
         }
     }, [reviewData]);
 
@@ -62,7 +62,7 @@ const Review = () => {
                                 imageUrl: reviewData.imageUrl,
                                 gameId: reviewData.gameId,
                                 gameName: reviewData.gameName,
-                                gameCover: reviewData.gameCover,
+                                gameCover: reviewData.gameCover ?? '',
                                 starRating: rating,
                                 isLiked: liked,
                                 reviewText: reviewText,
@@ -94,7 +94,7 @@ const Review = () => {
         if (reviewData) {
             setRating(reviewData.starRating);
             setLiked(reviewData.isLiked);
-            setReviewText(reviewData.reviewText);
+            setReviewText(reviewData.reviewText ?? '');
         }
         setModalVisible(false);
         router.push(`/(drawer)/reviews/${reviewId}`);

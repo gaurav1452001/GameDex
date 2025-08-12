@@ -33,7 +33,7 @@ export const addToCurrentlyPlaying = mutation({
     args: {
         externalId: v.string(),
         game_id: v.string(),
-        game_cover_url: v.string(),
+        game_cover_url: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
         const userTrack = await ctx.db
@@ -92,7 +92,7 @@ export const addToWantToPlay = mutation({
     args: {
         externalId: v.string(),
         game_id: v.string(),
-        game_cover_url: v.string(),
+        game_cover_url: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
         const userTrack = await ctx.db
@@ -147,7 +147,7 @@ export const addToFinishedPlaying = mutation({
     args: {
         externalId: v.string(),
         game_id: v.string(),
-        game_cover_url: v.string(),
+        game_cover_url: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
         const userTrack = await ctx.db

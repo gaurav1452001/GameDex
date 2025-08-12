@@ -62,7 +62,7 @@ export default function ReviewsScreen() {
           </Text>
         </View>
 
-        {reviews?.map((review) => (
+        {reviews?.filter(review => review.reviewText && review.reviewText.trim() !== "").map((review) => (
           <TouchableOpacity onPress={() => router.push(`/reviews/${review._id}`)} key={review._id} style={{ marginTop: 15 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 2 }}>
               <Text style={{ color: '#c7c7c7ff', fontSize: 15, fontWeight: 900, flex: 1.7 }}>

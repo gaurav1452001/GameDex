@@ -15,10 +15,10 @@ export const Review = {
     imageUrl: v.optional(v.string()),
     gameId: v.string(),
     gameName: v.string(),
-    gameCover: v.string(),
+    gameCover: v.optional(v.string()),
     starRating: v.number(),
     isLiked: v.boolean(),
-    reviewText: v.string(),
+    reviewText: v.optional(v.string()),
     reviewDate: v.string(),
     screenshots: v.optional(v.string()),
     gameYear: v.optional(v.string()),
@@ -98,7 +98,7 @@ export default defineSchema({
         .index("byExternalId", ["externalId"]),
 
     reviews: defineTable(Review)
-        .index("byUserAndGame", ["reviewDate"])
+        .index("byUserAndGame", ["externalId", "gameId"])
         .index("byUserId", ["externalId"]),
 
     lists: defineTable(List)
