@@ -1,6 +1,6 @@
 import { View, StyleSheet, Image, TouchableOpacity, FlatList, Text, ActivityIndicator,SafeAreaView } from "react-native";
 import {useUser } from '@clerk/clerk-expo';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import LottieView from "lottie-react-native";
@@ -8,22 +8,24 @@ import { useRef } from "react";
 
 
 
-export default function Finished() {
+export default function Playing() {
   const animation = useRef<LottieView>(null);
-  const { user, isLoaded } = useUser();
+  const params = useLocalSearchParams();
+  const userExternalId = params.externalId;
 
-  const user_track = useQuery(api.user_game_tracks.getUserGameTrack, { externalId: user?.id as string});
-  const wishlistGames = user_track?.finishedPlaying || [];
+  const user_track = useQuery(api.user_game_tracks.getUserGameTrack, { externalId: userExternalId as string});
+  const playingGames = user_track?.currentlyPlaying || [];
 
-  if (!isLoaded) {
+
+  if (playingGames?.length === 0) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#61d76fff" />
-        <Text style={styles.loadingText}>Loading...</Text>
+        <Text style={{ color: '#bcbcbcff', fontSize: 16, fontWeight: 'bold', textAlign: 'center', letterSpacing: 0.5 }}>
+          No games are being played currently.
+        </Text>
       </View>
     );
   }
-
 
   if (!user_track) {
     return (
@@ -43,21 +45,12 @@ export default function Finished() {
   }
 
 
-  if (wishlistGames?.length === 0) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Text style={{ color: '#bcbcbcff', fontSize: 16, fontWeight: 'bold', textAlign: 'center', letterSpacing: 0.5 }}>
-          You have not finished playing any games.
-          {'\n'}Start adding games to see them here!
-        </Text>
-      </View>
-    );
-  }
+  
 
   return (
     <SafeAreaView style={styles.view}>
       <FlatList
-        data={wishlistGames}
+        data={playingGames}
         keyExtractor={(item) => item.game_id.toString()}
         numColumns={4}
         contentContainerStyle={styles.mainView}

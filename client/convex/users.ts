@@ -1,4 +1,4 @@
-import { internalMutation, query, QueryCtx } from './_generated/server';
+import { internalMutation, query, QueryCtx, mutation } from './_generated/server';
 import { UserJSON } from '@clerk/backend';
 import { v, Validator } from 'convex/values';
 import { use } from 'react';
@@ -62,6 +62,22 @@ export const getUserByExternalId = query({
     },
 });
 
+export const getFavoriteGames = query({
+    args: { externalId: v.string() },
+    handler: async (ctx, args) => {
+        const user = await ctx.db
+            .query("users")
+            .withIndex("byExternalId", (q) => q.eq("externalId", args.externalId))
+            .unique();
+
+        if (!user || !user.fourFavorites) {
+            return [];
+        }
+
+        return user.fourFavorites;
+    },
+});
+
 export const getAllUsers = query({
     args: {},
     handler: async (ctx) => {
@@ -73,5 +89,39 @@ export const getUserById = query({
     args: { id: v.id("users") },
     handler: async (ctx, args) => {
         return await ctx.db.get(args.id);
+    },
+});
+
+export const updateUser = mutation({
+    args: {
+        externalId: v.string(),
+        name: v.string(),
+        bio: v.optional(v.string()),
+        fourFavorites: v.optional(
+            v.array(
+                v.object({
+                    game_id: v.string(),
+                    game_cover_url: v.optional(v.string()),
+                })
+            )
+        ),
+    },
+    handler: async (ctx, args) => {
+        const user = await ctx.db
+            .query("users")
+            .withIndex("byExternalId", (q) => q.eq("externalId", args.externalId))
+            .unique();
+
+        if (!user) {
+            throw new Error("User not found");
+        }
+
+        await ctx.db.patch(user._id, {
+            name: args.name,
+            bio: args.bio,
+            fourFavorites: args.fourFavorites,
+        });
+
+        return user._id;
     },
 });

@@ -117,6 +117,7 @@ export const getAllLists = query({
     },
 });
 
+//get all lists by a particular user
 export const getListByUserId = query({
     args: { externalId: v.string() },
     handler: async (ctx, { externalId }) => {

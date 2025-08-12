@@ -1,6 +1,5 @@
-import { View, StyleSheet, Image, TouchableOpacity, FlatList, Text, ActivityIndicator,SafeAreaView } from "react-native";
-import {useUser } from '@clerk/clerk-expo';
-import { router } from 'expo-router';
+import { View, StyleSheet, Image, TouchableOpacity, FlatList, Text, ActivityIndicator, SafeAreaView } from "react-native";
+import { router, useLocalSearchParams } from 'expo-router';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import LottieView from "lottie-react-native";
@@ -8,22 +7,25 @@ import { useRef } from "react";
 
 
 
-export default function Playing() {
+export default function Wishlist() {
   const animation = useRef<LottieView>(null);
-  const { user, isLoaded } = useUser();
+  const params = useLocalSearchParams();
+  const userExternalId = params.externalId;
 
-  const user_track = useQuery(api.user_game_tracks.getUserGameTrack, { externalId: user?.id as string});
-  const wishlistGames = user_track?.currentlyPlaying || [];
 
-  if (!isLoaded) {
+  const user_track = useQuery(api.user_game_tracks.getUserGameTrack, { externalId: userExternalId as string });
+  const wishlistGames = user_track?.wantToPlay || [];
+
+
+  if (wishlistGames?.length === 0) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#61d76fff" />
-        <Text style={styles.loadingText}>Loading...</Text>
+        <Text style={{ color: '#bcbcbcff', fontSize: 16, fontWeight: 'bold', textAlign: 'center', letterSpacing: 0.5 }}>
+          No games in wishlist.
+        </Text>
       </View>
     );
   }
-
 
   if (!user_track) {
     return (
@@ -43,16 +45,7 @@ export default function Playing() {
   }
 
 
-  if (wishlistGames?.length === 0) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Text style={{ color: '#bcbcbcff', fontSize: 16, fontWeight: 'bold', textAlign: 'center', letterSpacing: 0.5 }}>
-          You are not currently playing any games.
-          {'\n'}Start adding games to see them here!
-        </Text>
-      </View>
-    );
-  }
+
 
   return (
     <SafeAreaView style={styles.view}>

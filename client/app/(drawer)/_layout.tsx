@@ -43,7 +43,17 @@ export default function AppLayout() {
         headerTitle: 'GameDex',
       }} />
 
-
+      {/* <Drawer.Screen name="(users)" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} /> */}
+      <Drawer.Screen name="user_games" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
+      <Drawer.Screen name="user_games/playing" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
+      <Drawer.Screen name="user_games/wishlist" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
+      <Drawer.Screen name="user_games/index" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
+      <Drawer.Screen name="user_likes" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
+      <Drawer.Screen name="user_following" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
+      <Drawer.Screen name="user_followers" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
+      <Drawer.Screen name="user_lists" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
+      <Drawer.Screen name="user_profile" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
+      <Drawer.Screen name="user_reviews" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
 
       <Drawer.Screen name="searchGame" options={{
         drawerIcon: ({ color, size }) => (
@@ -51,11 +61,6 @@ export default function AppLayout() {
         ),
         headerShown: false,
         drawerLabel: 'Search',
-      }} />
-
-      <Drawer.Screen name="profile" options={{
-        headerShown: false,
-        drawerItemStyle: { display: 'none' },
       }} />
 
       {/* Auth routes - only show when not signed in */}
@@ -79,23 +84,6 @@ export default function AppLayout() {
 
       {/* Private routes - hide from default drawer, handle in CustomDrawerContent */}
       <Drawer.Screen name="private" options={{
-        headerShown: false,
-        drawerItemStyle: { display: 'none' },
-      }} />
-
-      <Drawer.Screen name="private/(tabs)" options={{
-        drawerIcon: ({ color, size }) => (
-          <Ionicons name="home-outline" color={color} size={17} />
-        ),
-        headerShown: false,
-      }} />
-
-      <Drawer.Screen name="private/profile" options={{
-        headerShown: false,
-        drawerItemStyle: { display: 'none' },
-      }} />
-
-      <Drawer.Screen name="private/diary" options={{
         headerShown: false,
         drawerItemStyle: { display: 'none' },
       }} />

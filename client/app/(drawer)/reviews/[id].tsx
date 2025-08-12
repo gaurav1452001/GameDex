@@ -10,7 +10,6 @@ import { Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
 import { Authenticated } from 'convex/react';
 import { useUser } from '@clerk/clerk-expo';
-import { useAppDispatch } from '@/redux/hooks';
 
 
 const ReviewDetailScreen = () => {
@@ -106,9 +105,9 @@ const ReviewDetailScreen = () => {
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', marginBottom: 8 }}>
                             <TouchableOpacity onPress={() => {
                                 router.push({
-                                    pathname: `/(drawer)/profile`,
+                                    pathname: `/(drawer)/user_profile`,
                                     params: {
-                                        userId: review?.externalId as string
+                                        externalId: review.externalId as string
                                     }
                                 }
                                 )

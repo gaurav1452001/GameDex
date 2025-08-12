@@ -1,8 +1,7 @@
 import { View, Text, TouchableOpacity, StyleSheet, TextInput, Modal, FlatList, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { updateList, clearList } from '@/redux/listCreationData/listCreationDataSlice';
-import { ScrollView } from "react-native-gesture-handler";
+import { useAppDispatch } from '@/redux/hooks';
+import { clearList } from '@/redux/listCreationData/listCreationDataSlice';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons'
 import { useUser } from '@clerk/clerk-expo';
@@ -160,7 +159,7 @@ const CreateList = () => {
                     </Text>
                 </View>
                 <TouchableOpacity onPress={() => {
-                    if(isChanging) {
+                    if (isChanging) {
                         return;
                     }
                     setIsChanging(true);

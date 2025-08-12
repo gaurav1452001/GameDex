@@ -7,6 +7,14 @@ export const User = {
     name: v.string(),
     imageUrl: v.optional(v.string()),
     bio: v.optional(v.string()),
+    fourFavorites: v.optional(
+        v.array(
+            v.object({
+                game_id: v.string(),
+                game_cover_url: v.optional(v.string()),
+            })
+        )
+    ),
 }
 
 export const Review = {

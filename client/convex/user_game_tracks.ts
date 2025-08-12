@@ -244,16 +244,16 @@ export const getUserGameTrack = query({
 export const getFinishedGamesCount = query({
     args: { externalId: v.string() },
     handler: async (ctx, { externalId }) => {
-        const userTrack = await ctx.db
-            .query('user_game_tracks')
-            .filter((q) => q.eq(q.field('externalId'), externalId))
-            .first();   
-
-        if (!userTrack) {
-            throw new Error('User track record not found');
+        try {
+            const userTrack = await ctx.db
+                .query('user_game_tracks')
+                .filter((q) => q.eq(q.field('externalId'), externalId))
+                .first();
+            return userTrack?.finishedPlaying.length;
+        } catch (error) {
+            console.error('Error fetching user game track:', error);
+            return 0;
         }
-
-        return userTrack.finishedPlaying.length;
     },
 });
 
@@ -261,33 +261,34 @@ export const getFinishedGamesCount = query({
 export const getPlayingGamesCount = query({
     args: { externalId: v.string() },
     handler: async (ctx, { externalId }) => {
-        const userTrack = await ctx.db
-            .query('user_game_tracks')
-            .filter((q) => q.eq(q.field('externalId'), externalId))
-            .first();   
-
-        if (!userTrack) {
-            throw new Error('User track record not found');
+        try {
+            const userTrack = await ctx.db
+                .query('user_game_tracks')
+                .filter((q) => q.eq(q.field('externalId'), externalId))
+                .first();
+            return userTrack?.currentlyPlaying.length;
+        } catch (error) {
+            console.error('Error fetching user game track:', error);
+            return 0;
         }
-
-        return userTrack.currentlyPlaying.length;
     },
 });
 
+
 //Get the number of games WishListed by a user
 export const getWishlistGamesCount = query({
-    args: { externalId: v.string() },
+args: { externalId: v.string() },
     handler: async (ctx, { externalId }) => {
-        const userTrack = await ctx.db
-            .query('user_game_tracks')
-            .filter((q) => q.eq(q.field('externalId'), externalId))
-            .first();   
-
-        if (!userTrack) {
-            throw new Error('User track record not found');
+        try {
+            const userTrack = await ctx.db
+                .query('user_game_tracks')
+                .filter((q) => q.eq(q.field('externalId'), externalId))
+                .first();
+            return userTrack?.wantToPlay.length;
+        } catch (error) {
+            console.error('Error fetching user game track:', error);
+            return 0;
         }
-
-        return userTrack.wantToPlay.length;
     },
 });
 
@@ -295,7 +296,7 @@ export const getWishlistGamesCount = query({
 
 // Get game status for a specific user and game
 export const getGameStatus = query({
-    args: { 
+    args: {
         externalId: v.string(),
         game_id: v.string(),
     },

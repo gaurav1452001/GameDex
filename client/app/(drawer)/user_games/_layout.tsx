@@ -1,42 +1,30 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { View, Text, SafeAreaView, TouchableOpacity,StyleSheet } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet } from 'react-native';
 import Finished from './index';
 import Playing from './playing';
 import Wishlist from './wishlist';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { useUser } from '@clerk/clerk-expo';
+import React from 'react';
 
 const Tab = createMaterialTopTabNavigator();
 
-
-const styles = StyleSheet.create({
-    header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingRight: 16,
-        paddingLeft: 12,
-        paddingVertical: 12,
-        backgroundColor: '#0b0b0bff',
-    },
-});
-
 export default function PrivateTabs() {
-    const { user } = useUser();
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#0b0b0bff', paddingTop: 45 }}>
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => router.push('/(drawer)/(tabs)')} style={{ marginRight: 15 }}>
+                <TouchableOpacity onPress={() => router.push("/(drawer)/(tabs)")} style={{ marginRight: 15 }}>
                     <Ionicons name="arrow-back" size={24} color="#fff" />
                 </TouchableOpacity>
                 <Text style={{ color: '#ffffff', fontSize: 18, fontWeight: 'bold' }}>
-                    {user?.firstName}'s Games
+                    Games List
                 </Text>
             </View>
 
             <Tab.Navigator
                 screenOptions={{
-                    tabBarItemStyle: { flex: 1 }, 
+                    tabBarItemStyle: { flex: 1 },
                     tabBarStyle: { backgroundColor: '#0b0b0bff' },
                     tabBarLabelStyle: { color: '#fff', fontSize: 13, letterSpacing: 0.5 },
                     tabBarActiveTintColor: '#ffffffff',
@@ -50,4 +38,14 @@ export default function PrivateTabs() {
         </SafeAreaView>
     );
 }
+const styles = StyleSheet.create({
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingRight: 16,
+        paddingLeft: 12,
+        paddingVertical: 12,
+        backgroundColor: '#0b0b0bff',
+    },
+});
 

@@ -94,9 +94,9 @@ const ListScreen = () => {
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
                         <TouchableOpacity onPress={() => router.push({
-                            pathname: `/(drawer)/profile`,
+                            pathname: `/(drawer)/user_profile`,
                             params: {
-                                userId: list.externalId as string
+                                externalId: list.externalId as string
                             }
                         })}>
                             <Image

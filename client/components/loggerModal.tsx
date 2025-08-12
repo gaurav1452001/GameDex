@@ -26,7 +26,7 @@ const LoggerModal = ({ setModalVisible }: any) => {
         externalId: user?.id as string,
         game_id: gamePage?.id.toString() as string
     });
-    const AllLists = useQuery(api.lists.getAllLists);
+    const AllLists = useQuery(api.lists.getListByUserId,{ externalId: user?.id as string });
     const addToList = useMutation(api.lists.addGameToList);
     const updateRating = useMutation(api.reviews.upsertLatestReviewByUserAndGame);
     const finishedPlaying = useMutation(api.user_game_tracks.addToFinishedPlaying);

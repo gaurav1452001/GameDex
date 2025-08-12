@@ -13,13 +13,13 @@ import { Authenticated, useMutation, useQuery } from 'convex/react'
 
 export default function Profile() {
     const params = useLocalSearchParams();
-    const userId = params?.userId;
+    const userId = params?.externalId as string;
     const { user } = useUser();
     const [isFollowing, setIsFollowing] = useState(false);
     const OtherUser = useQuery(api.users.getUserByExternalId, { externalId: userId as string });
     const loggedInUser = useQuery(
         api.users.getUserByExternalId,
-        user?.id ? { externalId: user.id } : "skip"
+        user?.id ? { externalId: user?.id } : "skip"
     );
     const following = useQuery(
         api.follows.isFollowing,
@@ -53,6 +53,9 @@ export default function Profile() {
     const recentReviews = useQuery(api.reviews.getFourUserReviews, {
         externalId: userId as string
     });
+    const favoriteGames = useQuery(api.users.getFavoriteGames, {
+        externalId: userId as string
+    });
     const likesListsCount = useQuery(api.likesLists.getLikesCountByUser, {
         userId: OtherUser?._id as Id<'users'>
     }) ?? 0;
@@ -81,7 +84,7 @@ export default function Profile() {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => router.push('/(drawer)/(tabs)')} style={{ marginRight: 15 }}>
+                <TouchableOpacity onPress={() => router.replace('/(drawer)/(tabs)')} style={{ marginRight: 15 }}>
                     <Ionicons name="arrow-back" size={24} color="#fff" />
                 </TouchableOpacity>
                 <Text style={{ color: '#c6c6c6ff', fontSize: 18, fontWeight: 'bold' }}>
@@ -124,7 +127,7 @@ export default function Profile() {
                         </View>
                     </Authenticated>
                     <Text style={styles.userBio}>
-                        this is an example bio of the user
+                        {OtherUser?.bio || 'No bio available.'}
                     </Text>
                 </View>
                 <View style={{ height: 1, backgroundColor: '#363636ff', marginTop: 30, width: '100%' }} />
@@ -132,7 +135,23 @@ export default function Profile() {
                     <Text style={{ color: '#808080ff', fontSize: 12, textAlign: 'left', width: '100%', marginTop: 10, letterSpacing: 1 }}>
                         FAVORITES
                     </Text>
-
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', marginTop: 10, marginHorizontal: -16 }}>
+                        {
+                            favoriteGames && favoriteGames?.length > 0 ? (
+                                favoriteGames.map((game) => (
+                                    <TouchableOpacity onPress={() => router.push(`/(drawer)/games/${game.game_id}`)} key={game.game_id}>
+                                        <Image
+                                            source={{ uri: game?.game_cover_url }}
+                                            style={styles.displayImage}
+                                            resizeMode="contain"
+                                        />
+                                    </TouchableOpacity>
+                                ))
+                            ) : (
+                                <Text style={{ color: '#717171ff', fontSize: 15 }}>No favorite games</Text>
+                            )
+                        }
+                    </View>
                 </View>
                 <View style={{ height: 1, backgroundColor: '#363636ff', marginTop: 30, width: '100%' }} />
                 <View style={styles.scrollContent}>
