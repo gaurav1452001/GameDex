@@ -65,18 +65,18 @@ const UserFollowers = () => {
           <Ionicons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
         <Text style={{ color: '#ffffff', fontSize: 18, fontWeight: 'bold' }}>
-          {(UserData?.name ? UserData.name.slice(0, 15) : 'User')}'s Reviews
+          {UserData?.name || 'User'}'s Followers
         </Text>
       </View>
       <View style={{ flex: 1, padding: 16, backgroundColor: '#181818' }}>
         {followers.map((follower) => (
-          <>
-            <TouchableOpacity onPress={() => {
-              router.push({
-                pathname: '/(drawer)/user_profile',
-                params: { externalId: follower?.externalId }
-              })
-            }} key={follower?._id} style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15, justifyContent: 'space-between' }}>
+          <TouchableOpacity onPress={() => {
+            router.push({
+              pathname: '/(drawer)/user_profile',
+              params: { externalId: follower?.externalId }
+            })
+          }} key={follower?._id} style={{ flexDirection: 'column', marginTop: 15}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Image
                   source={{ uri: follower?.imageUrl || 'https://placehold.co/40x40' }}
@@ -87,11 +87,11 @@ const UserFollowers = () => {
                 </Text>
               </View>
               <View>
-                <Ionicons name="chevron-forward" size={20} color="#b8b8b8ff" style={{ marginLeft: 'auto' }} />
+                <Ionicons name="chevron-forward" size={20} color="#b8b8b8ff" />
               </View>
-            </TouchableOpacity>
+            </View>
             <View style={{ height: 1, backgroundColor: '#545454ff', marginTop: 15, marginHorizontal: -16 }} />
-          </>
+          </TouchableOpacity>
         ))}
       </View>
     </ScrollView>

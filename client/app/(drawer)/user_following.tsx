@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, TouchableOpacity, ActivityIndicator, Image } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { router, useLocalSearchParams } from "expo-router";
@@ -65,7 +65,7 @@ const UserFollowing = () => {
           <Ionicons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
         <Text style={{ color: '#ffffff', fontSize: 18, fontWeight: 'bold' }}>
-          {(UserData?.name ? UserData.name.slice(0, 15) : 'User')}'s Reviews
+          {UserData?.name || 'User'}'s Following
         </Text>
       </View>
       <View style={{ flex: 1, padding: 16, backgroundColor: '#181818' }}>
@@ -75,7 +75,7 @@ const UserFollowing = () => {
               pathname: '/(drawer)/user_profile',
               params: { externalId: following?.externalId }
             })
-          }} key={following?._id} style={{ flexDirection: 'column', marginTop: 15 }}>
+          }} key={following?._id} style={{ flexDirection: 'column', marginTop: 15, justifyContent: 'space-between' }}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Image
                 source={{ uri: following?.imageUrl || 'https://placehold.co/40x40' }}
@@ -84,6 +84,9 @@ const UserFollowing = () => {
               <Text style={{ marginLeft: 12, color: '#b8b8b8ff', fontSize: 15 }}>
                 {following?.name || 'Unnamed User'}
               </Text>
+              <View>
+                <Ionicons name="chevron-forward" size={20} color="#b8b8b8ff" style={{ marginTop: 5 }} />
+              </View>
             </View>
             <View style={{ height: 1, backgroundColor: '#545454ff', marginTop: 15, marginHorizontal: -16 }} />
           </TouchableOpacity>

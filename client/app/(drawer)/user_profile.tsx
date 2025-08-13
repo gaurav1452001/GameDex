@@ -209,14 +209,7 @@ export default function Profile() {
                         }
                     </View>
                 </View>
-                <View style={{ height: 1, backgroundColor: '#363636ff', marginTop: 30, width: '100%' }} />
-                <View style={styles.scrollContent}>
-                    <Text style={{ color: '#808080ff', fontSize: 12, textAlign: 'left', width: '100%', marginTop: 10, letterSpacing: 1, }}>
-                        RATINGS
-                    </Text>
-
-                </View>
-                <View style={{ height: 1, backgroundColor: '#363636ff', marginTop: 30, width: '100%' }} />
+                <View style={{ height: 1, backgroundColor: '#363636ff', marginTop: 30, width: '100%' }} />\
 
                 <View style={{ flex: 1, paddingHorizontal: 16 }}>
                     <TouchableOpacity onPress={() => {router.push(
