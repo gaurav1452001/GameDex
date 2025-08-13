@@ -5,9 +5,13 @@ import { SignOutModal } from './signOutModal';
 import { Authenticated, Unauthenticated } from 'convex/react';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { useQuery } from 'convex/react';
+import { api } from '../convex/_generated/api';
 
 export default function CustomDrawerContent(props: any) {
     const { user } = useUser();
+    const convexUser = useQuery(api.users.getUserByExternalId, { externalId: user?.id as string });
+    
 
     return (
         <View style={{ flex: 1, backgroundColor: '#191919ff' }}>
@@ -27,7 +31,7 @@ export default function CustomDrawerContent(props: any) {
                 <Authenticated>
                     <View style={{ backgroundColor: '#191919ff', marginBottom: 20, flexDirection: 'row', alignItems: 'center', gap: 10, padding: 16 }}>
                         <Image
-                            source={{ uri: user?.imageUrl }}
+                            source={{ uri: convexUser?.imageUrl }}
                             style={{
                                 width: 50,
                                 height: 50,
@@ -37,7 +41,7 @@ export default function CustomDrawerContent(props: any) {
                             }}
                         />
                         <Text style={{ color: '#ffffff', fontSize: 16, fontWeight: 'bold' }}>
-                            {user?.fullName || user?.firstName || 'User'}
+                            {convexUser?.name}
                         </Text>
                     </View>
                 </Authenticated>
@@ -46,14 +50,13 @@ export default function CustomDrawerContent(props: any) {
                 <DrawerItemList {...props} />
 
                 {/* Protected routes section - only visible when authenticated */}
-                {user?.id && (
                     <Authenticated>
                         <DrawerItem
                             label="Profile"
                             labelStyle={{ color: '#9f9f9fff', fontSize: 14 }}
                             onPress={() => router.replace({
                                 pathname: '/(drawer)/user_profile',
-                                params: { externalId: user.id }
+                                params: { externalId: user?.id }
                             })}
                             icon={({ color, size }) => (
                                 <Ionicons name="person-outline" size={17} color={'#9f9f9fff'} />
@@ -65,10 +68,10 @@ export default function CustomDrawerContent(props: any) {
                             labelStyle={{ color: '#9f9f9fff', fontSize: 14 }}
                             onPress={() => router.replace({
                                 pathname: '/(drawer)/user_games',
-                                params: { externalId: user.id }
+                                params: { externalId: user?.id }
                             })}
                             icon={({ color, size }) => (
-                                <Ionicons name="person-outline" size={17} color={'#9f9f9fff'} />
+                                <Ionicons name="game-controller-outline" size={17} color={'#9f9f9fff'} />
                             )}
                         />
 
@@ -77,7 +80,7 @@ export default function CustomDrawerContent(props: any) {
                             labelStyle={{ color: '#9f9f9fff', fontSize: 14 }}
                             onPress={() => router.replace({
                                 pathname: '/(drawer)/user_reviews',
-                                params: { externalId: user.id }
+                                params: { externalId: user?.id }
                             })}
                             icon={({ color, size }) => (
                                 <Ionicons name="star-outline" size={17} color={'#9f9f9fff'} />
@@ -89,7 +92,7 @@ export default function CustomDrawerContent(props: any) {
                             labelStyle={{ color: '#9f9f9fff', fontSize: 14 }}
                             onPress={() => router.replace({
                                 pathname: '/(drawer)/user_lists',
-                                params: { externalId: user.id }
+                                params: { externalId: user?.id }
                             })}
                             icon={({ color, size }) => (
                                 <Ionicons name="list" size={17} color={'#9f9f9fff'} />
@@ -101,14 +104,14 @@ export default function CustomDrawerContent(props: any) {
                             labelStyle={{ color: '#9f9f9fff', fontSize: 14 }}
                             onPress={() => router.replace({
                                 pathname: '/(drawer)/private/settings',
-                                params: { externalId: user.id }
+                                params: { externalId: user?.id }
                             })}
                             icon={({ color, size }) => (
                                 <Ionicons name="settings-outline" size={17} color={'#9f9f9fff'} />
                             )}
                         />
                     </Authenticated>
-                )}
+                
                 <Authenticated>
                     <SignOutModal />
                 </Authenticated>

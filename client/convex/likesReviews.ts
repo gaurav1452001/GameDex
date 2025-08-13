@@ -62,7 +62,27 @@ export const getLikesByUser = query({
             .collect();
         },
     });
-    
+
+export const getReviewsLikedByUser = query({
+    args: { userId: v.id("users") },
+    handler: async (ctx, args) => { 
+        const likes = await ctx.db
+            .query("likesReviews")
+            .withIndex("byUser", (q) => q.eq("userId", args.userId))
+            .collect();
+
+        const reviewIds = likes.map(like => like.reviewId);
+
+        // Fetch all reviews by their IDs
+        const reviews = await Promise.all(
+            reviewIds.map(reviewId => ctx.db.get(reviewId))
+        );
+
+        // Filter out any nulls (in case some reviews were deleted)
+        return reviews.filter(Boolean);
+    }
+});
+
 // Mutation: Add a like
 export const addLikeReview = mutation({
     args: {

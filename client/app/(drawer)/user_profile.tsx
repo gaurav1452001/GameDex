@@ -1,5 +1,5 @@
 import React, { use, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Touchable } from 'react-native';
 import { useUser } from '@clerk/clerk-expo';
 import { Image } from 'expo-image';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -211,59 +211,95 @@ export default function Profile() {
                 <View style={{ height: 1, backgroundColor: '#363636ff', marginTop: 30, width: '100%' }} />
 
                 <View style={{ flex: 1, paddingHorizontal: 16 }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
+                    <TouchableOpacity onPress={() => {router.push(
+                        {
+                            pathname: '/(drawer)/user_games',
+                            params: { externalId: userId }
+                        }
+                    )}} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
                         <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', letterSpacing: 1 }}>
                             Games Finished
                         </Text>
                         <Text style={{ color: '#717171ff', fontSize: 15, textAlign: 'right' }}>
                             {finishedCount ? finishedCount : 0}
                         </Text>
-                    </View>
+                    </TouchableOpacity>
 
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
+                    <TouchableOpacity onPress={() => {router.push(
+                        {
+                            pathname: '/(drawer)/user_games/wishlist',
+                            params: { externalId: userId }
+                        }
+                    )}} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
                         <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', letterSpacing: 1 }}>
                             Games Wishlist
                         </Text>
                         <Text style={{ color: '#717171ff', fontSize: 15, textAlign: 'right' }}>
                             {wishlistCount ? wishlistCount : 0}
                         </Text>
-                    </View>
+                    </TouchableOpacity>
 
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
+                    <TouchableOpacity onPress={() => {router.push(
+                        {
+                            pathname: '/(drawer)/user_games/playing',
+                            params: { externalId: userId }
+                        }
+                    )}} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
                         <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', letterSpacing: 1 }}>
                             Games Playing
                         </Text>
                         <Text style={{ color: '#717171ff', fontSize: 15, textAlign: 'right' }}>
                             {playingCount ? playingCount : 0}
                         </Text>
-                    </View>
+                    </TouchableOpacity>
 
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
+                    <TouchableOpacity onPress={() => {
+                        router.push(
+                            {
+                                pathname: '/(drawer)/user_reviews',
+                                params: { externalId: userId }
+                            }
+                        )
+                    }} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
                         <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', letterSpacing: 1 }}>
                             Reviews
                         </Text>
                         <Text style={{ color: '#717171ff', fontSize: 15, textAlign: 'right' }}>
                             {reviewsCount ? reviewsCount : 0}
                         </Text>
-                    </View>
+                    </TouchableOpacity>
 
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
+                    <TouchableOpacity onPress={() => {
+                        router.push(
+                            {
+                                pathname: '/(drawer)/user_lists',
+                                params: { externalId: userId }
+                            }
+                        )
+                    }} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
                         <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', letterSpacing: 1 }}>
                             Lists
                         </Text>
                         <Text style={{ color: '#717171ff', fontSize: 15, textAlign: 'right' }}>
                             {listsCount ? listsCount : 0}
                         </Text>
-                    </View>
+                    </TouchableOpacity>
 
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
+                    <TouchableOpacity onPress={()=>{
+                        router.push(
+                            {
+                                pathname: '/(drawer)/user_likes/lists',
+                                params: { externalId: userId }
+                            }
+                        )
+                    }} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
                         <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', letterSpacing: 1 }}>
                             Likes
                         </Text>
                         <Text style={{ color: '#717171ff', fontSize: 15, textAlign: 'right' }}>
                             {likes ? likes : 0}
                         </Text>
-                    </View>
+                    </TouchableOpacity>
 
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
                         <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', letterSpacing: 1 }}>
