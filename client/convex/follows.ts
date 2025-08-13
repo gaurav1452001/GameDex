@@ -10,6 +10,14 @@ export const createFollow = mutation({
         followingId: v.id("users"),
     },
     handler: async (ctx, args) => {
+        const existing = await ctx.db
+            .query("follows")
+            .filter(q => q.eq(q.field("followerId"), args.followerId))
+            .filter(q => q.eq(q.field("followingId"), args.followingId))
+            .first();
+        if (existing) {
+            return null;
+        }
         return await ctx.db.insert("follows", {
             followerId: args.followerId,
             followingId: args.followingId,
@@ -58,10 +66,16 @@ export const isFollowing = query({
 export const getFollowers = query({
     args: { userId: v.id("users") },
     handler: async (ctx, args) => {
-        return await ctx.db
+        const follows = await ctx.db
             .query("follows")
             .filter(q => q.eq(q.field("followingId"), args.userId))
             .collect();
+        // Fetch user documents for each followerId
+        const followers = await Promise.all(
+            follows.map(follow => ctx.db.get(follow.followerId))
+        );
+        // Filter out any nulls (in case a user was deleted)
+        return followers.filter(Boolean);
     },
 });
 
@@ -71,10 +85,16 @@ export const getFollowers = query({
 export const getFollowing = query({
     args: { userId: v.id("users") },
     handler: async (ctx, args) => {
-        return await ctx.db
+        const follows = await ctx.db
             .query("follows")
             .filter(q => q.eq(q.field("followerId"), args.userId))
             .collect();
+        // Fetch user documents for each followingId
+        const followingUsers = await Promise.all(
+            follows.map(follow => ctx.db.get(follow.followingId))
+        );
+        // Filter out any nulls (in case a user was deleted)
+        return followingUsers.filter(Boolean);
     },
 });
 

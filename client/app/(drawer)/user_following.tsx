@@ -1,31 +1,29 @@
-import { Text, View, Image, StyleSheet, TouchableOpacity, ActivityIndicator, SafeAreaView } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, ActivityIndicator, Image } from "react-native";
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
-import { ScrollView } from "react-native-gesture-handler";
-import { StarRatingDisplay } from "react-native-star-rating-widget";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
+import { Id } from "@/convex/_generated/dataModel";
+import React, { useRef } from "react";
 import { Ionicons } from "@expo/vector-icons";
+import { ScrollView } from "react-native-gesture-handler";
 import LottieView from "lottie-react-native";
-import { useRef } from "react";
-import { useUser } from "@clerk/clerk-expo";
-import React from "react";
 
-const Reviews = () => {
+const UserFollowing = () => {
+  const params = useLocalSearchParams();
   const animation = useRef<LottieView>(null);
-  const { user, isLoaded } = useUser();
-  const reviews = useQuery(api.reviews.getUserReviews, { externalId: user?.id as string });
+  const userExternalId = params?.externalId as string;
+  const UserData = useQuery(api.users.getUserByExternalId, { externalId: userExternalId as string });
+  const following = useQuery(api.follows.getFollowing, { userId: UserData?._id as Id<'users'> });
 
-  if (!isLoaded) {
+  if (!userExternalId) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#61d76fff" />
-        <Text style={styles.loadingText}>Loading...</Text>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>No userId provided.</Text>
       </View>
     );
   }
 
-
-  if (!reviews) {
+  if (following === undefined) {
     return (
       <View style={styles.loadingContainer}>
         <LottieView
@@ -42,135 +40,62 @@ const Reviews = () => {
     );
   }
 
-
-  if (reviews.length === 0) {
+  if (following.length === 0) {
     return (
       <>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.push('/(drawer)/(tabs)')} style={{ marginRight: 15 }}>
+          <TouchableOpacity onPress={() => router.back()} style={{ marginRight: 15 }}>
             <Ionicons name="arrow-back" size={24} color="#fff" />
           </TouchableOpacity>
           <Text style={{ color: '#ffffff', fontSize: 18, fontWeight: 'bold' }}>
-            {((user?.firstName || user?.fullName || 'User').slice(0, 15))}'s Reviews
+            {UserData?.name}
           </Text>
         </View>
-        <View style={styles.loadingContainer}>
-          <Text style={{ color: '#bcbcbcff', fontSize: 16, fontWeight: 'bold', textAlign: 'center', letterSpacing: 0.5 }}>
-            You don't have any reviews yet.
-            {'\n'}Start reviewing games to see them here!
-          </Text>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#181818' }}>
+          <Text style={{ color: '#b8b8b8ff', fontSize: 16 }}>This user is not following any accounts.</Text>
         </View>
       </>
     );
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#181818' }}>
-
+    <ScrollView contentContainerStyle={{ flex: 1 }}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.push('/(drawer)/(tabs)')} style={{ marginRight: 15 }}>
           <Ionicons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
         <Text style={{ color: '#ffffff', fontSize: 18, fontWeight: 'bold' }}>
-          {((user?.firstName || user?.fullName || 'User').slice(0, 15))}'s Reviews
+          {(UserData?.name ? UserData.name.slice(0, 15) : 'User')}'s Reviews
         </Text>
       </View>
-
-      <ScrollView
-        style={{ flex: 1, paddingHorizontal: 16, paddingTop: 20, backgroundColor: '#181818' }}
-        contentContainerStyle={{ paddingBottom: 50 }}
-        showsVerticalScrollIndicator={false}
-      >
-
-        {reviews?.map((review) => (
-          <TouchableOpacity onPress={() => router.push(`/reviews/${review._id}`)} key={review._id} style={{ marginTop: 15 }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 2 }}>
-              <Text style={{ color: '#c7c7c7ff', fontSize: 15, fontWeight: 900, flex: 1.7 }}>
-                {review.gameName}
-                <Text style={styles.reviewGameDate}>
-                  {review.gameYear ? `  ${review.gameYear}` : ''}
-                </Text>
-              </Text>
-
-            </View>
-
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', marginBottom: 8 }}>
-              <StarRatingDisplay
-                rating={review.starRating}
-                emptyColor="#181818"
-                color="#61d76fff"
-                starSize={13}
-                starStyle={{ marginHorizontal: -0.5 }}
+      <View style={{ flex: 1, padding: 16, backgroundColor: '#181818' }}>
+        {following.map((following) => (
+          <TouchableOpacity onPress={() => {
+            router.push({
+              pathname: '/(drawer)/user_profile',
+              params: { externalId: following?.externalId }
+            })
+          }} key={following?._id} style={{ flexDirection: 'column', marginTop: 15 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Image
+                source={{ uri: following?.imageUrl || 'https://placehold.co/40x40' }}
+                style={{ width: 40, height: 40, borderRadius: 50, borderWidth: 1, borderColor: '#6e6e6eff' }}
               />
-              {review.isLiked && (
-                <Ionicons
-                  name="heart"
-                  size={13}
-                  color="#d98138ff"
-                  style={{ marginLeft: 6 }}
-                />
-              )}
+              <Text style={{ marginLeft: 12, color: '#b8b8b8ff', fontSize: 15 }}>
+                {following?.name || 'Unnamed User'}
+              </Text>
             </View>
-
-            <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-              {review?.gameCover ? (
-                <Image
-                  source={{ uri: review.gameCover }}
-                  style={{ width: 80, height: 120, marginRight: 12, borderColor: '#535353ff', borderWidth: 1 }}
-                />
-              ) : (
-                <View style={styles.displayImage}>
-                  <Text style={styles.displayText}>
-                    {review.gameName}
-                  </Text>
-                </View>
-              )}
-              <View style={{ flex: 2 }}>
-                <Text style={{ color: '#aaaaaaff', fontSize: 12, letterSpacing: 0.5 }} numberOfLines={8}>{review.reviewText}</Text>
-              </View>
-            </View>
-            <View style={styles.hLine} />
+            <View style={{ height: 1, backgroundColor: '#545454ff', marginTop: 15, marginHorizontal: -16 }} />
           </TouchableOpacity>
         ))}
-      </ScrollView>
-    </SafeAreaView>
+      </View>
+    </ScrollView>
   );
-}
-export default Reviews;
+};
+
+export default UserFollowing;
 
 const styles = StyleSheet.create({
-  hLine: {
-    height: 1,
-    backgroundColor: '#333',
-    marginTop: 15,
-    marginRight: -16
-  },
-  reviewGameDate: {
-    color: '#7a7a7aff',
-    fontSize: 11,
-    fontWeight: '500',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#181818',
-  },
-  loadingText: {
-    color: '#bcbcbcff',
-    fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    letterSpacing: 0.5,
-    marginTop: 12,
-  },
-  displayText: {
-    color: '#f0f0f0',
-    fontSize: 15,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    justifyContent: 'center'
-  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -179,13 +104,10 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     backgroundColor: '#2a2a2a',
   },
-  displayImage: {
-    borderColor: '#535353ff',
-    backgroundColor: '#404040',
+  loadingContainer: {
+    flex: 1,
     justifyContent: 'center',
-    width: 80,
-    height: 120,
-    marginRight: 12,
-    borderWidth: 1,
-  }
-})
+    alignItems: 'center',
+    backgroundColor: '#181818',
+  },
+});

@@ -10,8 +10,10 @@ import { api } from '../convex/_generated/api';
 
 export default function CustomDrawerContent(props: any) {
     const { user } = useUser();
-    const convexUser = useQuery(api.users.getUserByExternalId, { externalId: user?.id as string });
-    
+    const convexUser = useQuery(
+            api.users.getUserByExternalId,
+            user?.id ? { externalId: user.id } : "skip"
+        );
 
     return (
         <View style={{ flex: 1, backgroundColor: '#191919ff' }}>

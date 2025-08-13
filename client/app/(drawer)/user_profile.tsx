@@ -1,5 +1,5 @@
-import React, { use, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Touchable } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useUser } from '@clerk/clerk-expo';
 import { Image } from 'expo-image';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -9,18 +9,20 @@ import { StarRatingDisplay } from "react-native-star-rating-widget";
 import { api } from '@/convex/_generated/api';
 import { Id } from "@/convex/_generated/dataModel";
 import { Authenticated, useMutation, useQuery } from 'convex/react'
+import LottieView from 'lottie-react-native';
 
 
 export default function Profile() {
     const params = useLocalSearchParams();
     const userId = params?.externalId as string;
-    const { user } = useUser();
+    const { user,isLoaded } = useUser();
     const [isFollowing, setIsFollowing] = useState(false);
     const OtherUser = useQuery(api.users.getUserByExternalId, { externalId: userId as string });
     const loggedInUser = useQuery(
         api.users.getUserByExternalId,
         user?.id ? { externalId: user?.id } : "skip"
     );
+
     const following = useQuery(
         api.follows.isFollowing,
         user && loggedInUser?._id && OtherUser?._id
@@ -71,15 +73,21 @@ export default function Profile() {
     });
 
 
-    if (!userId) {
+    if (!isLoaded || !OtherUser) {
         return (
             <SafeAreaView style={styles.container}>
                 <View style={styles.loadingContainer}>
-                    <Text style={styles.loadingText}>Loading...</Text>
+                    <LottieView
+                        source={require('@/assets/animations/batman.json')}
+                        autoPlay
+                        loop
+                        style={{ width: 200, height: 200 }}
+                    />
                 </View>
             </SafeAreaView>
         );
     }
+    
 
     return (
         <SafeAreaView style={styles.container}>
@@ -301,23 +309,37 @@ export default function Profile() {
                         </Text>
                     </TouchableOpacity>
 
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
+                    <TouchableOpacity onPress={()=>{
+                        router.push(
+                            {
+                                pathname: '/(drawer)/user_following',
+                                params: { externalId: userId }
+                            }
+                        )
+                    }} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
                         <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', letterSpacing: 1 }}>
                             Following
                         </Text>
                         <Text style={{ color: '#717171ff', fontSize: 15, textAlign: 'right' }}>
                             {followingCount ? followingCount : 0}
                         </Text>
-                    </View>
+                    </TouchableOpacity>
 
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
+                    <TouchableOpacity onPress={()=>{
+                        router.push(
+                            {
+                                pathname: '/(drawer)/user_followers',
+                                params: { externalId: userId }
+                            }
+                        )
+                    }} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
                         <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', letterSpacing: 1 }}>
                             Followers
                         </Text>
                         <Text style={{ color: '#717171ff', fontSize: 15, textAlign: 'right' }}>
                             {followerCount ? followerCount : 0}
                         </Text>
-                    </View>
+                    </TouchableOpacity>
 
                 </View>
             </ScrollView>

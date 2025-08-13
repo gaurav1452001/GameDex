@@ -6,7 +6,6 @@ import { api } from '@/convex/_generated/api';
 import LottieView from 'lottie-react-native';
 import { useUser } from '@clerk/clerk-expo';
 import { router, useLocalSearchParams } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
 import { Id } from "@/convex/_generated/dataModel";
 import ListAddButton from '@/components/listAddButton';
 
@@ -56,7 +55,6 @@ const Lists = () => {
         return (
             <>
                 <View style={styles.loadingContainer}>
-
                     <Text style={{ color: '#bcbcbcff', fontSize: 16, fontWeight: 'bold', textAlign: 'center', letterSpacing: 0.5, paddingHorizontal: 20 }}>
                         You don't have any lists yet.
                         {'\n'}Start by creating one!
@@ -115,9 +113,6 @@ const Lists = () => {
                     </TouchableOpacity>
                 ))}
             </ScrollView>
-            <TouchableOpacity onPress={() => router.push('/(drawer)/private/createList')} style={{ position: 'absolute', bottom: 35, right: 20 }}>
-                <ListAddButton />
-            </TouchableOpacity>
         </SafeAreaView>
     );
 }
