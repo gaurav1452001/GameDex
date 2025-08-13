@@ -11,9 +11,9 @@ import { api } from '../convex/_generated/api';
 export default function CustomDrawerContent(props: any) {
     const { user } = useUser();
     const convexUser = useQuery(
-            api.users.getUserByExternalId,
-            user?.id ? { externalId: user.id } : "skip"
-        );
+        api.users.getUserByExternalId,
+        user?.id ? { externalId: user.id } : "skip"
+    );
 
     return (
         <View style={{ flex: 1, backgroundColor: '#191919ff' }}>
@@ -52,72 +52,75 @@ export default function CustomDrawerContent(props: any) {
                 <DrawerItemList {...props} />
 
                 {/* Protected routes section - only visible when authenticated */}
-                    <Authenticated>
-                        <DrawerItem
-                            label="Profile"
-                            labelStyle={{ color: '#9f9f9fff', fontSize: 14 }}
-                            onPress={() => router.replace({
-                                pathname: '/(drawer)/user_profile',
-                                params: { externalId: user?.id }
-                            })}
-                            icon={({ color, size }) => (
-                                <Ionicons name="person-outline" size={17} color={'#9f9f9fff'} />
-                            )}
-                        />
+                <Authenticated>
+                    <DrawerItem
+                        label="Profile"
+                        labelStyle={{ color: '#9f9f9fff', fontSize: 14 }}
+                        onPress={() => router.replace({
+                            pathname: '/(drawer)/user_profile',
+                            params: { externalId: user?.id }
+                        })}
+                        icon={({ color, size }) => (
+                            <Ionicons name="person-outline" size={17} color={'#9f9f9fff'} />
+                        )}
+                    />
 
-                        <DrawerItem
-                            label="Games"
-                            labelStyle={{ color: '#9f9f9fff', fontSize: 14 }}
-                            onPress={() => router.replace({
-                                pathname: '/(drawer)/user_games',
-                                params: { externalId: user?.id }
-                            })}
-                            icon={({ color, size }) => (
-                                <Ionicons name="game-controller-outline" size={17} color={'#9f9f9fff'} />
-                            )}
-                        />
+                    <DrawerItem
+                        label="Games"
+                        labelStyle={{ color: '#9f9f9fff', fontSize: 14 }}
+                        onPress={() => router.replace({
+                            pathname: '/(drawer)/user_games',
+                            params: { externalId: user?.id }
+                        })}
+                        icon={({ color, size }) => (
+                            <Ionicons name="game-controller-outline" size={17} color={'#9f9f9fff'} />
+                        )}
+                    />
 
-                        <DrawerItem
-                            label="Reviews"
-                            labelStyle={{ color: '#9f9f9fff', fontSize: 14 }}
-                            onPress={() => router.replace({
-                                pathname: '/(drawer)/user_reviews',
-                                params: { externalId: user?.id }
-                            })}
-                            icon={({ color, size }) => (
-                                <Ionicons name="star-outline" size={17} color={'#9f9f9fff'} />
-                            )}
-                        />
+                    <DrawerItem
+                        label="Reviews"
+                        labelStyle={{ color: '#9f9f9fff', fontSize: 14 }}
+                        onPress={() => router.replace({
+                            pathname: '/(drawer)/user_reviews',
+                            params: { externalId: user?.id }
+                        })}
+                        icon={({ color, size }) => (
+                            <Ionicons name="star-outline" size={17} color={'#9f9f9fff'} />
+                        )}
+                    />
 
-                        <DrawerItem
-                            label="Lists"
-                            labelStyle={{ color: '#9f9f9fff', fontSize: 14 }}
-                            onPress={() => router.replace({
-                                pathname: '/(drawer)/user_lists',
-                                params: { externalId: user?.id }
-                            })}
-                            icon={({ color, size }) => (
-                                <Ionicons name="list" size={17} color={'#9f9f9fff'} />
-                            )}
-                        />
+                    <DrawerItem
+                        label="Lists"
+                        labelStyle={{ color: '#9f9f9fff', fontSize: 14 }}
+                        onPress={() => router.replace({
+                            pathname: '/(drawer)/user_lists',
+                            params: { externalId: user?.id }
+                        })}
+                        icon={({ color, size }) => (
+                            <Ionicons name="list" size={17} color={'#9f9f9fff'} />
+                        )}
+                    />
 
-                        <DrawerItem
-                            label="Settings"
-                            labelStyle={{ color: '#9f9f9fff', fontSize: 14 }}
-                            onPress={() => router.replace({
-                                pathname: '/(drawer)/private/settings',
-                                params: { externalId: user?.id }
-                            })}
-                            icon={({ color, size }) => (
-                                <Ionicons name="settings-outline" size={17} color={'#9f9f9fff'} />
-                            )}
-                        />
-                    </Authenticated>
-                
+                    <DrawerItem
+                        label="Settings"
+                        labelStyle={{ color: '#9f9f9fff', fontSize: 14 }}
+                        onPress={() => router.replace({
+                            pathname: '/(drawer)/private/settings',
+                            params: { externalId: user?.id }
+                        })}
+                        icon={({ color, size }) => (
+                            <Ionicons name="settings-outline" size={17} color={'#9f9f9fff'} />
+                        )}
+                    />
+                </Authenticated>
+
                 <Authenticated>
                     <SignOutModal />
                 </Authenticated>
             </DrawerContentScrollView>
+                    <Text style={{ fontStyle: 'italic', color: '#9a9a9aff', fontSize: 12, textAlign: 'left', paddingLeft: 30, marginBottom: 20 }}>
+                        Powered By IGDB
+                    </Text>
         </View>
     );
 }

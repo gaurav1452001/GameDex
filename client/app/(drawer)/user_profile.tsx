@@ -15,7 +15,7 @@ import LottieView from 'lottie-react-native';
 export default function Profile() {
     const params = useLocalSearchParams();
     const userId = params?.externalId as string;
-    const { user,isLoaded } = useUser();
+    const { user, isLoaded } = useUser();
     const [isFollowing, setIsFollowing] = useState(false);
     const OtherUser = useQuery(api.users.getUserByExternalId, { externalId: userId as string });
     const loggedInUser = useQuery(
@@ -58,22 +58,38 @@ export default function Profile() {
     const favoriteGames = useQuery(api.users.getFavoriteGames, {
         externalId: userId as string
     });
-    const likesListsCount = useQuery(api.likesLists.getLikesCountByUser, {
-        userId: OtherUser?._id as Id<'users'>
-    }) ?? 0;
-    const likesReviewsCount = useQuery(api.likesReviews.getLikesCountByUser, {
-        userId: OtherUser?._id as Id<'users'>
-    }) ?? 0;
-    const likes = likesListsCount + likesReviewsCount;
-    const followerCount = useQuery(api.follows.getFollowerCount, {
-        userId: OtherUser?._id as Id<'users'>
-    });
-    const followingCount = useQuery(api.follows.getFollowingCount, {
-        userId: OtherUser?._id as Id<'users'>
-    });
+    const likesListsCount = useQuery(api.likesLists.getLikesCountByUser,
+        OtherUser?._id?
+        {
+            userId: OtherUser?._id as Id<'users'>,
+        }
+        :"skip"
+    );
+    const likesReviewsCount = useQuery(api.likesReviews.getLikesCountByUser, 
+        OtherUser?._id?
+        {
+            userId: OtherUser?._id as Id<'users'>,
+        }
+        :"skip"
+    );
+    const likes = (likesListsCount ?? 0) + (likesReviewsCount ?? 0);
+    const followerCount = useQuery(api.follows.getFollowerCount, 
+        OtherUser?._id?
+        {
+            userId: OtherUser?._id as Id<'users'>,
+        }
+        :"skip"
+    );
+    const followingCount = useQuery(api.follows.getFollowingCount, 
+        OtherUser?._id?
+        {
+            userId: OtherUser?._id as Id<'users'>,
+        }
+        :"skip"
+    );
 
 
-    if (!isLoaded || !OtherUser) {
+    if (!isLoaded) {
         return (
             <SafeAreaView style={styles.container}>
                 <View style={styles.loadingContainer}>
@@ -87,7 +103,7 @@ export default function Profile() {
             </SafeAreaView>
         );
     }
-    
+
 
     return (
         <SafeAreaView style={styles.container}>
@@ -151,7 +167,7 @@ export default function Profile() {
                                         <Image
                                             source={{ uri: game?.game_cover_url }}
                                             style={styles.displayImage}
-                                            resizeMode="contain"
+                                            contentFit="contain"
                                         />
                                     </TouchableOpacity>
                                 ))
@@ -174,7 +190,7 @@ export default function Profile() {
                                         <Image
                                             source={{ uri: review?.gameCover }}
                                             style={styles.displayImage}
-                                            resizeMode="contain"
+                                            contentFit="contain"
                                         />
                                         <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 2 }}>
                                             <StarRatingDisplay
@@ -209,15 +225,17 @@ export default function Profile() {
                         }
                     </View>
                 </View>
-                <View style={{ height: 1, backgroundColor: '#363636ff', marginTop: 30, width: '100%' }} />\
+                <View style={{ height: 1, backgroundColor: '#363636ff', marginTop: 30, width: '100%' }} />
 
                 <View style={{ flex: 1, paddingHorizontal: 16 }}>
-                    <TouchableOpacity onPress={() => {router.push(
-                        {
-                            pathname: '/(drawer)/user_games',
-                            params: { externalId: userId }
-                        }
-                    )}} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
+                    <TouchableOpacity onPress={() => {
+                        router.push(
+                            {
+                                pathname: '/(drawer)/user_games',
+                                params: { externalId: userId }
+                            }
+                        )
+                    }} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
                         <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', letterSpacing: 1 }}>
                             Games Finished
                         </Text>
@@ -226,12 +244,14 @@ export default function Profile() {
                         </Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => {router.push(
-                        {
-                            pathname: '/(drawer)/user_games/wishlist',
-                            params: { externalId: userId }
-                        }
-                    )}} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
+                    <TouchableOpacity onPress={() => {
+                        router.push(
+                            {
+                                pathname: '/(drawer)/user_games/wishlist',
+                                params: { externalId: userId }
+                            }
+                        )
+                    }} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
                         <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', letterSpacing: 1 }}>
                             Games Wishlist
                         </Text>
@@ -240,12 +260,14 @@ export default function Profile() {
                         </Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => {router.push(
-                        {
-                            pathname: '/(drawer)/user_games/playing',
-                            params: { externalId: userId }
-                        }
-                    )}} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
+                    <TouchableOpacity onPress={() => {
+                        router.push(
+                            {
+                                pathname: '/(drawer)/user_games/playing',
+                                params: { externalId: userId }
+                            }
+                        )
+                    }} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 25 }}>
                         <Text style={{ color: '#c6c6c6ff', fontSize: 15, textAlign: 'left', letterSpacing: 1 }}>
                             Games Playing
                         </Text>
@@ -286,7 +308,7 @@ export default function Profile() {
                         </Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={()=>{
+                    <TouchableOpacity onPress={() => {
                         router.push(
                             {
                                 pathname: '/(drawer)/user_likes/lists',
@@ -302,7 +324,7 @@ export default function Profile() {
                         </Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={()=>{
+                    <TouchableOpacity onPress={() => {
                         router.push(
                             {
                                 pathname: '/(drawer)/user_following',
@@ -318,7 +340,7 @@ export default function Profile() {
                         </Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={()=>{
+                    <TouchableOpacity onPress={() => {
                         router.push(
                             {
                                 pathname: '/(drawer)/user_followers',

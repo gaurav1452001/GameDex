@@ -3,48 +3,58 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
 import { Text, View, Button, Image, TouchableOpacity } from "react-native";
+import { Unauthenticated, Authenticated } from "convex/react";
+import { Redirect } from 'expo-router';
+
 export default function Index() {
     return (
-        <View style={styles.view}>
-            <View>
-                <Image
-                    source={require('../assets/images/landingpage.jpg')}
-                    style={styles.image}
-                    resizeMode="cover"
-                />
-                <LinearGradient
-                    colors={['transparent', '#181818']} // Replace #ffffff with your background color
-                    style={styles.gradient}
-                />
-                
-            </View>
-            <View style={{ flex: 1, paddingHorizontal: 20 }}>
-                <Image
-                    source={require('../assets/images/logo.png')}
-                    style={styles.logo}
-                    resizeMode="cover"
-                />
-                <Text style={styles.mainText}>
-                    GameDex
-                </Text>
-                <Text style={styles.introText}>
-                    Discover and explore games like never before.
-                </Text>
-                <Link href="/(drawer)/(auth)/signIn" asChild>
-                    <TouchableOpacity style={styles.skipButton}>
-                        <Text style={styles.ButtonText}>Sign In</Text>
-                    </TouchableOpacity>
-                </Link>
-                <Link href="/(drawer)/(tabs)" asChild>
-                    <TouchableOpacity style={styles.skipButton}>
-                        <Text style={styles.ButtonText}>Skip this step</Text>
-                    </TouchableOpacity>
-                </Link>
-                <Text style={styles.infoText}>
-                    You can browse content without an account, but some features will be limited.
-                </Text>
-            </View>
-        </View>
+        <>
+            <Unauthenticated>
+                <View style={styles.view}>
+                    <View>
+                        <Image
+                            source={require('../assets/images/landingpage.jpg')}
+                            style={styles.image}
+                            resizeMode="cover"
+                        />
+                        <LinearGradient
+                            colors={['transparent', '#181818']} // Replace #ffffff with your background color
+                            style={styles.gradient}
+                        />
+
+                    </View>
+                    <View style={{ flex: 1, paddingHorizontal: 20 }}>
+                        <Image
+                            source={require('../assets/images/logo.png')}
+                            style={styles.logo}
+                            resizeMode="cover"
+                        />
+                        <Text style={styles.mainText}>
+                            GameDex
+                        </Text>
+                        <Text style={styles.introText}>
+                            Discover and explore games like never before.
+                        </Text>
+                        <Link href="/(drawer)/(auth)/signIn" asChild>
+                            <TouchableOpacity style={styles.skipButton}>
+                                <Text style={styles.ButtonText}>Sign In</Text>
+                            </TouchableOpacity>
+                        </Link>
+                        <Link href="/(drawer)/(tabs)" asChild>
+                            <TouchableOpacity style={styles.skipButton}>
+                                <Text style={styles.ButtonText}>Skip this step</Text>
+                            </TouchableOpacity>
+                        </Link>
+                        <Text style={styles.infoText}>
+                            You can browse content without an account, but some features will be limited.
+                        </Text>
+                    </View>
+                </View>
+            </Unauthenticated>
+            <Authenticated>
+                <Redirect href="/(drawer)/(tabs)" />
+            </Authenticated>
+        </>
     );
 }
 
@@ -87,7 +97,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 400,
     },
-    logo:{
+    logo: {
         width: 180,
         height: 120,
         alignSelf: 'center',

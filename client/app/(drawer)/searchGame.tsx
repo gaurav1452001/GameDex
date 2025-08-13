@@ -1,7 +1,6 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, SafeAreaView, FlatList, BackHandler } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, SafeAreaView, FlatList } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Ionicons } from '@expo/vector-icons'
-import { useNavigation } from '@react-navigation/native'
 import axios from 'axios'
 import { router } from 'expo-router'
 import { SearchGameType } from '@/types/gameTypes'
@@ -9,20 +8,6 @@ import { SearchGameType } from '@/types/gameTypes'
 
 export default function SearchGame() {
   const [searchQuery, setSearchQuery] = useState("")
-  const navigation = useNavigation();
-  
-  useEffect(() => {
-    const handleBackPress = () => {
-      setSearchQuery("");
-      navigation.goBack();
-      return true;
-    };
-
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
-
-    return () => backHandler.remove();
-  }, [navigation]);
-
   const [gamePages, setGamePages] = useState<SearchGameType[]>([]);
 
   useEffect(() => {
@@ -47,12 +32,12 @@ export default function SearchGame() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => { setSearchQuery(""); navigation.goBack() }}>
+        <TouchableOpacity style={styles.backButton} onPress={() => { setSearchQuery(""); }}>
           <Ionicons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
         <TextInput
           style={styles.searchInput}
-          placeholder="Search..."
+          placeholder="Search any game..."
           placeholderTextColor="#666"
           autoCapitalize='none'
           autoFocus={true}
@@ -113,7 +98,6 @@ export default function SearchGame() {
           )}
         />
       </View>
-
     </SafeAreaView>
   )
 }

@@ -173,7 +173,7 @@ const CreateList = () => {
                             list_game_ids: listItems
                         }).then(() => {
                             dispatch(clearList());
-                            router.push('/(drawer)/private/lists');
+                            router.push('/(drawer)/(tabs)/global_lists');
                         }).catch((error) => {
                             console.error('Error creating list:', error);
                         });

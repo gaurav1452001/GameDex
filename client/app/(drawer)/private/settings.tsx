@@ -302,7 +302,7 @@ const Settings = () => {
 
       {/* Header with Update Button */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={{ marginRight: 15 }}>
+        <TouchableOpacity onPress={() => router.replace('/(drawer)/(tabs)')} style={{ marginRight: 15 }}>
           <Ionicons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
         <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold', flex: 1 }}>Settings</Text>

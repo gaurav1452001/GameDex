@@ -75,15 +75,17 @@ const UserFollowing = () => {
               pathname: '/(drawer)/user_profile',
               params: { externalId: following?.externalId }
             })
-          }} key={following?._id} style={{ flexDirection: 'column', marginTop: 15, justifyContent: 'space-between' }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Image
-                source={{ uri: following?.imageUrl || 'https://placehold.co/40x40' }}
-                style={{ width: 40, height: 40, borderRadius: 50, borderWidth: 1, borderColor: '#6e6e6eff' }}
-              />
-              <Text style={{ marginLeft: 12, color: '#b8b8b8ff', fontSize: 15 }}>
-                {following?.name || 'Unnamed User'}
-              </Text>
+          }} key={following?._id} style={{ flexDirection: 'column', marginTop: 15 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Image
+                  source={{ uri: following?.imageUrl || 'https://placehold.co/40x40' }}
+                  style={{ width: 40, height: 40, borderRadius: 50, borderWidth: 1, borderColor: '#6e6e6eff' }}
+                />
+                <Text style={{ marginLeft: 12, color: '#b8b8b8ff', fontSize: 15 }}>
+                  {following?.name || 'Unnamed User'}
+                </Text>
+              </View>
               <View>
                 <Ionicons name="chevron-forward" size={20} color="#b8b8b8ff" style={{ marginTop: 5 }} />
               </View>
