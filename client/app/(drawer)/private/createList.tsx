@@ -166,7 +166,7 @@ const CreateList = () => {
                     if (listName.trim() && listItems.length > 0) {
                         createReview({
                             externalId: user?.id || '',
-                            name: user?.firstName || '',
+                            name: user?.username || '',
                             userImageUrl: user?.imageUrl || '',
                             listName,
                             listDesc,

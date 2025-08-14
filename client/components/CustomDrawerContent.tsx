@@ -2,6 +2,7 @@ import { useUser } from '@clerk/clerk-expo';
 import { DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
 import { View, Image, Text, StyleSheet } from 'react-native';
 import { SignOutModal } from './signOutModal';
+import * as Linking from 'expo-linking';
 import { Authenticated, Unauthenticated } from 'convex/react';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
@@ -118,9 +119,17 @@ export default function CustomDrawerContent(props: any) {
                     <SignOutModal />
                 </Authenticated>
             </DrawerContentScrollView>
-                    <Text style={{ fontStyle: 'italic', color: '#9a9a9aff', fontSize: 12, textAlign: 'left', paddingLeft: 30, marginBottom: 20 }}>
-                        Powered By IGDB
-                    </Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingRight:10, alignContent:'center' }}>
+                <Text
+                    style={{ fontWeight: 'bold', color: '#c1c1c1ff', fontSize: 15, textAlign: 'center', paddingLeft: 30, marginBottom: 20 }}
+                    onPress={() => Linking.openURL('https://kumargaurav.me')}
+                >
+                    About Us
+                </Text>
+                <Text style={{ fontStyle: 'italic', color: '#9a9a9aff', fontSize: 12, textAlign: 'center', paddingLeft: 30, marginBottom: 20 }}>
+                    Powered By IGDB
+                </Text>
+            </View>
         </View>
     );
 }

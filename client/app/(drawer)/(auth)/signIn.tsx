@@ -29,6 +29,7 @@ export default function SignIn() {
     // Form states
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [username, setUsername] = useState('')
     const [isSignUp, setIsSignUp] = useState(false)
     const [loading, setLoading] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
@@ -72,8 +73,19 @@ export default function SignIn() {
 
     const onEmailSignUp = async () => {
         if (!isLoadedSignUp) return
-        if (!email.trim() || !password.trim()) {
+        if (!email.trim() || !password.trim() || !username.trim()) {
             Alert.alert('Error', 'Please fill in all fields')
+            return
+        }
+
+        // Basic username validation
+        if (username.length < 3) {
+            Alert.alert('Error', 'Username must be at least 3 characters long')
+            return
+        }
+
+        if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+            Alert.alert('Error', 'Username can only contain letters, numbers, and underscores')
             return
         }
 
@@ -82,6 +94,7 @@ export default function SignIn() {
             await signUp.create({
                 emailAddress: email,
                 password,
+                username: username,
             })
 
             // Send the email verification code
@@ -197,9 +210,26 @@ export default function SignIn() {
                             <Text style={styles.subtitle}>
                                 {isSignUp 
                                     ? 'Sign up to start tracking your games'
-                                    : 'Sign in to continue your gaming journey'
+                                    : 'Sign in to continue discovering games'
                                 }
                             </Text>
+
+                            {/* Username Input - Only show for Sign Up */}
+                            {isSignUp && (
+                                <View style={styles.inputContainer}>
+                                    <Ionicons name="person-outline" size={20} color="#666" style={styles.inputIcon} />
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder="Username"
+                                        placeholderTextColor="#666"
+                                        value={username}
+                                        onChangeText={setUsername}
+                                        autoCapitalize="none"
+                                        autoCorrect={false}
+                                        maxLength={20}
+                                    />
+                                </View>
+                            )}
 
                             {/* Email Input */}
                             <View style={styles.inputContainer}>
@@ -241,6 +271,13 @@ export default function SignIn() {
                                 </TouchableOpacity>
                             </View>
 
+                            {/* Username requirements text for sign up */}
+                            {isSignUp && (
+                                <Text style={styles.requirementText}>
+                                    Username must be 3-20 characters (letters, numbers, underscore only)
+                                </Text>
+                            )}
+
                             {/* Sign In/Up Button */}
                             <TouchableOpacity
                                 style={[styles.button, styles.primaryButton]}
@@ -259,7 +296,13 @@ export default function SignIn() {
                             {/* Toggle Sign In/Up */}
                             <TouchableOpacity
                                 style={styles.toggleButton}
-                                onPress={() => setIsSignUp(!isSignUp)}
+                                onPress={() => {
+                                    setIsSignUp(!isSignUp)
+                                    // Clear username when switching to sign in
+                                    if (!isSignUp) {
+                                        setUsername('')
+                                    }
+                                }}
                             >
                                 <Text style={styles.toggleText}>
                                     {isSignUp 
@@ -394,8 +437,7 @@ const styles = StyleSheet.create({
     },
     formContainer: {
         paddingHorizontal: 24,
-        paddingTop: 20,
-        paddingBottom: 40,
+        paddingBottom: 20,
     },
     backButton: {
         alignSelf: 'flex-start',
@@ -422,7 +464,7 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         marginBottom: 16,
         paddingHorizontal: 16,
-        paddingVertical: 12,
+        paddingVertical: 5,
     },
     inputIcon: {
         marginRight: 12,
@@ -504,5 +546,11 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontWeight: '600',
         marginBottom: 24,
+    },
+    requirementText: {
+        color: '#999',
+        fontSize: 12,
+        marginTop: 8,
+        textAlign: 'center',
     },
 });

@@ -179,7 +179,7 @@ const EditList = () => {
                         updateList({
                             listId,
                             externalId: user?.id || '',
-                            name: user?.firstName || '',
+                            name: user?.username || '',
                             userImageUrl: user?.imageUrl || '',
                             listName,
                             listDesc,

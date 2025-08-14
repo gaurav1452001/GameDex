@@ -43,11 +43,7 @@ export default function AppLayout() {
         headerTitle: 'GameDex',
       }} />
 
-      {/* <Drawer.Screen name="(users)" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} /> */}
       <Drawer.Screen name="user_games" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
-      {/* <Drawer.Screen name="user_games/playing" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
-      <Drawer.Screen name="user_games/wishlist" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
-      <Drawer.Screen name="user_games/index" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} /> */}
       <Drawer.Screen name="user_likes" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
       <Drawer.Screen name="user_following" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
       <Drawer.Screen name="user_followers" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
@@ -79,30 +75,11 @@ export default function AppLayout() {
         drawerItemStyle: { display: 'none' },
       }} />
 
-      {/* <Drawer.Screen name="private/lists" options={{
-        headerShown: false,
-        drawerItemStyle: { display: 'none' },
-      }} />
-
-      <Drawer.Screen name="private/createList" options={{
-        headerShown: false,
-        drawerItemStyle: { display: 'none' },
-      }} /> */}
-
-      {/* <Drawer.Screen name="private/reviews" options={{
-        headerShown: false,
-        drawerItemStyle: { display: 'none' },
-      }} /> */}
-
       {/* Hidden routes */}
       <Drawer.Screen name="games/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
       <Drawer.Screen name="events/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
       <Drawer.Screen name="keywords/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
-      {/* <Drawer.Screen name="reviews/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} /> */}
-      {/* <Drawer.Screen name="lists/[id]" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} /> */}
-      {/* <Drawer.Screen name="lists/list_comments" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} /> */}
       <Drawer.Screen name="lists" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
-      {/* <Drawer.Screen name="reviews/review_comments" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} /> */}
       <Drawer.Screen name="reviews" options={{ headerShown: false, drawerItemStyle: { display: 'none' } }} />
 
 

@@ -1,4 +1,4 @@
-import { Text, View, Button, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { Text, View, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { ScrollView } from "react-native-gesture-handler";

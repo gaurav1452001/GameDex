@@ -69,7 +69,7 @@ const Review = () => {
                     setIsChanging(true);
                     const currentReviewData = {
                         externalId: user?.id || '',
-                        name: user?.firstName || '',
+                        name: user?.username || '',
                         imageUrl: user?.imageUrl || undefined,
                         gameId: gamePage?.id?.toString() || '',
                         gameName: gamePage?.name || '',
