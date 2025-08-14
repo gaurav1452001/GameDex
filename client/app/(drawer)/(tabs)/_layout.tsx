@@ -12,8 +12,8 @@ export default function MyTabs() {
       screenOptions={{
       tabBarItemStyle: { flex:1 },
       tabBarStyle: { backgroundColor: '#0b0b0bff' },
-      tabBarLabelStyle: { color: '#bbbbbbff', fontSize: 13, letterSpacing: 0.5 },
-      tabBarActiveTintColor: '#ffffffff',
+      tabBarLabelStyle: { color: '#dededeff', fontSize: 13, letterSpacing: 0.2 },
+      tabBarActiveTintColor: '#0f0d0dff',
       tabBarIndicatorStyle: { backgroundColor: '#4692d0ff' },
       }}
     >

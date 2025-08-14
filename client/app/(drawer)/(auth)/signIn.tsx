@@ -33,14 +33,13 @@ export default function SignIn() {
     const [isSignUp, setIsSignUp] = useState(false)
     const [loading, setLoading] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
-    
+
     // Email verification states
     const [pendingVerification, setPendingVerification] = useState(false)
     const [code, setCode] = useState('')
 
     // Social sign-in
     const { startSSOFlow: startGoogleSSO } = useSSO()
-    const { startSSOFlow: startAppleSSO } = useSSO()
 
     const onEmailSignIn = async () => {
         if (!isLoaded) return
@@ -139,7 +138,7 @@ export default function SignIn() {
 
     const resendCode = async () => {
         if (!isLoadedSignUp) return
-        
+
         setLoading(true)
         try {
             await signUp.prepareEmailAddressVerification({ strategy: 'email_code' })
@@ -169,22 +168,6 @@ export default function SignIn() {
         }
     }, [])
 
-    const onApplePress = useCallback(async () => {
-        try {
-            const { createdSessionId, setActive } = await startAppleSSO({
-                strategy: 'oauth_apple',
-                redirectUrl: AuthSession.makeRedirectUri({ path: '/' }),
-            })
-
-            if (createdSessionId) {
-                setActive!({ session: createdSessionId })
-                router.replace('/(drawer)/(tabs)')
-            }
-        } catch (err) {
-            console.error(JSON.stringify(err, null, 2))
-            Alert.alert('Error', 'Apple sign in failed. Please try again.')
-        }
-    }, [])
 
     return (
         <ScrollView style={styles.view}>
@@ -208,7 +191,7 @@ export default function SignIn() {
                                 {isSignUp ? 'Create Account' : 'Welcome Back'}
                             </Text>
                             <Text style={styles.subtitle}>
-                                {isSignUp 
+                                {isSignUp
                                     ? 'Sign up to start tracking your games'
                                     : 'Sign in to continue discovering games'
                                 }
@@ -292,7 +275,6 @@ export default function SignIn() {
                                     </Text>
                                 )}
                             </TouchableOpacity>
-
                             {/* Toggle Sign In/Up */}
                             <TouchableOpacity
                                 style={styles.toggleButton}
@@ -305,7 +287,7 @@ export default function SignIn() {
                                 }}
                             >
                                 <Text style={styles.toggleText}>
-                                    {isSignUp 
+                                    {isSignUp
                                         ? 'Already have an account? Sign In'
                                         : "Don't have an account? Sign Up"
                                     }
@@ -320,21 +302,11 @@ export default function SignIn() {
                             </View>
 
                             {/* Social Sign In Buttons */}
-                            <View style={styles.socialContainer}>
+                            <View style={{ flexDirection: 'column', gap: 12, alignItems: 'center' }}>
                                 <TouchableOpacity
-                                    style={[styles.button, styles.socialButton]}
                                     onPress={onGooglePress}
                                 >
-                                    <Ionicons name="logo-google" size={20} color="#fff" />
-                                    <Text style={styles.socialButtonText}>Google</Text>
-                                </TouchableOpacity>
-
-                                <TouchableOpacity
-                                    style={[styles.button, styles.socialButton]}
-                                    onPress={onApplePress}
-                                >
-                                    <Ionicons name="logo-apple" size={20} color="#fff" />
-                                    <Text style={styles.socialButtonText}>Apple</Text>
+                                    <Image style={{ height: 40 }} source={require('@/assets/images/google.png')} resizeMode='contain' />
                                 </TouchableOpacity>
                             </View>
                         </>
@@ -415,6 +387,9 @@ export default function SignIn() {
                     </TouchableOpacity>
                 </View>
             </SignedIn>
+            <TouchableOpacity style={{ position: 'absolute', top: 40, left: 20, backgroundColor: '#00000080', padding: 10, borderRadius: 50 }} onPress={() => router.back()}>
+                <Ionicons name="arrow-back" size={24} color="#fcfcfcff" />
+            </TouchableOpacity>
         </ScrollView>
     )
 }
@@ -426,7 +401,7 @@ const styles = StyleSheet.create({
     },
     image: {
         width: '100%',
-        height: 350,
+        height: 280, // Reduced from 350
         resizeMode: 'cover',
     },
     gradient: {
@@ -437,34 +412,35 @@ const styles = StyleSheet.create({
     },
     formContainer: {
         paddingHorizontal: 24,
-        paddingBottom: 20,
+        paddingTop: 16, // Reduced from 20
+        paddingBottom: 16, // Reduced from 20
     },
     backButton: {
         alignSelf: 'flex-start',
-        marginBottom: 20,
+        marginBottom: 12, // Reduced from 20
         padding: 8,
     },
     title: {
-        fontSize: 28,
+        fontSize: 26, // Reduced from 28
         fontWeight: 'bold',
         color: '#fff',
         textAlign: 'center',
-        marginBottom: 8,
+        marginBottom: 6, // Reduced from 8
     },
     subtitle: {
-        fontSize: 16,
+        fontSize: 15, // Reduced from 16
         color: '#999',
         textAlign: 'center',
-        marginBottom: 32,
+        marginBottom: 24, // Reduced from 32
     },
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: '#2a2a2a',
-        borderRadius: 12,
-        marginBottom: 16,
+        borderRadius: 10,
+        marginBottom: 10, // Reduced from 16
         paddingHorizontal: 16,
-        paddingVertical: 5,
+        paddingVertical: 5, // Increased slightly from 5 for better touch area
     },
     inputIcon: {
         marginRight: 12,
@@ -477,8 +453,15 @@ const styles = StyleSheet.create({
     eyeIcon: {
         padding: 4,
     },
+    requirementText: {
+        color: '#999',
+        fontSize: 11, // Reduced from 12
+        marginTop: -8, // Negative margin to pull closer to input
+        marginBottom: 12, // Reduced from default
+        textAlign: 'center',
+    },
     button: {
-        paddingVertical: 16,
+        paddingVertical: 14, // Reduced from 16
         borderRadius: 12,
         alignItems: 'center',
         justifyContent: 'center',
@@ -486,7 +469,7 @@ const styles = StyleSheet.create({
     },
     primaryButton: {
         backgroundColor: '#4a90e2',
-        marginBottom: 16,
+        marginBottom: 12, // Reduced from 16
     },
     buttonText: {
         color: '#fff',
@@ -495,7 +478,7 @@ const styles = StyleSheet.create({
     },
     toggleButton: {
         alignItems: 'center',
-        marginBottom: 24,
+        marginBottom: 16, // Reduced from 24
     },
     toggleText: {
         color: '#4a90e2',
@@ -504,7 +487,7 @@ const styles = StyleSheet.create({
     dividerContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 24,
+        marginBottom: 16, // Reduced from 24
     },
     divider: {
         flex: 1,
@@ -513,7 +496,7 @@ const styles = StyleSheet.create({
     },
     dividerText: {
         color: '#666',
-        fontSize: 14,
+        fontSize: 13, // Reduced from 14
         marginHorizontal: 16,
     },
     socialContainer: {
@@ -533,7 +516,7 @@ const styles = StyleSheet.create({
     signedInContainer: {
         alignItems: 'center',
         paddingHorizontal: 24,
-        paddingTop: 40,
+        paddingTop: 20, // Reduced from 40
     },
     profileImage: {
         width: 80,
@@ -546,11 +529,5 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontWeight: '600',
         marginBottom: 24,
-    },
-    requirementText: {
-        color: '#999',
-        fontSize: 12,
-        marginTop: 8,
-        textAlign: 'center',
     },
 });

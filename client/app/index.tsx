@@ -25,13 +25,10 @@ export default function Index() {
                     </View>
                     <View style={{ flex: 1, paddingHorizontal: 20 }}>
                         <Image
-                            source={require('../assets/images/logo.png')}
+                            source={require('../assets/images/gamedexlogo2.png')}
                             style={styles.logo}
-                            resizeMode="cover"
+                            resizeMode="contain"
                         />
-                        <Text style={styles.mainText}>
-                            GameDex
-                        </Text>
                         <Text style={styles.introText}>
                             Discover and explore games like never before.
                         </Text>
@@ -98,10 +95,9 @@ const styles = StyleSheet.create({
         height: 400,
     },
     logo: {
-        width: 180,
-        height: 120,
+        width: 200,
+        height: 100,
         alignSelf: 'center',
-        marginTop: -100,
     },
     gradient: {
         position: 'absolute',

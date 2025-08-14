@@ -1,9 +1,9 @@
-import { View, StyleSheet, Image, TouchableOpacity, FlatList, ActivityIndicator, Text } from "react-native";
+import { View, StyleSheet, Image, TouchableOpacity, FlatList, ActivityIndicator, Text, Modal } from "react-native";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { router } from 'expo-router';
 import { HomePageGameType } from '@/types/gameTypes';
-
+import { Ionicons } from '@expo/vector-icons';
 
 export default function HomeScreen() {
   const [gamePages, setGamePages] = useState<HomePageGameType[]>([]);
@@ -11,9 +11,9 @@ export default function HomeScreen() {
   const [hasMoreData, setHasMoreData] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [sortOrder, setSortOrder] = useState(2);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const renderLoader = () => {
-    // if (!isLoading || !hasMoreData) return null;
     return (
       <View style={{ backgroundColor: '#181818', justifyContent: 'center', alignItems: 'center', height: 100 }}>
         <ActivityIndicator size="large" color="#4692d0ff" />
@@ -70,95 +70,26 @@ export default function HomeScreen() {
     fetchGames();
   }, [Offset, sortOrder]);
 
+  const resetAndSetSort = (newSortOrder: number) => {
+    setGamePages([]);
+    setOffset(0);
+    setHasMoreData(true);
+    setSortOrder(newSortOrder);
+    setModalVisible(false);
+  };
+
+  const getSortOrderLabel = () => {
+    switch (sortOrder) {
+      case 2: return 'Top Wishlists';
+      case 3: return 'Top Playing';
+      case 4: return 'Top Played';
+      case 5: return 'Top 24hr Peak Players';
+      default: return 'Sort';
+    }
+  };
 
   return (
     <View style={styles.view}>
-      <View style={{ flexDirection: 'row', paddingHorizontal: 3,paddingVertical:5,gap:4, backgroundColor: '#181818', }}>
-        <TouchableOpacity
-          onPress={() => { setGamePages([]); setSortOrder(2); }}
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            paddingVertical: 5,
-            marginHorizontal: 2,
-            backgroundColor: sortOrder === 2 ? '#2e3d27' : '#2d2d2dff',
-            borderRadius: 6,
-            borderWidth: sortOrder === 2 ? 2 : 0,
-            borderColor: sortOrder === 2 ? '#61d76f' : 'transparent',
-          }}
-        >
-          <Text style={{
-            color: sortOrder === 2 ? '#61d76f' : '#fff',
-            textAlign: 'center',
-            fontSize: 10,
-          }}>
-            Want To Play
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => { setGamePages([]); setSortOrder(3); }}
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            paddingVertical: 5,
-            marginHorizontal: 2,
-            backgroundColor: sortOrder === 3 ? '#2e3d27' : '#2d2d2dff',
-            borderRadius: 6,
-            borderWidth: sortOrder === 3 ? 2 : 0,
-            borderColor: sortOrder === 3 ? '#61d76f' : 'transparent',
-          }}
-        >
-          <Text style={{
-            color: sortOrder === 3 ? '#61d76f' : '#fff',
-            textAlign: 'center',
-            fontSize: 10,
-          }}>
-            Playing
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => { setGamePages([]); setSortOrder(4); }}
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            paddingVertical: 5,
-            marginHorizontal: 2,
-            backgroundColor: sortOrder === 4 ? '#2e3d27' : '#2d2d2dff',
-            borderRadius: 6,
-            borderWidth: sortOrder === 4 ? 2 : 0,
-            borderColor: sortOrder === 4 ? '#61d76f' : 'transparent',
-          }}
-        >
-          <Text style={{
-            color: sortOrder === 4 ? '#61d76f' : '#fff',
-            textAlign: 'center',
-            fontSize: 10,
-          }}>
-            Played
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => { setGamePages([]); setSortOrder(5); }}
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            paddingVertical: 5,
-            marginHorizontal: 2,
-            backgroundColor: sortOrder === 5 ? '#2e3d27' : '#2d2d2dff',
-            borderRadius: 6,
-            borderWidth: sortOrder === 5 ? 2 : 0,
-            borderColor: sortOrder === 5 ? '#61d76f' : 'transparent',
-          }}
-        >
-          <Text style={{
-            color: sortOrder === 5 ? '#61d76f' : '#fff',
-            textAlign: 'center',
-            fontSize: 10,
-          }}>
-            24hr Peak Players
-          </Text>
-        </TouchableOpacity>
-      </View>
       <FlatList
         data={gamePages}
         keyExtractor={(item) => item.id.toString()}
@@ -183,6 +114,131 @@ export default function HomeScreen() {
         onEndReachedThreshold={0.2}
         showsVerticalScrollIndicator={false}
       />
+
+      {/* Filter Button - Bottom Right */}
+      <TouchableOpacity
+        style={styles.filterButton}
+        onPress={() => setModalVisible(true)}
+      >
+        <Ionicons name="filter" size={20} color="#fff" />
+        <Text style={styles.filterButtonText}>{getSortOrderLabel()}</Text>
+      </TouchableOpacity>
+
+      {/* Filter Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Filter Games</Text>
+              <TouchableOpacity
+                onPress={() => setModalVisible(false)}
+                style={styles.closeButton}
+              >
+                <Ionicons name="close" size={24} color="#fff" />
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.filterOptions}>
+              <TouchableOpacity
+                onPress={() => resetAndSetSort(2)}
+                style={[
+                  styles.filterOption,
+                  sortOrder === 2 && styles.activeFilterOption
+                ]}
+              >
+                <Ionicons 
+                  name="bookmark-outline" 
+                  size={20} 
+                  color={sortOrder === 2 ? '#61d76f' : '#fff'} 
+                />
+                <Text style={[
+                  styles.filterOptionText,
+                  sortOrder === 2 && styles.activeFilterOptionText
+                ]}>
+                  Top Wishlists
+                </Text>
+                {sortOrder === 2 && (
+                  <Ionicons name="checkmark" size={20} color="#61d76f" />
+                )}
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => resetAndSetSort(3)}
+                style={[
+                  styles.filterOption,
+                  sortOrder === 3 && styles.activeFilterOption
+                ]}
+              >
+                <Ionicons 
+                  name="game-controller-outline" 
+                  size={20} 
+                  color={sortOrder === 3 ? '#61d76f' : '#fff'} 
+                />
+                <Text style={[
+                  styles.filterOptionText,
+                  sortOrder === 3 && styles.activeFilterOptionText
+                ]}>
+                  Top Playing
+                </Text>
+                {sortOrder === 3 && (
+                  <Ionicons name="checkmark" size={20} color="#61d76f" />
+                )}
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => resetAndSetSort(4)}
+                style={[
+                  styles.filterOption,
+                  sortOrder === 4 && styles.activeFilterOption
+                ]}
+              >
+                <Ionicons 
+                  name="checkmark-circle-outline" 
+                  size={20} 
+                  color={sortOrder === 4 ? '#61d76f' : '#fff'} 
+                />
+                <Text style={[
+                  styles.filterOptionText,
+                  sortOrder === 4 && styles.activeFilterOptionText
+                ]}>
+                  Top Played
+                </Text>
+                {sortOrder === 4 && (
+                  <Ionicons name="checkmark" size={20} color="#61d76f" />
+                )}
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => resetAndSetSort(5)}
+                style={[
+                  styles.filterOption,
+                  sortOrder === 5 && styles.activeFilterOption
+                ]}
+              >
+                <Ionicons 
+                  name="trending-up-outline" 
+                  size={20} 
+                  color={sortOrder === 5 ? '#61d76f' : '#fff'} 
+                />
+                <Text style={[
+                  styles.filterOptionText,
+                  sortOrder === 5 && styles.activeFilterOptionText
+                ]}>
+                  24hr Peak Players
+                </Text>
+                {sortOrder === 5 && (
+                  <Ionicons name="checkmark" size={20} color="#61d76f" />
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -212,5 +268,83 @@ const styles = StyleSheet.create({
     borderWidth: 0.4,
     borderColor: 'gray',
     backgroundColor: '#404040',
-  }
-})
+  },
+  filterButton: {
+    position: 'absolute',
+    bottom: 30,
+    right: 20,
+    backgroundColor: '#1d1d1dff',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 25,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  filterButtonText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    backgroundColor: '#2a2a2a',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingBottom: 40,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#444',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  closeButton: {
+    padding: 4,
+  },
+  filterOptions: {
+    padding: 20,
+    gap: 4,
+  },
+  filterOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    backgroundColor: '#333',
+    marginBottom: 8,
+    gap: 12,
+  },
+  activeFilterOption: {
+    backgroundColor: '#2e3d27',
+    borderWidth: 1,
+    borderColor: '#61d76f',
+  },
+  filterOptionText: {
+    flex: 1,
+    fontSize: 16,
+    color: '#fff',
+    fontWeight: '500',
+  },
+  activeFilterOptionText: {
+    color: '#61d76f',
+    fontWeight: '600',
+  },
+});

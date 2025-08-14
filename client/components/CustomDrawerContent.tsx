@@ -20,14 +20,12 @@ export default function CustomDrawerContent(props: any) {
         <View style={{ flex: 1, backgroundColor: '#191919ff' }}>
             <DrawerContentScrollView {...props} scrollEnabled={false}>
                 <Unauthenticated>
-                    <View style={{ backgroundColor: '#191919ff', alignItems: 'center', marginBottom: 20 }}>
+                    <View style={{ backgroundColor: '#191919ff', alignItems: 'flex-start', marginBottom: 30, marginTop:30 }}>
                         <Image
-                            source={require('../assets/images/logo.png')}
-                            style={{ width: 200, height: 150 }}
+                            source={require('../assets/images/gamedexlogo2.png')}
+                            resizeMode='contain'
+                            style={{ width: 200, height: 100, }}
                         />
-                        <Text style={{ color: '#ffffff', fontSize: 35, fontWeight: 'bold', marginBottom: 10 }}>
-                            GameDex
-                        </Text>
                     </View>
                 </Unauthenticated>
 
@@ -124,7 +122,7 @@ export default function CustomDrawerContent(props: any) {
                     style={{ fontWeight: 'bold', color: '#c1c1c1ff', fontSize: 15, textAlign: 'center', paddingLeft: 30, marginBottom: 20 }}
                     onPress={() => Linking.openURL('https://kumargaurav.me')}
                 >
-                    About Us
+                    About Dev
                 </Text>
                 <Text style={{ fontStyle: 'italic', color: '#9a9a9aff', fontSize: 12, textAlign: 'center', paddingLeft: 30, marginBottom: 20 }}>
                     Powered By IGDB
