@@ -16,7 +16,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.kumargaurav14.GameDex"
     },
     "web": {
       "bundler": "metro",
@@ -34,9 +35,16 @@
           "backgroundColor": "#ffffff"
         }
       ]
+      
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "166ab36a-5f6e-421f-b9f1-247029dda2a9"
+      }
     }
   }
 }

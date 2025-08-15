@@ -29,8 +29,8 @@ const CreateList = () => {
     useEffect(() => {
         const fetchGames = async () => {
             try {
-                const ip_address = process.env.EXPO_PUBLIC_IP_ADDRESS || '';
-                const response = await axios.get(`http://${ip_address}:8000/posts/search`, {
+                const backend_url = process.env.EXPO_PUBLIC_IP_ADDRESS || '';
+                const response = await axios.get(`https://${backend_url}/posts/search`, {
                     params: {
                         searchText: searchText
                     }

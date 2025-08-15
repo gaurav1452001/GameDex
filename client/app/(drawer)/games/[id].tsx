@@ -43,9 +43,9 @@ export default function GameInfo() {
             setActiveTab('details');
             setExpanded(false);
             try {
-                const ip_address = process.env.EXPO_PUBLIC_IP_ADDRESS || '';
-                const response = await axios.get(`http://${ip_address}:8000/posts/search/${id}`);
-                const responsePlaytime = await axios.get(`http://${ip_address}:8000/posts/playtime/${id}`);
+                const backend_url = process.env.EXPO_PUBLIC_IP_ADDRESS || '';
+                const response = await axios.get(`https://${backend_url}/posts/search/${id}`);
+                const responsePlaytime = await axios.get(`https://${backend_url}/posts/playtime/${id}`);
                 dispatch(update(response.data));
                 setPlaytime(responsePlaytime.data[0]);
 

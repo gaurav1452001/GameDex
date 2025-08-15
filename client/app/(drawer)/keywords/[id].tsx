@@ -20,8 +20,8 @@ export default function KeywordGames() {
             setKeywordGames([]);
             setKeywordName('');
             try {
-                const ip_address = process.env.EXPO_PUBLIC_IP_ADDRESS || '';
-                const response = await axios.get(`http://${ip_address}:8000/posts/keywords/${id}`, {
+                const backend_url = process.env.EXPO_PUBLIC_IP_ADDRESS || '';
+                const response = await axios.get(`https://${backend_url}/posts/keywords/${id}`, {
                 });
                 setKeywordName(response.data.keywordName);
                 setKeywordGames(response.data.games);

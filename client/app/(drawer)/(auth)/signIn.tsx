@@ -1,27 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import * as WebBrowser from 'expo-web-browser'
-import * as AuthSession from 'expo-auth-session'
-import { StyleSheet, TextInput, TouchableOpacity, Text, Alert, KeyboardAvoidingView, Platform } from "react-native";
-import { useSignIn, useSignUp, useSSO, SignedIn, SignedOut, useUser } from '@clerk/clerk-expo'
+import { StyleSheet, TextInput, TouchableOpacity, Text, Alert } from "react-native";
+import { useSignIn, useSignUp, SignedIn, SignedOut, useUser } from '@clerk/clerk-expo'
 import { LinearGradient } from 'expo-linear-gradient';
 import { View, Image, ActivityIndicator } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { ScrollView } from 'react-native-gesture-handler';
 
-export const useWarmUpBrowser = () => {
-    useEffect(() => {
-        void WebBrowser.warmUpAsync()
-        return () => {
-            void WebBrowser.coolDownAsync()
-        }
-    }, [])
-}
-
-WebBrowser.maybeCompleteAuthSession()
-
 export default function SignIn() {
-    useWarmUpBrowser()
     const { user } = useUser()
     const { signIn, setActive, isLoaded } = useSignIn()
     const { signUp, setActive: setActiveSignUp, isLoaded: isLoadedSignUp } = useSignUp()
@@ -37,9 +23,6 @@ export default function SignIn() {
     // Email verification states
     const [pendingVerification, setPendingVerification] = useState(false)
     const [code, setCode] = useState('')
-
-    // Social sign-in
-    const { startSSOFlow: startGoogleSSO } = useSSO()
 
     const onEmailSignIn = async () => {
         if (!isLoaded) return
@@ -151,24 +134,6 @@ export default function SignIn() {
         }
     }
 
-    const onGooglePress = useCallback(async () => {
-        try {
-            const { createdSessionId, setActive } = await startGoogleSSO({
-                strategy: 'oauth_google',
-                redirectUrl: AuthSession.makeRedirectUri({ path: '/' }),
-            })
-
-            if (createdSessionId) {
-                setActive!({ session: createdSessionId })
-                router.replace('/(drawer)/(tabs)')
-            }
-        } catch (err) {
-            console.error(JSON.stringify(err, null, 2))
-            Alert.alert('Error', 'Google sign in failed. Please try again.')
-        }
-    }, [])
-
-
     return (
         <ScrollView style={styles.view}>
             <View>
@@ -275,6 +240,7 @@ export default function SignIn() {
                                     </Text>
                                 )}
                             </TouchableOpacity>
+
                             {/* Toggle Sign In/Up */}
                             <TouchableOpacity
                                 style={styles.toggleButton}
@@ -293,22 +259,6 @@ export default function SignIn() {
                                     }
                                 </Text>
                             </TouchableOpacity>
-
-                            {/* Divider */}
-                            <View style={styles.dividerContainer}>
-                                <View style={styles.divider} />
-                                <Text style={styles.dividerText}>or continue with</Text>
-                                <View style={styles.divider} />
-                            </View>
-
-                            {/* Social Sign In Buttons */}
-                            <View style={{ flexDirection: 'column', gap: 12, alignItems: 'center' }}>
-                                <TouchableOpacity
-                                    onPress={onGooglePress}
-                                >
-                                    <Image style={{ height: 40 }} source={require('@/assets/images/google.png')} resizeMode='contain' />
-                                </TouchableOpacity>
-                            </View>
                         </>
                     ) : (
                         /* Email Verification Form */
@@ -387,6 +337,7 @@ export default function SignIn() {
                     </TouchableOpacity>
                 </View>
             </SignedIn>
+
             <TouchableOpacity style={{ position: 'absolute', top: 40, left: 20, backgroundColor: '#00000080', padding: 10, borderRadius: 50 }} onPress={() => router.back()}>
                 <Ionicons name="arrow-back" size={24} color="#fcfcfcff" />
             </TouchableOpacity>
@@ -401,7 +352,7 @@ const styles = StyleSheet.create({
     },
     image: {
         width: '100%',
-        height: 280, // Reduced from 350
+        height: 280,
         resizeMode: 'cover',
     },
     gradient: {
@@ -412,35 +363,35 @@ const styles = StyleSheet.create({
     },
     formContainer: {
         paddingHorizontal: 24,
-        paddingTop: 16, // Reduced from 20
-        paddingBottom: 16, // Reduced from 20
+        paddingTop: 16,
+        paddingBottom: 16,
     },
     backButton: {
         alignSelf: 'flex-start',
-        marginBottom: 12, // Reduced from 20
+        marginBottom: 12,
         padding: 8,
     },
     title: {
-        fontSize: 26, // Reduced from 28
+        fontSize: 26,
         fontWeight: 'bold',
         color: '#fff',
         textAlign: 'center',
-        marginBottom: 6, // Reduced from 8
+        marginBottom: 6,
     },
     subtitle: {
-        fontSize: 15, // Reduced from 16
+        fontSize: 15,
         color: '#999',
         textAlign: 'center',
-        marginBottom: 24, // Reduced from 32
+        marginBottom: 24,
     },
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: '#2a2a2a',
         borderRadius: 10,
-        marginBottom: 10, // Reduced from 16
+        marginBottom: 10,
         paddingHorizontal: 16,
-        paddingVertical: 5, // Increased slightly from 5 for better touch area
+        paddingVertical: 5,
     },
     inputIcon: {
         marginRight: 12,
@@ -455,13 +406,13 @@ const styles = StyleSheet.create({
     },
     requirementText: {
         color: '#999',
-        fontSize: 11, // Reduced from 12
-        marginTop: -8, // Negative margin to pull closer to input
-        marginBottom: 12, // Reduced from default
+        fontSize: 11,
+        marginTop: -8,
+        marginBottom: 12,
         textAlign: 'center',
     },
     button: {
-        paddingVertical: 14, // Reduced from 16
+        paddingVertical: 14,
         borderRadius: 12,
         alignItems: 'center',
         justifyContent: 'center',
@@ -469,7 +420,7 @@ const styles = StyleSheet.create({
     },
     primaryButton: {
         backgroundColor: '#4a90e2',
-        marginBottom: 12, // Reduced from 16
+        marginBottom: 12,
     },
     buttonText: {
         color: '#fff',
@@ -478,7 +429,7 @@ const styles = StyleSheet.create({
     },
     toggleButton: {
         alignItems: 'center',
-        marginBottom: 16, // Reduced from 24
+        marginBottom: 16,
     },
     toggleText: {
         color: '#4a90e2',
@@ -487,7 +438,7 @@ const styles = StyleSheet.create({
     dividerContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 16, // Reduced from 24
+        marginBottom: 16,
     },
     divider: {
         flex: 1,
@@ -496,7 +447,7 @@ const styles = StyleSheet.create({
     },
     dividerText: {
         color: '#666',
-        fontSize: 13, // Reduced from 14
+        fontSize: 13,
         marginHorizontal: 16,
     },
     socialContainer: {
@@ -516,7 +467,7 @@ const styles = StyleSheet.create({
     signedInContainer: {
         alignItems: 'center',
         paddingHorizontal: 24,
-        paddingTop: 20, // Reduced from 40
+        paddingTop: 20,
     },
     profileImage: {
         width: 80,

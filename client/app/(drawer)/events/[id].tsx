@@ -18,8 +18,8 @@ export default function EventInfo() {
         const fetchEvent = async () => {
             setEventPage(undefined); // Clear previous game data
             try {
-                const ip_address = process.env.EXPO_PUBLIC_IP_ADDRESS || '';
-                const response = await axios.get(`http://${ip_address}:8000/posts/searchEvent/${id}`);
+                const backend_url = process.env.EXPO_PUBLIC_IP_ADDRESS || '';
+                const response = await axios.get(`https://${backend_url}/posts/searchEvent/${id}`);
                 setEventPage(response.data);
             } catch (error) {
                 console.error('Error fetching playtime:', error);

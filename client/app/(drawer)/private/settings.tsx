@@ -9,26 +9,27 @@ import React, { useRef, useState, useEffect } from 'react'
 import LottieView from "lottie-react-native";
 import axios from 'axios';
 import { SearchGameType } from '@/types/gameTypes';
+import * as ImagePicker from 'expo-image-picker';
 
 const Settings = () => {
   const params = useLocalSearchParams();
   const animation = useRef<LottieView>(null);
   const userExternalId = params?.externalId as string;
-  const { isLoaded } = useUser();
+  const { user, isLoaded } = useUser();
   const UserData = useQuery(api.users.getUserByExternalId, { externalId: userExternalId as string });
 
   // State variables for editing
   const [name, setName] = useState('');
   const [bio, setBio] = useState('');
-  const [fourFavorites, setFourFavorites] = useState<{game_id: string, game_cover_url?: string}[]>([]);
+  const [fourFavorites, setFourFavorites] = useState<{ game_id: string, game_cover_url?: string }[]>([]);
   const [isUpdating, setIsUpdating] = useState(false);
-  
+
   // Modal states
   const [modalVisible, setModalVisible] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [gamePages, setGamePages] = useState<SearchGameType[]>([]);
   const [selectedFavoriteIndex, setSelectedFavoriteIndex] = useState<number>(-1);
-  
+
   // Bio modal state
   const [bioModalVisible, setBioModalVisible] = useState(false);
   const [nameModalVisible, setNameModalVisible] = useState(false);
@@ -49,8 +50,8 @@ const Settings = () => {
     const fetchGames = async () => {
       if (searchText.trim()) {
         try {
-          const ip_address = process.env.EXPO_PUBLIC_IP_ADDRESS || '';
-          const response = await axios.get(`http://${ip_address}:8000/posts/search`, {
+          const backend_url = process.env.EXPO_PUBLIC_IP_ADDRESS || '';
+          const response = await axios.get(`https://${backend_url}/posts/search`, {
             params: {
               searchText: searchText
             }
@@ -66,9 +67,41 @@ const Settings = () => {
     fetchGames();
   }, [searchText]);
 
+  const pickImageAndUpdate = async () => {
+    if (!isLoaded) return;
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permissionResult.granted) {
+      Alert.alert("Permission required", "You need to allow access to photos.");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      base64: true,
+    });
+
+    if (!result.canceled) {
+      try {
+        const base64Image = result.assets[0].base64;
+
+        // Upload to Clerk
+        await user?.setProfileImage({
+          file: `data:image/jpeg;base64,${base64Image}`,
+        });
+
+        Alert.alert("Success", "Profile image updated!");
+      } catch (error) {
+        Alert.alert("Failed to update profile image.");
+      }
+    }
+  };
+
+
   const handleUpdateUser = async () => {
     if (isUpdating) return;
-    
+
     setIsUpdating(true);
     try {
       await updateUser({
@@ -77,7 +110,7 @@ const Settings = () => {
         bio: bio.trim(),
         fourFavorites: fourFavorites.filter(fav => fav.game_id && fav.game_id.trim() !== ''), // Remove empty objects
       });
-      
+
       Alert.alert('Success', 'Profile updated successfully!');
     } catch (error) {
       console.error('Error updating user:', error);
@@ -327,13 +360,16 @@ const Settings = () => {
       <ScrollView contentContainerStyle={{ padding: 16 }}>
         {/* Profile Picture and Name */}
         <View style={styles.profileHeader}>
-          <View>
+          <TouchableOpacity onPress={pickImageAndUpdate}>
             <Image
               source={{ uri: UserData?.imageUrl || 'https://placehold.co/80x120' }}
               style={{ width: 120, height: 120, borderRadius: 60, borderColor: '#535353ff', borderWidth: 1 }}
             />
-          </View>
-          <View style={{ flex: 1, marginLeft: 20}}>
+            <Text style={{ color: '#bcbcbc', fontSize: 12, textAlign: 'center', marginTop: 4 }}>
+              Edit Image
+            </Text>
+          </TouchableOpacity>
+          <View style={{ flex: 1, marginLeft: 20 }}>
             <TouchableOpacity onPress={() => setNameModalVisible(true)}>
               <Text style={styles.displayText}>{name || 'Your Name'}</Text>
               <Text style={{ color: '#bcbcbc', fontSize: 12, marginTop: 4 }}>Edit Name</Text>
@@ -464,7 +500,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     height: '80%',
     overflow: "hidden",
-    },
+  },
   textInput: {
     backgroundColor: '#232323',
     color: '#fff',

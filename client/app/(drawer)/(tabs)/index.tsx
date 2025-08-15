@@ -43,8 +43,8 @@ export default function HomeScreen() {
     if (isLoading) return; // Prevent multiple calls
     setIsLoading(true);
     try {
-        const ip_Address = process.env.EXPO_PUBLIC_IP_ADDRESS || '';
-        const response = await axios.get(`http://${ip_Address}:8000/posts/popular`, {
+        const backend_url = process.env.EXPO_PUBLIC_IP_ADDRESS || '';
+        const response = await axios.get(`https://${backend_url}/posts/popular`, {
           params: {
             currentOffset: Offset,
             sortOrder: sortOrder,

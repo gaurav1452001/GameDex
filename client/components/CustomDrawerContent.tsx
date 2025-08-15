@@ -1,6 +1,6 @@
 import { useUser } from '@clerk/clerk-expo';
 import { DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
-import { View, Image, Text, StyleSheet } from 'react-native';
+import { View, Image, Text } from 'react-native';
 import { SignOutModal } from './signOutModal';
 import * as Linking from 'expo-linking';
 import { Authenticated, Unauthenticated } from 'convex/react';
@@ -122,7 +122,7 @@ export default function CustomDrawerContent(props: any) {
                     style={{ fontWeight: 'bold', color: '#c1c1c1ff', fontSize: 15, textAlign: 'center', paddingLeft: 30, marginBottom: 20 }}
                     onPress={() => Linking.openURL('https://kumargaurav.me')}
                 >
-                    About Dev
+                    About Developer
                 </Text>
                 <Text style={{ fontStyle: 'italic', color: '#9a9a9aff', fontSize: 12, textAlign: 'center', paddingLeft: 30, marginBottom: 20 }}>
                     Powered By IGDB

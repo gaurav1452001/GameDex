@@ -6,7 +6,7 @@ export const upsertFromClerk = internalMutation({
     args: { data: v.any() as Validator<UserJSON> }, // no runtime validation, trust Clerk
     async handler(ctx, { data }) {
         const userAttributes = {
-            name: `${data.username}`||'User',
+            name: data.username||'User',
             externalId: data.id,
             email: data.email_addresses[0].email_address,
             imageUrl: data.image_url,
@@ -96,6 +96,7 @@ export const updateUser = mutation({
         externalId: v.string(),
         name: v.string(),
         bio: v.optional(v.string()),
+        imageUrl: v.optional(v.id('_storage')),
         fourFavorites: v.optional(
             v.array(
                 v.object({
@@ -124,3 +125,24 @@ export const updateUser = mutation({
         return user._id;
     },
 });
+
+export const generateUploadUrl= mutation({
+    handler: async (ctx) => {
+        await getCurrentUserOrThrow(ctx);
+        return await ctx.storage.generateUploadUrl()
+    }
+});
+
+export async function getCurrentUserOrThrow(ctx: QueryCtx) {
+  const userRecord = await getCurrentUser(ctx);
+  if (!userRecord) throw new Error("Can't get current user");
+  return userRecord;
+}
+
+export async function getCurrentUser(ctx: QueryCtx) {
+  const identity = await ctx.auth.getUserIdentity();
+  if (identity === null) {
+    return null;
+  }
+  return await userByExternalId(ctx, identity.subject);
+}
