@@ -61,7 +61,7 @@ export default function ListTabs() {
                                         onPress={() => {
                                             deleteList({ listId, externalId: user?.id as string });
                                             setDeleteModalVisible(!deleteModalVisible);
-                                            router.push('/(drawer)/private/lists');
+                                            router.back();
                                         }}
                                     >
                                         <Text style={styles.textStyle}>Delete</Text>
