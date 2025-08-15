@@ -17,7 +17,8 @@
         "backgroundColor": "#bdfe00"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.kumargaurav14.GameDex"
+      "package": "com.kumargaurav14.GameDex",
+      "versionCode": 1
     },
     "web": {
       "bundler": "metro",
