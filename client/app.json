@@ -2,14 +2,15 @@
   "expo": {
     "name": "GameDex",
     "slug": "GameDex",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "gamedex",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.kumargaurav14.GameDex"
     },
     "android": {
       "adaptiveIcon": {
@@ -18,7 +19,7 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "com.kumargaurav14.GameDex",
-      "versionCode": 1
+      "versionCode": 2
     },
     "web": {
       "bundler": "metro",
