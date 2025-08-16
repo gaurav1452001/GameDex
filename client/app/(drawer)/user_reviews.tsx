@@ -59,8 +59,7 @@ const Reviews = () => {
         </View>
         <View style={styles.loadingContainer}>
           <Text style={{ color: '#bcbcbcff', fontSize: 16, fontWeight: 'bold', textAlign: 'center', letterSpacing: 0.5 }}>
-            You don't have any reviews yet.
-            {'\n'}Start reviewing games to see them here!
+            No Reviews Found
           </Text>
         </View>
       </>

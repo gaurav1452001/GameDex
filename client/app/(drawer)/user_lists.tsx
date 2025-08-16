@@ -66,10 +66,8 @@ const Lists = () => {
           </Text>
         </View>
         <View style={styles.loadingContainer}>
-
           <Text style={{ color: '#bcbcbcff', fontSize: 16, fontWeight: 'bold', textAlign: 'center', letterSpacing: 0.5, paddingHorizontal: 20 }}>
-            You don't have any lists yet.
-            {'\n'}Start by creating one!
+            No Lists Found
           </Text>
           <TouchableOpacity onPress={() => router.push('/(drawer)/private/createList')} style={{ position: 'absolute', bottom: 35, right: 20 }}>
             <ListAddButton />

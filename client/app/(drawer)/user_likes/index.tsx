@@ -15,7 +15,7 @@ const Reviews = () => {
   const params = useLocalSearchParams();
   const userExternalId = params?.externalId as string;
   const animation = useRef<LottieView>(null);
-  const {isLoaded } = useUser();
+  const { isLoaded } = useUser();
   const UserData = useQuery(api.users.getUserByExternalId, { externalId: userExternalId as string });
   const reviews = useQuery(api.likesReviews.getReviewsLikedByUser, { userId: UserData?._id as Id<'users'> });
 
@@ -50,18 +50,9 @@ const Reviews = () => {
   if (reviews.length === 0) {
     return (
       <>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.push('/(drawer)/(tabs)')} style={{ marginRight: 15 }}>
-            <Ionicons name="arrow-back" size={24} color="#fff" />
-          </TouchableOpacity>
-          <Text style={{ color: '#ffffff', fontSize: 18, fontWeight: 'bold' }}>
-            {(UserData?.name ? UserData.name.slice(0, 15) : 'User')}'s Reviews
-          </Text>
-        </View>
         <View style={styles.loadingContainer}>
-          <Text style={{ color: '#bcbcbcff', fontSize: 16, fontWeight: 'bold', textAlign: 'center', letterSpacing: 0.5 }}>
-            You don't have any reviews yet.
-            {'\n'}Start reviewing games to see them here!
+          <Text style={{ color: '#bcbcbcff', fontSize: 16, fontWeight: 'bold', textAlign: 'center', letterSpacing: 0.5, paddingHorizontal: 20 }}>
+            No Liked Reviews
           </Text>
         </View>
       </>
@@ -91,7 +82,7 @@ const Reviews = () => {
 
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', marginBottom: 8 }}>
               <StarRatingDisplay
-                rating={review?.starRating||0}
+                rating={review?.starRating || 0}
                 emptyColor="#181818"
                 color="#61d76fff"
                 starSize={13}
