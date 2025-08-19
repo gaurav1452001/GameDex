@@ -1,6 +1,6 @@
-# 🎮 Gamedex  
+# 🎮 GameDex  
 
-**Gamedex** is a community-driven platform for gamers to **track, review, rate, and share** their gaming experiences. Inspired by Letterboxd for films, Gamedex allows players to build a digital gaming diary, discover new titles, and connect with other gamers.  
+**GameDex** is a community-driven platform for gamers to **track, review, rate, and share** their gaming experiences. Inspired by Letterboxd for films, Gamedex allows players to build a digital gaming diary, discover new titles, and connect with other gamers.  
 
 ---
 
