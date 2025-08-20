@@ -63,7 +63,7 @@ npm install
 
 ### 4. Configure Environment Variables
 ```bash
-DATABASE_URL=your_neondb_connection_string
+BACKEND_URL=your_backend_url
 CLERK_API_KEY=your_clerk_api_key
 IGDB_CLIENT_ID=your_igdb_client_id
 IGDB_CLIENT_SECRET=your_igdb_client_secret
